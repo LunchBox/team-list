@@ -13,7 +13,7 @@ defineProps(["list", "parent"]);
       :task="task"
       :parent="parent"
     ></TaskListItem>
-    <li v-if="focusing === parent">
+    <li v-if="(!focusing && !parent) || focusing === parent">
       <TaskForm :parent="parent"></TaskForm>
     </li>
   </ol>

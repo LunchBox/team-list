@@ -1,5 +1,10 @@
 <script setup>
-import { editing, focusing, destroy } from "@/stores/tasks.js";
+import {
+  focusing,
+  destroy,
+  countChildren,
+  getChildren,
+} from "@/stores/tasks.js";
 
 import TaskList from "./TaskList.vue";
 
@@ -7,35 +12,33 @@ const props = defineProps(["task", "parent"]);
 
 const onClick = () => {
   const { task } = props;
-  editing.value = task;
-
-  task.expend = !task.expend;
-  if (task.expend) {
-    focusing.value = task;
-  }
+  focusing.value = task;
 };
 </script>
 <template>
   <li>
     <div class="item-main">
-      <a href="#" @click.prevent="onClick">
+      <a href="#" @click.prevent="task.expend = !task.expend">
         {{ task.expend ? "-" : "+" }}
-        {{ task.content }}
+      </a>
+
+      <a href="#" @click.prevent="onClick">
+        {{ task.title }}
       </a>
 
       <span style="color: #ccc; font-style: italic; font-size: smaller">
-        ({{ task.children?.length }} : {{ task.countAll() }})
+        ({{ getChildren(task).length }} : {{ countChildren(task) }})
       </span>
 
       <span style="color: #ccc; font-style: italic"> - {{ task.user }} </span>
 
       <span class="del">
         -
-        <a href="#" @click="destroy(task, parent)">Delete</a>
+        <a href="#" @click="destroy(task)">Delete</a>
       </span>
     </div>
     <div v-if="task.expend">
-      <TaskList :list="task.children" :parent="task"></TaskList>
+      <TaskList :list="getChildren(task)" :parent="task"></TaskList>
     </div>
   </li>
 </template>

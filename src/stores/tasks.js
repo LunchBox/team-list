@@ -1,35 +1,67 @@
 import { ref, watch, computed } from "vue";
 import randomId from "@/utils/random_id.js";
-import Task from "@/models/task.js";
+
+const REPLACER = (key, value) => {
+  return key.startsWith("_") || key.startsWith("$") ? undefined : value;
+};
 
 // TODO: move to other place
 const currentUser = ref("daniel");
 
 const taskList = ref([]);
+const rootTasks = computed(() => taskList.value.filter((t) => !t._parent));
 
 const editing = ref(null);
 const focusing = ref(null);
 
-const collapseAll = () => {
-  taskList.value.forEach((t) => t.collapseAll());
+// ---- filters
+
+const find = (id) => taskList.value.find((t) => t.id === id);
+
+// ---- parent & children
+
+const getParent = (task) => {
+  return taskList.value.find((t) => t.id === task.id);
 };
 
-const expandAll = () => {
-  taskList.value.forEach((t) => t.expandAll());
+const getChildren = (task) => {
+  return taskList.value.filter((t) => t.parentId === task.id);
+};
+
+// ---- collapse & expend
+const collapse = (task) => {
+  task.expend = false;
+  getChildren(task).forEach(collapse);
+};
+
+const collapseAll = () => taskList.value.forEach(collapse);
+
+const expand = (task) => {
+  task.expend = true;
+  getChildren(task).forEach(expand);
+};
+
+const expandAll = () => taskList.value.forEach(expand);
+
+// ---- count all children of a task
+
+const countChildren = (task) => {
+  const children = getChildren(task);
+  return children
+    .map(countChildren)
+    .reduce((sum, c) => sum + c, children.length ?? 0);
 };
 
 // ---- create & update
 
-const save = (data, parent = null) => {
-  const container = parent ? parent.children : taskList.value;
-
-  if (!data.id) {
-    const task = Object.assign(new Task(), data);
+const save = (task) => {
+  if (!task.id) {
     task.user = currentUser.value;
-    task.id = randomId();
-    container.push(task);
-  } else if (editing.value?.id === data.id) {
-    Object.assign(editing.value, data);
+    task.id = randomId(16);
+    taskList.value.push(task);
+  } else {
+    const t = find(task.id);
+    if (t) Object.assign(t, task);
   }
 };
 
@@ -37,39 +69,41 @@ const save = (data, parent = null) => {
 watch(
   taskList,
   () => {
-    localStorage.setItem("tl-data", JSON.stringify(taskList.value));
+    localStorage.setItem("tl/tasks", JSON.stringify(taskList.value, REPLACER));
   },
   { deep: true }
 );
 
 const load = () => {
-  const ds = localStorage.getItem("tl-data");
+  const ds = localStorage.getItem("tl/tasks");
   if (typeof ds === "string") {
-    taskList.value = JSON.parse(ds).map((attr) =>
-      new Task().loadAttributes(attr)
-    );
+    taskList.value = JSON.parse(ds);
   }
 };
 load();
 
 // ---- delete
 
-const destroy = (task, parent) => {
-  const container = parent ? parent.children : taskList.value;
+const destroy = (task) => {
+  if (!confirm("Are you sure?")) return false;
 
-  const idx = container.indexOf(task);
+  const idx = taskList.value.findIndex((t) => t.id === task.id);
   if (idx > -1) {
-    container.splice(idx, 1);
+    taskList.value.splice(idx, 1);
   }
 };
 
 export {
   taskList,
+  rootTasks,
   editing,
   focusing,
   currentUser,
   save,
+  getParent,
+  getChildren,
   collapseAll,
   expandAll,
+  countChildren,
   destroy,
 };

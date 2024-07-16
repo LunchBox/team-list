@@ -1,37 +1,38 @@
 <script setup>
 import { onUnmounted } from "vue";
+import { autoBind } from "@/utils/bind.js";
 import {
-  taskList,
+  rootTasks,
   editing,
   focusing,
   expandAll,
   collapseAll,
 } from "@/stores/tasks.js";
 
+import TaskDetails from "./tasks/TaskDetails.vue";
 import TaskForm from "./tasks/TaskForm.vue";
 import TaskList from "./tasks/TaskList.vue";
 
-import {} from "@/stores/tasks.js";
-
-const clearFocus = () => (focusing.value = null);
-document.addEventListener("click", clearFocus);
-onUnmounted(() => {
-  document.removeEventListener("click", clearFocus);
-});
+autoBind(document, "click", () => (focusing.value = null));
 </script>
 <template>
   <div>
-    <div class="flex">
-      <div>
-        <TaskForm v-if="editing" :task="editing"></TaskForm>
+    <div class="flex" @click.stop>
+      <div style="padding: 2rem">
+        <div v-if="editing">
+          <TaskForm :task="editing"></TaskForm>
+        </div>
+        <div v-else-if="focusing">
+          <TaskDetails :task="focusing"></TaskDetails>
+        </div>
       </div>
-      <aside @click.stop>
+      <aside>
         <div style="margin: 1rem 0">
           Tools:
           <a href="#" @click.prevent="expandAll">Expand All</a> &middot;
           <a href="#" @click.prevent="collapseAll">Collapse All</a>
         </div>
-        <TaskList :list="taskList"></TaskList>
+        <TaskList :list="rootTasks"></TaskList>
       </aside>
     </div>
   </div>
