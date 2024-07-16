@@ -1,32 +1,48 @@
 <script setup>
-import { taskList, editing, save } from "@/stores/tasks.js";
+import { onUnmounted } from "vue";
+import {
+  taskList,
+  editing,
+  focusing,
+  expandAll,
+  collapseAll,
+} from "@/stores/tasks.js";
 
 import TaskForm from "./tasks/TaskForm.vue";
 import TaskList from "./tasks/TaskList.vue";
 
-import { expandAll, collapseAll } from "@/stores/tasks.js";
+import {} from "@/stores/tasks.js";
+
+const clearFocus = () => (focusing.value = null);
+document.addEventListener("click", clearFocus);
+onUnmounted(() => {
+  document.removeEventListener("click", clearFocus);
+});
 </script>
 <template>
   <div>
-    <div style="margin: 1rem 0">
-      Tools:
-      <a href="#" @click.prevent="expandAll">Expand All</a> &middot;
-      <a href="#" @click.prevent="collapseAll">Collapse All</a>
-    </div>
-    <div style="margin: 1rem 0">
-      <TaskForm :task="editing"></TaskForm>
-    </div>
-    <div>
-      <TaskList :list="taskList"></TaskList>
+    <div class="flex">
+      <div>
+        <TaskForm v-if="editing" :task="editing"></TaskForm>
+      </div>
+      <aside @click.stop>
+        <div style="margin: 1rem 0">
+          Tools:
+          <a href="#" @click.prevent="expandAll">Expand All</a> &middot;
+          <a href="#" @click.prevent="collapseAll">Collapse All</a>
+        </div>
+        <TaskList :list="taskList"></TaskList>
+      </aside>
     </div>
   </div>
 </template>
 
 <style scoped>
-h2 {
-  margin-top: 1rem;
+.flex {
+  display: flex;
 }
-li {
-  margin: 0.5rem 0;
+
+.flex > * {
+  flex: 1;
 }
 </style>

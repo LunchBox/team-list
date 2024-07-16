@@ -1,16 +1,18 @@
 <script setup>
-import { ref, watch } from "vue";
-
-import { editing, destroy } from "@/stores/tasks.js";
+import { editing, focusing, destroy } from "@/stores/tasks.js";
 
 import TaskList from "./TaskList.vue";
 
 const props = defineProps(["task", "parent"]);
-defineEmits(["select", "reset", "submit-child"]);
 
 const onClick = () => {
-  editing.value = props.task;
-  props.task.expend = !props.task.expend;
+  const { task } = props;
+  editing.value = task;
+
+  task.expend = !task.expend;
+  if (task.expend) {
+    focusing.value = task;
+  }
 };
 </script>
 <template>
@@ -39,6 +41,9 @@ const onClick = () => {
 </template>
 
 <style scoped>
+li {
+  margin: 4px 0;
+}
 .del {
   color: #ccc;
   font-style: italic;

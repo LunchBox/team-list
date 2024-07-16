@@ -8,6 +8,7 @@ const currentUser = ref("daniel");
 const taskList = ref([]);
 
 const editing = ref(null);
+const focusing = ref(null);
 
 const collapseAll = () => {
   taskList.value.forEach((t) => t.collapseAll());
@@ -65,6 +66,7 @@ const destroy = (task, parent) => {
 export {
   taskList,
   editing,
+  focusing,
   currentUser,
   save,
   collapseAll,
