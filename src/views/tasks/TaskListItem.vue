@@ -16,7 +16,7 @@ const onClick = () => {
 };
 </script>
 <template>
-  <li>
+  <li :class="{ active: focusing === task }">
     <div class="item-main">
       <a href="#" @click.prevent="task.expend = !task.expend">
         {{ task.expend ? "-" : "+" }}
@@ -41,6 +41,10 @@ const onClick = () => {
 <style scoped>
 li {
   margin: 4px 0;
+}
+li.active > .item-main:after {
+  content: "<--";
+  margin-left: 0.5rem;
 }
 .del {
   color: #ccc;

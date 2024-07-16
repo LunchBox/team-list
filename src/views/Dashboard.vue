@@ -1,5 +1,4 @@
 <script setup>
-import { onUnmounted } from "vue";
 import { autoBind } from "@/utils/bind.js";
 import {
   rootTasks,
@@ -7,6 +6,7 @@ import {
   focusing,
   expandAll,
   collapseAll,
+  increaseIndent,
 } from "@/stores/tasks.js";
 
 import TaskDetails from "./tasks/TaskDetails.vue";
@@ -14,6 +14,15 @@ import TaskForm from "./tasks/TaskForm.vue";
 import TaskList from "./tasks/TaskList.vue";
 
 autoBind(document, "click", () => (focusing.value = null));
+
+autoBind(document, "keydown", (e) => {
+  if (!focusing.value) return;
+
+  if (e.key === "Tab") {
+    e.preventDefault();
+    increaseIndent(focusing.value);
+  }
+});
 </script>
 <template>
   <div>

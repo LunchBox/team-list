@@ -9,7 +9,7 @@ const REPLACER = (key, value) => {
 const currentUser = ref("daniel");
 
 const taskList = ref([]);
-const rootTasks = computed(() => taskList.value.filter((t) => !t._parent));
+const rootTasks = computed(() => taskList.value.filter((t) => !t.parentId));
 
 const editing = ref(null);
 const focusing = ref(null);
@@ -21,7 +21,7 @@ const find = (id) => taskList.value.find((t) => t.id === id);
 // ---- parent & children
 
 const getParent = (task) => {
-  return taskList.value.find((t) => t.id === task.id);
+  return taskList.value.find((t) => t.id === task.parentId);
 };
 
 const getChildren = (task) => {
@@ -59,9 +59,11 @@ const save = (task) => {
     task.user = currentUser.value;
     task.id = randomId(16);
     taskList.value.push(task);
+    return task;
   } else {
     const t = find(task.id);
     if (t) Object.assign(t, task);
+    return t;
   }
 };
 
@@ -96,6 +98,15 @@ const destroy = (task) => {
   focusing.value = null;
 };
 
+// ---- increase / decrease indent
+
+const increaseIndent = (task) => {
+  const parent = getParent(task);
+
+  const middle = save({ title: "N/A", parentId: parent?.id });
+  save({ ...task, parentId: middle.id });
+};
+
 export {
   taskList,
   rootTasks,
@@ -109,4 +120,5 @@ export {
   expandAll,
   countChildren,
   destroy,
+  increaseIndent,
 };
