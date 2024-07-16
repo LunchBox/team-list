@@ -7,12 +7,23 @@ const REPLACER = (key, value) => {
 
 const bySeq = (a, b) => a.seq - b.seq;
 
+const first = (arr) => arr[0];
 const last = (arr) => arr[arr.length - 1];
+
+class CusArray extends Array {
+  get first() {
+    return this[0];
+  }
+
+  get last() {
+    return this[this.length - 1];
+  }
+}
 
 // TODO: move to other place
 const currentUser = ref("daniel");
 
-const taskList = ref([]);
+const taskList = ref(new CusArray());
 const rootTasks = computed(() =>
   taskList.value.filter((t) => !t.parentId).sort(bySeq)
 );
@@ -25,6 +36,7 @@ class Task {
   title = null;
   content = null;
   parentId = null;
+  exp = false;
   seq = 0;
 
   // ---- filters
@@ -47,7 +59,7 @@ class Task {
       .reduce((sum, c) => sum + c, this.children.length ?? 0);
   }
 
-  // under the same parents
+  // with same parent
   get siblings() {
     return (this.parent ? this.parent.children : rootTasks.value).sort(bySeq);
   }
@@ -60,6 +72,10 @@ class Task {
     return last(this.siblings.filter((t) => t.seq < this.seq));
   }
 
+  get next() {
+    return first(this.siblings.filter((t) => t.seq > this.seq));
+  }
+
   get maxChildSeq() {
     return last(this.children)?.seq ?? -1;
   }
@@ -67,12 +83,12 @@ class Task {
   // ---- collapse & expend
 
   collapse() {
-    this.expend = false;
+    this.exp = false;
     this.children.forEach((t) => t.collapse());
   }
 
   expand() {
-    this.expend = true;
+    this.exp = true;
     this.children.forEach((t) => t.expand());
   }
 
@@ -120,8 +136,8 @@ watch(
 const load = () => {
   const ds = localStorage.getItem("tl/tasks");
   if (typeof ds === "string") {
-    taskList.value = JSON.parse(ds).map((attrs) =>
-      Object.assign(new Task(), attrs)
+    taskList.value = new CusArray(
+      ...JSON.parse(ds).map((attrs) => Object.assign(new Task(), attrs))
     );
   }
 };
@@ -139,6 +155,24 @@ const destroy = (task) => {
 
   editing.value = null;
   focusing.value = null;
+};
+
+// ---- move up/down
+
+const moveUp = (task) => {
+  if (!task.prev) return;
+
+  const seq = task.prev.seq;
+  task.prev.seq = task.seq;
+  task.seq = seq;
+};
+
+const moveDown = (task) => {
+  if (!task.next) return;
+
+  const seq = task.next.seq;
+  task.next.seq = task.seq;
+  task.seq = seq;
 };
 
 // ---- increase / decrease indent
@@ -162,7 +196,7 @@ const increaseIndent = (task) => {
   task.seq = middle.maxChildSeq + 1;
 
   // 展開方便查看
-  if (parent) parent.expand = true;
+  parent?.expand();
 };
 
 const decreaseIndent = (task) => {
@@ -188,7 +222,7 @@ const decreaseIndent = (task) => {
     task.seq = parent.seq + 1;
 
     // 展開方便查看
-    task.expand = true;
+    task.expand();
   }
 };
 
@@ -204,4 +238,6 @@ export {
   destroy,
   increaseIndent,
   decreaseIndent,
+  moveUp,
+  moveDown,
 };

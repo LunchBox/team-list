@@ -8,8 +8,8 @@ const props = defineProps(["task", "parent"]);
 <template>
   <li :class="{ active: focusing === task }">
     <div class="item-main">
-      <a href="#" @click.prevent="task.expend = !task.expend">
-        {{ task.expend ? "-" : "+" }}
+      <a href="#" @click.prevent="task.exp = !task.exp">
+        {{ task.exp ? "-" : "+" }}
       </a>
 
       <a href="#" @click.prevent="focusing = task" @dblclick="editing = task">
@@ -22,7 +22,7 @@ const props = defineProps(["task", "parent"]);
 
       <span style="color: #ccc; font-style: italic"> - {{ task.user }} </span>
     </div>
-    <div v-if="task.expend">
+    <div v-if="task.exp">
       <TaskList :list="task.children" :parent="task"></TaskList>
     </div>
   </li>
