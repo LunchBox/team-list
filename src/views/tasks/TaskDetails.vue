@@ -11,8 +11,14 @@ defineProps(["task", "parent"]);
 
       <a href="#" @click="destroy(task)">Delete</a>
     </div>
-    <div>
+    <div class="content">
       {{ task.content }}
     </div>
   </div>
 </template>
+
+<style scoped>
+.content {
+  white-space: pre;
+}
+</style>

@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch } from "vue";
 
-import { Task, editing } from "@/stores/tasks.js";
+import { Task, editing, focusing } from "@/stores/tasks.js";
 
 const props = defineProps(["task", "parent"]);
 
@@ -20,9 +20,11 @@ watch(props, reloadForm, {
 });
 
 const onSubmit = () => {
-  formData.value.save();
+  const ut = formData.value.save();
   reloadForm();
+
   editing.value = null;
+  focusing.value = ut;
 };
 </script>
 <template>

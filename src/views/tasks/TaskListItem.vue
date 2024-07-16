@@ -1,18 +1,27 @@
 <script setup>
+import { ref } from "vue";
 import { focusing, editing } from "@/stores/tasks.js";
 
 import TaskList from "./TaskList.vue";
+import TaskInlineForm from "./TaskInlineForm.vue";
 
 const props = defineProps(["task", "parent"]);
+
+const quickEdit = ref(false);
 </script>
 <template>
   <li :class="{ active: focusing === task }">
-    <div class="item-main">
+    <TaskInlineForm
+      v-if="quickEdit"
+      :task="task"
+      @after-submit="quickEdit = false"
+    ></TaskInlineForm>
+    <div class="item-summary" v-else>
       <a href="#" @click.prevent="task.exp = !task.exp">
         {{ task.exp ? "-" : "+" }}
       </a>
 
-      <a href="#" @click.prevent="focusing = task" @dblclick="editing = task">
+      <a href="#" @click.prevent="focusing = task" @dblclick="quickEdit = true">
         {{ task.title }}
       </a>
 
@@ -22,6 +31,7 @@ const props = defineProps(["task", "parent"]);
 
       <span style="color: #ccc; font-style: italic"> - {{ task.user }} </span>
     </div>
+
     <div v-if="task.exp">
       <TaskList :list="task.children" :parent="task"></TaskList>
     </div>
@@ -32,7 +42,7 @@ const props = defineProps(["task", "parent"]);
 li {
   margin: 4px 0;
 }
-li.active > .item-main:after {
+li.active > .item-summary:after {
   content: "<--";
   margin-left: 0.5rem;
 }
@@ -44,7 +54,7 @@ li.active > .item-main:after {
 li .del {
   display: none;
 }
-li:hover > .item-main .del {
+li:hover > .item-summary .del {
   display: initial;
 }
 </style>
