@@ -1,12 +1,16 @@
 <script setup>
 import { ref, watch } from "vue";
 
+import randomId from "@/utils/random_id.js";
+
 class Task {
-  user = "daniel";
+  user = null;
   content = null;
+  children = [];
 }
 
 const taskList = ref([]);
+const currentUser = ref("daniel");
 
 watch(
   taskList,
@@ -28,14 +32,24 @@ load();
 const formData = ref(new Task());
 
 const onSubmit = () => {
-  taskList.value.push(formData.value);
+  const task = formData.value;
+  task.user = currentUser.value;
+
+  if (!task.id) {
+    task.id = randomId();
+    taskList.value.unshift(task);
+  }
+
   formData.value = new Task();
+};
+
+const edit = (task) => {
+  formData.value = task;
 };
 </script>
 <template>
   <div>
-    <h2>Dashboard</h2>
-    <div>
+    <div style="margin: 2rem 0">
       <form @submit.prevent="onSubmit">
         <input type="text" v-model="formData.content" />
         <input type="hidden" v-model="formData.user" />
@@ -43,9 +57,10 @@ const onSubmit = () => {
       </form>
     </div>
     <div>
-      <h2>Task List</h2>
       <ul>
-        <li v-for="task in taskList">{{ task.user }}: {{ task.content }}</li>
+        <li v-for="task in taskList" @click.prevent="edit(task)">
+          {{ task.content }}
+        </li>
       </ul>
     </div>
   </div>
