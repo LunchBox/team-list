@@ -1,11 +1,11 @@
 <script setup>
 import { ref, watch } from "vue";
 
-import { editing } from "@/stores/tasks.js";
+import { editing, destroy } from "@/stores/tasks.js";
 
 import TaskList from "./TaskList.vue";
 
-const props = defineProps(["task"]);
+const props = defineProps(["task", "parent"]);
 defineEmits(["select", "reset", "submit-child"]);
 
 const onClick = () => {
@@ -15,16 +15,37 @@ const onClick = () => {
 </script>
 <template>
   <li>
-    <div>
+    <div class="item-main">
       <a href="#" @click.prevent="onClick">
         {{ task.expend ? "-" : "+" }}
         {{ task.content }}
       </a>
 
       <span style="color: #999">({{ task.children?.length }})</span>
+
+      <span style="color: #ccc; font-style: italic"> - {{ task.user }} </span>
+
+      <span class="del">
+        -
+        <a href="#" @click="destroy(task, parent)">Delete</a>
+      </span>
     </div>
     <div v-if="task.expend">
       <TaskList :list="task.children" :parent="task"></TaskList>
     </div>
   </li>
 </template>
+
+<style scoped>
+.del {
+  color: #ccc;
+  font-style: italic;
+}
+
+li .del {
+  display: none;
+}
+li:hover > .item-main .del {
+  display: initial;
+}
+</style>

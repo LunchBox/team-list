@@ -51,4 +51,23 @@ const load = () => {
 };
 load();
 
-export { taskList, editing, currentUser, save, collapseAll, expandAll };
+// ---- delete
+
+const destroy = (task, parent) => {
+  const container = parent ? parent.children : taskList.value;
+
+  const idx = container.indexOf(task);
+  if (idx > -1) {
+    container.splice(idx, 1);
+  }
+};
+
+export {
+  taskList,
+  editing,
+  currentUser,
+  save,
+  collapseAll,
+  expandAll,
+  destroy,
+};

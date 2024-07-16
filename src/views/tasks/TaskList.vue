@@ -6,7 +6,11 @@ defineProps(["list", "parent"]);
 </script>
 <template>
   <ul>
-    <TaskListItem v-for="task in list" :task="task"></TaskListItem>
+    <TaskListItem
+      v-for="task in list"
+      :task="task"
+      :parent="parent"
+    ></TaskListItem>
     <li>
       <TaskForm :parent="parent"></TaskForm>
     </li>
