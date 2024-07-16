@@ -1,18 +1,15 @@
 <script setup>
 import { ref, watch } from "vue";
 
-import { editing, save } from "@/stores/tasks.js";
+import { Task, editing } from "@/stores/tasks.js";
 
 const props = defineProps(["task", "parent"]);
 
 const formData = ref(null);
 
 const reloadForm = () => {
-  if (props.task) {
-    formData.value = { ...props.task };
-  } else {
-    formData.value = { title: null, content: null };
-  }
+  formData.value = Object.assign(new Task(), { ...props.task });
+
   if (props.parent) {
     formData.value.parentId = props.parent?.id;
   }
@@ -23,7 +20,8 @@ watch(props, reloadForm, {
 });
 
 const onSubmit = () => {
-  save(formData.value);
+  formData.value.save();
+  reloadForm();
   editing.value = null;
 };
 </script>

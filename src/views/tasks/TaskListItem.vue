@@ -1,10 +1,5 @@
 <script setup>
-import {
-  focusing,
-  editing,
-  countChildren,
-  getChildren,
-} from "@/stores/tasks.js";
+import { focusing, editing } from "@/stores/tasks.js";
 
 import TaskList from "./TaskList.vue";
 
@@ -22,13 +17,13 @@ const props = defineProps(["task", "parent"]);
       </a>
 
       <span style="color: #ccc; font-style: italic; font-size: smaller">
-        ({{ getChildren(task).length }} : {{ countChildren(task) }})
+        ({{ task.children.length }} : {{ task.allChildrenLen }})
       </span>
 
       <span style="color: #ccc; font-style: italic"> - {{ task.user }} </span>
     </div>
     <div v-if="task.expend">
-      <TaskList :list="getChildren(task)" :parent="task"></TaskList>
+      <TaskList :list="task.children" :parent="task"></TaskList>
     </div>
   </li>
 </template>
