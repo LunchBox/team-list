@@ -178,8 +178,6 @@ const moveDown = (task) => {
 // ---- increase / decrease indent
 
 const increaseIndent = (task) => {
-  if (!confirm("Are you sure?")) return false;
-
   const parent = task.parent;
 
   // 如果有前一個 node 就用前一個 node 做 parent
@@ -196,12 +194,10 @@ const increaseIndent = (task) => {
   task.seq = middle.maxChildSeq + 1;
 
   // 展開方便查看
-  parent?.expand();
+  task.parent?.expand();
 };
 
 const decreaseIndent = (task) => {
-  if (!confirm("Are you sure?")) return false;
-
   const parent = task.parent;
 
   if (parent) {

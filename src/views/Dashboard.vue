@@ -20,29 +20,20 @@ autoBind(document, "click", () => (focusing.value = null));
 
 autoBind(document, "keydown", (e) => {
   if (!focusing.value) return;
-
-  if (e.key === "Tab") {
-    e.preventDefault();
-
-    if (e.shiftKey) {
-      decreaseIndent(focusing.value);
-    } else {
-      increaseIndent(focusing.value);
-    }
-  }
-
   const ft = focusing.value;
-  if (!ft) return;
 
   // 按住 shift 移動
   if (e.shiftKey) {
     e.preventDefault();
 
-    if (e.key === "ArrowUp") {
-      moveUp(focusing.value);
-    } else if (e.key === "ArrowDown") {
-      moveDown(focusing.value);
-    }
+    const fs = {
+      ArrowUp: () => moveUp(ft),
+      ArrowDown: () => moveDown(ft),
+      ArrowLeft: () => decreaseIndent(ft),
+      ArrowRight: () => increaseIndent(ft),
+    };
+
+    fs[e.key]?.();
   } else {
     // 不按 shift 只是移動 focus
     const fs = {
