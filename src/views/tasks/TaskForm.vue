@@ -1,13 +1,13 @@
 <script setup>
 import { ref, watch } from "vue";
 
-import { save } from "@/stores/tasks.js";
+import { editing, save } from "@/stores/tasks.js";
 
 const props = defineProps(["task", "parent"]);
 
 const formData = ref(null);
 
-const reset = () => {
+const reloadForm = () => {
   if (props.task) {
     formData.value = { ...props.task };
   } else {
@@ -18,20 +18,45 @@ const reset = () => {
   }
 };
 
-watch(props, reset, {
+watch(props, reloadForm, {
   immediate: true,
 });
 
 const onSubmit = () => {
   save(formData.value);
-
-  reset();
+  editing.value = null;
 };
 </script>
 <template>
   <form @submit.prevent="onSubmit">
-    <input type="text" v-model="formData.title" />
+    <label>
+      <span>Title</span>
+      <input type="text" v-model="formData.title" />
+    </label>
+    <label>
+      <span>Content</span>
+      <textarea v-model="formData.content"></textarea>
+    </label>
     <input type="submit" value="Submit" />
-    <input type="button" value="reset" @click.prevent="reset" />
+    <input type="button" value="reset" @click.prevent="reloadForm" />
+    <input type="button" value="cancel" @click.prevent="editing = null" />
   </form>
 </template>
+
+<style scoped>
+label {
+  display: block;
+  margin: 0.5rem 0;
+}
+label > span {
+  display: block;
+}
+
+input[type="text"] {
+  width: 100%;
+}
+textarea {
+  width: 100%;
+  height: 12rem;
+}
+</style>

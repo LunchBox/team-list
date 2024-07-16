@@ -1,6 +1,6 @@
 <script setup>
 import TaskListItem from "./TaskListItem.vue";
-import TaskForm from "./TaskForm.vue";
+import TaskInlineForm from "./TaskInlineForm.vue";
 
 import { focusing } from "@/stores/tasks.js";
 
@@ -14,7 +14,7 @@ defineProps(["list", "parent"]);
       :parent="parent"
     ></TaskListItem>
     <li v-if="(!focusing && !parent) || focusing === parent">
-      <TaskForm :parent="parent"></TaskForm>
+      <TaskInlineForm :parent="parent"></TaskInlineForm>
     </li>
   </ol>
 </template>
