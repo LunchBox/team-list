@@ -28,7 +28,7 @@ const onSubmit = () => {
 };
 </script>
 <template>
-  <form @submit.prevent="onSubmit">
+  <form @submit.prevent="onSubmit" @keydown.stop>
     <label>
       <span>Title</span>
       <input type="text" v-model="formData.title" />

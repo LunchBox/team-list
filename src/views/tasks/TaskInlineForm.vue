@@ -28,7 +28,7 @@ const onSubmit = () => {
 };
 </script>
 <template>
-  <form @submit.prevent="onSubmit">
+  <form @submit.prevent="onSubmit" @keydown.stop>
     <input type="text" v-model="formData.title" autofocus required />
     <input type="submit" value="Submit" />
     <input type="button" value="reset" @click.prevent="reloadForm" />
