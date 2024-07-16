@@ -101,10 +101,22 @@ const destroy = (task) => {
 // ---- increase / decrease indent
 
 const increaseIndent = (task) => {
+  if (!confirm("Are you sure?")) return false;
+
   const parent = getParent(task);
 
   const middle = save({ title: "N/A", parentId: parent?.id });
   save({ ...task, parentId: middle.id });
+};
+
+const decreaseIndent = (task) => {
+  if (!confirm("Are you sure?")) return false;
+
+  const parent = getParent(task);
+
+  if (parent) {
+    save({ ...task, parentId: getParent(parent)?.id });
+  }
 };
 
 export {
@@ -121,4 +133,5 @@ export {
   countChildren,
   destroy,
   increaseIndent,
+  decreaseIndent,
 };

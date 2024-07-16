@@ -1,7 +1,7 @@
 <script setup>
 import {
   focusing,
-  destroy,
+  editing,
   countChildren,
   getChildren,
 } from "@/stores/tasks.js";
@@ -9,11 +9,6 @@ import {
 import TaskList from "./TaskList.vue";
 
 const props = defineProps(["task", "parent"]);
-
-const onClick = () => {
-  const { task } = props;
-  focusing.value = task;
-};
 </script>
 <template>
   <li :class="{ active: focusing === task }">
@@ -22,7 +17,7 @@ const onClick = () => {
         {{ task.expend ? "-" : "+" }}
       </a>
 
-      <a href="#" @click.prevent="onClick">
+      <a href="#" @click.prevent="focusing = task" @dblclick="editing = task">
         {{ task.title }}
       </a>
 

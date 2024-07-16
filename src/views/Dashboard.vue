@@ -7,6 +7,7 @@ import {
   expandAll,
   collapseAll,
   increaseIndent,
+  decreaseIndent,
 } from "@/stores/tasks.js";
 
 import TaskDetails from "./tasks/TaskDetails.vue";
@@ -20,7 +21,11 @@ autoBind(document, "keydown", (e) => {
 
   if (e.key === "Tab") {
     e.preventDefault();
-    increaseIndent(focusing.value);
+    if (e.shiftKey) {
+      decreaseIndent(focusing.value);
+    } else {
+      increaseIndent(focusing.value);
+    }
   }
 });
 </script>
