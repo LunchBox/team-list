@@ -91,6 +91,9 @@ const destroy = (task) => {
   if (idx > -1) {
     taskList.value.splice(idx, 1);
   }
+
+  editing.value = null;
+  focusing.value = null;
 };
 
 export {

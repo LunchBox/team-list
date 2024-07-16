@@ -31,11 +31,6 @@ const onClick = () => {
       </span>
 
       <span style="color: #ccc; font-style: italic"> - {{ task.user }} </span>
-
-      <span class="del">
-        -
-        <a href="#" @click="destroy(task)">Delete</a>
-      </span>
     </div>
     <div v-if="task.expend">
       <TaskList :list="getChildren(task)" :parent="task"></TaskList>

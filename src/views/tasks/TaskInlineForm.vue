@@ -7,7 +7,7 @@ const props = defineProps(["task", "parent"]);
 
 const formData = ref(null);
 
-const reset = () => {
+const reloadForm = () => {
   if (props.task) {
     formData.value = { ...props.task };
   } else {
@@ -18,20 +18,19 @@ const reset = () => {
   }
 };
 
-watch(props, reset, {
+watch(props, reloadForm, {
   immediate: true,
 });
 
 const onSubmit = () => {
   save(formData.value);
-
-  reset();
+  reloadForm();
 };
 </script>
 <template>
   <form @submit.prevent="onSubmit">
     <input type="text" v-model="formData.title" />
     <input type="submit" value="Submit" />
-    <input type="button" value="reset" @click.prevent="reset" />
+    <input type="button" value="reset" @click.prevent="reloadForm" />
   </form>
 </template>
