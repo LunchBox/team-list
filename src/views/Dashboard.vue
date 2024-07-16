@@ -4,13 +4,16 @@ import { taskList, editing, save } from "@/stores/tasks.js";
 import TaskForm from "./tasks/TaskForm.vue";
 import TaskList from "./tasks/TaskList.vue";
 
-const reset = () => {
-  editing.value = null;
-};
+import { expandAll, collapseAll } from "@/stores/tasks.js";
 </script>
 <template>
   <div>
-    <div style="margin: 2rem 0">
+    <div style="margin: 1rem 0">
+      Tools:
+      <a href="#" @click.prevent="expandAll">Expand All</a> &middot;
+      <a href="#" @click.prevent="collapseAll">Collapse All</a>
+    </div>
+    <div style="margin: 1rem 0">
       <TaskForm :task="editing"></TaskForm>
     </div>
     <div>

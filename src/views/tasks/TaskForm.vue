@@ -11,7 +11,11 @@ const formData = ref(new Task());
 watch(
   () => props.task,
   () => {
-    formData.value = { ...props.task };
+    if (props.task instanceof Task) {
+      // do not touch the children at the moment
+      const { children, ...attrs } = props.task;
+      formData.value = attrs;
+    }
   },
   {
     immediate: true,

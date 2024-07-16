@@ -9,7 +9,15 @@ const taskList = ref([]);
 
 const editing = ref(null);
 
-const currentTask = ref(null);
+const collapseAll = () => {
+  taskList.value.forEach((t) => t.collapseAll());
+};
+
+const expandAll = () => {
+  taskList.value.forEach((t) => t.expandAll());
+};
+
+// ---- create & update
 
 const save = (data, parent = null) => {
   const container = parent ? parent.children : taskList.value;
@@ -32,14 +40,15 @@ watch(
   },
   { deep: true }
 );
+
 const load = () => {
   const ds = localStorage.getItem("tl-data");
   if (typeof ds === "string") {
-    taskList.value = JSON.parse(ds).map((str) =>
-      Object.assign(new Task(), str)
+    taskList.value = JSON.parse(ds).map((attr) =>
+      new Task().loadAttributes(attr)
     );
   }
 };
 load();
 
-export { taskList, editing, currentTask, currentUser, save };
+export { taskList, editing, currentUser, save, collapseAll, expandAll };
