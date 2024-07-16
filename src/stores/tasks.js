@@ -24,9 +24,14 @@ class CusArray extends Array {
 const currentUser = ref("daniel");
 
 const taskList = ref(new CusArray());
+
 const rootTasks = computed(() =>
   taskList.value.filter((t) => !t.parentId).sort(bySeq)
 );
+
+const resetTaskList = () => {
+  taskList.value = new CusArray();
+};
 
 const editing = ref(null);
 const focusing = ref(null);
@@ -236,4 +241,5 @@ export {
   decreaseIndent,
   moveUp,
   moveDown,
+  resetTaskList,
 };

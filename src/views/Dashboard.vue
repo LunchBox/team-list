@@ -10,6 +10,7 @@ import {
   decreaseIndent,
   moveUp,
   moveDown,
+  resetTaskList,
 } from "@/stores/tasks.js";
 
 import TaskDetails from "./tasks/TaskDetails.vue";
@@ -63,23 +64,29 @@ autoBind(document, "keydown", (e) => {
     target && (focusing.value = target);
   }
 });
+
+const clear = () => {
+  if (!confirm("Are you sure?")) return;
+  resetTaskList();
+};
 </script>
 <template>
   <div>
     <div class="flex" @click.stop>
-      <div style="padding: 2rem">
+      <main style="padding: 2rem">
         <div v-if="editing">
           <TaskForm :task="editing"></TaskForm>
         </div>
         <div v-else-if="focusing">
           <TaskDetails :task="focusing"></TaskDetails>
         </div>
-      </div>
+      </main>
       <aside>
         <div style="margin: 1rem 0">
           Tools:
           <a href="#" @click.prevent="expandAll">Expand All</a> &middot;
-          <a href="#" @click.prevent="collapseAll">Collapse All</a>
+          <a href="#" @click.prevent="collapseAll">Collapse All</a> &middot;
+          <a href="#" @click.prevent="clear">Delete All</a>
         </div>
         <TaskList :list="rootTasks"></TaskList>
       </aside>
@@ -94,5 +101,9 @@ autoBind(document, "keydown", (e) => {
 
 .flex > * {
   flex: 1;
+}
+
+main {
+  min-height: 80vh;
 }
 </style>
