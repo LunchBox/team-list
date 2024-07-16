@@ -35,4 +35,10 @@ export default class Task {
     this.expend = true;
     this.children?.forEach((ct) => ct.expandAll());
   }
+
+  countAll() {
+    return this.children
+      .map((ct) => ct.countAll())
+      .reduce((sum, c) => sum + c, this.children.length ?? 0);
+  }
 }

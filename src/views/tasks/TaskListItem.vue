@@ -21,7 +21,9 @@ const onClick = () => {
         {{ task.content }}
       </a>
 
-      <span style="color: #999">({{ task.children?.length }})</span>
+      <span style="color: #ccc; font-style: italic; font-size: smaller">
+        ({{ task.children?.length }} : {{ task.countAll() }})
+      </span>
 
       <span style="color: #ccc; font-style: italic"> - {{ task.user }} </span>
 
