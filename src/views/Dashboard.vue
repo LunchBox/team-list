@@ -17,6 +17,7 @@ import TaskDetails from "./tasks/TaskDetails.vue";
 import TaskForm from "./tasks/TaskForm.vue";
 import TaskList from "./tasks/TaskList.vue";
 
+// 點在畫面上其他地方都 release focus
 autoBind(document, "click", () => (focusing.value = null));
 
 autoBind(document, "keydown", (e) => {
@@ -73,7 +74,7 @@ const clear = () => {
 <template>
   <div>
     <div class="flex" @click.stop>
-      <main style="padding: 2rem">
+      <main>
         <div v-if="editing">
           <TaskForm :task="editing"></TaskForm>
         </div>
