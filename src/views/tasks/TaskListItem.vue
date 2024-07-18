@@ -88,7 +88,7 @@ li:hover > .item-summary .del {
 
 .list-item-marker {
   display: inline-block;
-  width: 1rem;
+  width: 1.5rem;
   text-align: center;
   margin: 0;
   padding: 3px;
