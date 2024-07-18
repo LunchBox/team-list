@@ -6,8 +6,10 @@ import TaskList from "./TaskList.vue";
 import TaskInlineForm from "./TaskInlineForm.vue";
 
 const props = defineProps(["task", "parent"]);
+defineEmits(["click", "dblclick"]);
 
 const quickEdit = ref(false);
+//TODO: click within  0.5s and < 1s should activate quick edit mode
 </script>
 <template>
   <div class="list-item" :class="{ active: focusing === task }">
@@ -17,12 +19,16 @@ const quickEdit = ref(false);
       @after-submit="quickEdit = false"
     ></TaskInlineForm>
 
-    <div class="item-summary" v-else>
+    <div v-else class="item-summary">
       <a href="#" @click.prevent="task.exp = !task.exp">
         {{ task.exp ? "-" : "+" }}
       </a>
 
-      <a href="#" @click.prevent="focusing = task" @dblclick="quickEdit = true">
+      <a
+        href="#"
+        @click.prevent="$emit('click', task)"
+        @dblclick="$emit('dblclick', task)"
+      >
         {{ task.title }}
       </a>
 
@@ -32,7 +38,11 @@ const quickEdit = ref(false);
     </div>
 
     <div v-if="task.exp">
-      <TaskList :list="task.children" :parent="task"></TaskList>
+      <TaskList
+        :list="task.children"
+        :parent="task"
+        @click="(item) => $emit('click', item)"
+      ></TaskList>
     </div>
   </div>
 </template>

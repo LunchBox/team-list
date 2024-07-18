@@ -234,6 +234,7 @@ export {
   editing,
   focusing,
   currentUser,
+  find,
   collapseAll,
   expandAll,
   destroy,
