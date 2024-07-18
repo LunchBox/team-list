@@ -1,7 +1,8 @@
 <script setup>
-import { ref, watch } from "vue";
+import { nextTick, ref, watch } from "vue";
 
 import { Task } from "@/stores/tasks.js";
+import resize from "@/utils/resizeable.js";
 
 const props = defineProps(["task", "parent"]);
 const emit = defineEmits(["after-submit"]);
@@ -24,7 +25,17 @@ const onSubmit = () => {
   formData.value.save();
   reloadForm();
 
+  // have to wait for the new content to be loaded
+  nextTick(() => {
+    resizeTextarea();
+  });
+
   emit("after-submit");
+};
+
+const textEl = ref(null);
+const resizeTextarea = () => {
+  textEl.value && resize(textEl.value);
 };
 </script>
 <template>
@@ -32,23 +43,24 @@ const onSubmit = () => {
     <div class="list-item-row flex items-center">
       <span class="list-item-marker">-</span>
 
-      <form class="cell full" @submit.prevent="onSubmit" @keydown.stop>
-        <div class="flex">
-          <input type="text" v-model="formData.title" autofocus required />
-          <input type="submit" value="Submit" />
-        </div>
-        <!-- <input type="button" value="reset" @click.prevent="reloadForm" /> -->
+      <form class="full" @submit.prevent="onSubmit" @keydown.stop>
+        <textarea
+          ref="textEl"
+          rows="1"
+          autofocus
+          required
+          v-model="formData.title"
+          @input="resizeTextarea"
+          @keydown.enter.ctrl="onSubmit"
+        ></textarea>
+        <input type="submit" value="Submit" />
       </form>
     </div>
   </div>
 </template>
 
 <style scoped>
-.flex {
-  gap: 0 0.5rem;
-}
-
-input[type="text"] {
+textarea {
   flex: 1;
   line-height: 1.5rem;
   border: none;
@@ -58,6 +70,13 @@ input[type="text"] {
   font-family: var(--base-font-family);
   font-size: var(--base-font-size);
   color: var(--color-text);
+
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: 0 3px;
+  resize: none;
 }
 
 input[type="submit"] {
