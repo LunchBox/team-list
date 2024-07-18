@@ -52,7 +52,7 @@ const resizeTextarea = () => {
           placeholder="what's on your mind?"
           v-model="formData.title"
           @input="resizeTextarea"
-          @keydown.enter.ctrl="onSubmit"
+          @keydown.enter.prevent="onSubmit"
         ></textarea>
         <input type="submit" value="Submit" />
       </form>
