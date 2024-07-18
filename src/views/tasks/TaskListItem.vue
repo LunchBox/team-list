@@ -10,13 +10,6 @@ defineEmits(["click", "dblclick"]);
 
 const quickEdit = ref(false);
 //TODO: click within  0.5s and < 1s should activate quick edit mode
-
-const contentBlank = computed(() => {
-  const content = props.task.content;
-  return (
-    (!content || content.trim() === "") && props.task.children?.length === 0
-  );
-});
 </script>
 <template>
   <div class="list-item" :class="{ active: focusing === task }">
@@ -27,7 +20,7 @@ const contentBlank = computed(() => {
     ></TaskInlineForm>
 
     <div v-else class="list-item-row flex items-center">
-      <template v-if="contentBlank">
+      <template v-if="task.isContentBlank">
         <span class="list-item-marker">-</span>
         <span
           class="full"

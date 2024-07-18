@@ -22,6 +22,11 @@ const router = createRouter({
       name: "node",
       component: () => import("../views/tasks/TaskDetailsView.vue"),
     },
+    {
+      path: "/nodes/:id/edit",
+      name: "edit_node",
+      component: () => import("../views/tasks/TaskEditView.vue"),
+    },
   ],
 });
 

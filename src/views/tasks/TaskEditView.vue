@@ -2,19 +2,17 @@
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 import { find } from "@/stores/tasks.js";
-import TaskDetails from "./TaskDetails.vue";
+
+import TaskForm from "./TaskForm.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
 
 const route = useRoute();
-
-const task = computed(() => {
-  return find(route.params.id);
-});
+const task = computed(() => find(route.params.id));
 </script>
 <template>
   <template v-if="task">
     <Breadcrumbs :task="task"></Breadcrumbs>
-    <TaskDetails :task="task"></TaskDetails>
+    <TaskForm :task="task"></TaskForm>
   </template>
   <div v-else>Not Found...</div>
 </template>

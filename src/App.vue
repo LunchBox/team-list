@@ -20,12 +20,6 @@ import AppAside from "./views/AppAside.vue";
     <AppAside></AppAside>
     <main>
       <RouterView />
-      <!-- <div v-if="editing">
-        <TaskForm :task="editing"></TaskForm>
-      </div>
-      <div v-else-if="focusing">
-        <TaskDetails :task="focusing"></TaskDetails>
-      </div> -->
     </main>
   </div>
 </template>

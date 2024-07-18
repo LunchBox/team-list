@@ -1,15 +1,10 @@
 import { autoBind } from "@/utils/bind.js";
 import {
-  rootTasks,
-  editing,
   focusing,
-  expandAll,
-  collapseAll,
   increaseIndent,
   decreaseIndent,
   moveUp,
   moveDown,
-  resetTaskList,
 } from "@/stores/tasks.js";
 
 export default () => {

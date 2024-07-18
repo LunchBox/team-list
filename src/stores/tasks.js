@@ -33,7 +33,6 @@ const resetTaskList = () => {
   taskList.value = new CusArray();
 };
 
-const editing = ref(null);
 const focusing = ref(null);
 
 // ---- Model
@@ -83,6 +82,12 @@ class Task {
 
   get maxChildSeq() {
     return last(this.children)?.seq ?? -1;
+  }
+
+  // ----
+  get isContentBlank() {
+    const content = this.content;
+    return (!content || content.trim() === "") && this.children?.length === 0;
   }
 
   // ---- path, for breadcrumbs
@@ -167,7 +172,6 @@ const destroy = (task) => {
     taskList.value.splice(idx, 1);
   }
 
-  editing.value = null;
   focusing.value = null;
 };
 
@@ -240,7 +244,6 @@ export {
   Task,
   taskList,
   rootTasks,
-  editing,
   focusing,
   currentUser,
   find,

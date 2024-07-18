@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from "vue-router";
-import { focusing, editing, destroy } from "@/stores/tasks.js";
+import { focusing, destroy } from "@/stores/tasks.js";
 
 import TaskList from "./TaskList.vue";
 import TaskInlineForm from "./TaskInlineForm.vue";
@@ -19,12 +19,12 @@ const onDblClick = (task) => {
   <div>
     <h2>{{ task.title }}</h2>
     <div style="margin: 1rem 0">
-      <a href="#" @click.prevent="editing = task">Edit</a> &middot;
+      <RouterLink :to="`/nodes/${task.id}/edit`">Edit</RouterLink> &middot;
 
       <a href="#" @click="destroy(task)">Delete</a>
     </div>
 
-    <div class="content">
+    <div v-if="!task.isContentBlank" class="content">
       {{ task.content }}
     </div>
 
@@ -46,6 +46,9 @@ const onDblClick = (task) => {
 
 <style scoped>
 .content {
+  background: #efefef;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
   white-space: pre;
 }
 </style>

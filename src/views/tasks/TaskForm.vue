@@ -1,7 +1,8 @@
 <script setup>
 import { ref, watch } from "vue";
+import { useRouter } from "vue-router";
 
-import { Task, editing, focusing } from "@/stores/tasks.js";
+import { Task } from "@/stores/tasks.js";
 
 const props = defineProps(["task", "parent"]);
 
@@ -19,13 +20,18 @@ watch(props, reloadForm, {
   immediate: true,
 });
 
-const onSubmit = () => {
-  const ut = formData.value.save();
-  reloadForm();
-
-  editing.value = null;
-  focusing.value = ut;
+const router = useRouter();
+const backToShow = () => {
+  router.push({ name: "node", id: props.task.id });
 };
+
+const onSubmit = () => {
+  formData.value.save();
+
+  backToShow();
+};
+
+const onCancel = backToShow;
 </script>
 <template>
   <form @submit.prevent="onSubmit" @keydown.stop>
@@ -39,7 +45,7 @@ const onSubmit = () => {
     </label>
     <input type="submit" value="Submit" />
     <input type="button" value="reset" @click.prevent="reloadForm" />
-    <input type="button" value="cancel" @click.prevent="editing = null" />
+    <input type="button" value="cancel" @click.prevent="onCancel" />
   </form>
 </template>
 
