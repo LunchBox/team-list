@@ -28,7 +28,7 @@ const onDblClick = (task) => {
       {{ task.content }}
     </div>
 
-    <div class="list">
+    <div class="a-list">
       <TaskList
         :list="task.children"
         :parent="task"

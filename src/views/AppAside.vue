@@ -37,7 +37,7 @@ const onClick = (task) => {
       <a href="#" @click.prevent="collapseAll">Collapse All</a> &middot;
       <a href="#" @click.prevent="clear">Delete All</a>
     </div>
-    <div class="item-list">
+    <div class="a-list">
       <TaskList :list="rootTasks" @click="onClick"></TaskList>
       <div class="list-item">
         <div class="list-item-row flex items-center">
@@ -60,7 +60,7 @@ aside {
 }
 
 /* customize the list position */
-.item-list {
+.a-list {
   margin-left: -2rem;
 }
 </style>

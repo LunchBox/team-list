@@ -50,7 +50,8 @@ input[type="text"] {
   outline: none;
 
   font-family: var(--base-font-family);
-  font-size: 1rem;
+  font-size: var(--base-font-size);
+  color: var(--color-text);
 }
 
 input[type="submit"] {

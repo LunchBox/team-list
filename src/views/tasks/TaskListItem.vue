@@ -60,14 +60,14 @@ const contentBlank = computed(() => {
       </template>
     </div>
 
-    <template v-if="task.exp">
+    <div class="a-list" v-if="task.exp">
       <TaskList
         :list="task.children"
         :parent="task"
         @click="(task) => $emit('click', task)"
         @dblclick="(task) => $emit('dblclick', task)"
       ></TaskList>
-    </template>
+    </div>
   </div>
 </template>
 

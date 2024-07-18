@@ -48,52 +48,54 @@ main {
 }
 
 /* list item related */
-
-.item-list {
+.a-list {
   position: relative;
   padding-left: 2rem;
   line-height: 1.5rem;
-}
-.item-list:before {
-  content: " ";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 2rem;
-  width: 1px;
-  background-color: #eee;
-}
 
-.list-item {
-  margin: 4px 0;
-}
+  &:before {
+    content: " ";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 2rem;
+    width: 1px;
+    background-color: #eee;
+  }
 
-.list-item-row {
-  line-height: initial;
-}
+  .list-item {
+    margin: 4px 0;
 
-.list-item-row .full {
-  flex: 1;
-}
+    &.active > .list-item-row:before {
+      content: " ";
+      width: 26px;
+      height: 26px;
+      background: url("@/assets/arrow-right.svg") no-repeat center center;
 
-.list-item.active > .list-item-row:before {
-  content: " ";
-  width: 26px;
-  height: 26px;
-  background: url("@/assets/arrow-right.svg") no-repeat center center;
+      position: absolute;
+      margin-left: calc(-18px);
+    }
+  }
 
-  position: absolute;
-  margin-left: -16px;
-}
-.list-item-marker {
-  display: inline-block;
-  width: 2rem;
-  text-align: center;
-  margin: 0;
-  padding: 3px 0;
-}
+  .list-item-row {
+    position: relative;
+    line-height: initial;
 
-.list-item .cell {
-  padding: 3px;
+    .full {
+      flex: 1;
+    }
+  }
+
+  .list-item-marker {
+    display: inline-block;
+    width: 2rem;
+    text-align: center;
+    margin: 0;
+    padding: 3px 0;
+  }
+
+  .cell {
+    padding: 3px;
+  }
 }
 </style>
