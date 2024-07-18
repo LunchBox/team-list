@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { focusing } from "@/stores/tasks.js";
 
 import TaskList from "./TaskList.vue";
@@ -10,6 +10,13 @@ defineEmits(["click", "dblclick"]);
 
 const quickEdit = ref(false);
 //TODO: click within  0.5s and < 1s should activate quick edit mode
+
+const contentBlank = computed(() => {
+  const content = props.task.content;
+  return (
+    (!content || content.trim() === "") && props.task.children?.length === 0
+  );
+});
 </script>
 <template>
   <div class="list-item" :class="{ active: focusing === task }">
@@ -20,17 +27,30 @@ const quickEdit = ref(false);
     ></TaskInlineForm>
 
     <div v-else class="item-summary">
-      <a href="#" @click.prevent="task.exp = !task.exp">
-        {{ task.exp ? "-" : "+" }}
-      </a>
-
-      <a
-        href="#"
-        @click.prevent="$emit('click', task)"
-        @dblclick="$emit('dblclick', task)"
-      >
-        {{ task.title }}
-      </a>
+      <template v-if="contentBlank">
+        <span class="list-item-marker"> - </span>
+        <span
+          @click.prevent="$emit('click', task)"
+          @dblclick="$emit('dblclick', task)"
+          >{{ task.title }}</span
+        >
+      </template>
+      <template v-else>
+        <a
+          href="#"
+          class="list-item-marker"
+          @click.prevent="task.exp = !task.exp"
+        >
+          {{ task.exp ? "-" : "+" }}
+        </a>
+        <a
+          href="#"
+          @click.prevent="$emit('click', task)"
+          @dblclick="$emit('dblclick', task)"
+        >
+          {{ task.title }}
+        </a>
+      </template>
 
       <span style="color: #ccc; font-style: italic; font-size: smaller">
         ({{ task.children.length }} : {{ task.allChildrenLen }})
@@ -41,7 +61,8 @@ const quickEdit = ref(false);
       <TaskList
         :list="task.children"
         :parent="task"
-        @click="(item) => $emit('click', item)"
+        @click="(task) => $emit('click', task)"
+        @dblclick="(task) => $emit('dblclick', task)"
       ></TaskList>
     </div>
   </div>
@@ -62,5 +83,17 @@ li .del {
 }
 li:hover > .item-summary .del {
   display: initial;
+}
+
+.list-item-marker {
+  display: inline-block;
+  width: 1rem;
+  text-align: center;
+  margin: 0;
+  padding: 3px;
+}
+
+.item-summary {
+  line-height: initial;
 }
 </style>
