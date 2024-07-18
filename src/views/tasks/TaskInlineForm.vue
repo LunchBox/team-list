@@ -29,8 +29,34 @@ const onSubmit = () => {
 </script>
 <template>
   <form @submit.prevent="onSubmit" @keydown.stop>
-    <input type="text" v-model="formData.title" autofocus required />
-    <input type="submit" value="Submit" />
-    <input type="button" value="reset" @click.prevent="reloadForm" />
+    <div class="flex">
+      <input type="text" v-model="formData.title" autofocus required />
+      <input type="submit" value="Submit" />
+    </div>
+    <!-- <input type="button" value="reset" @click.prevent="reloadForm" /> -->
   </form>
 </template>
+
+<style scoped>
+.flex {
+  gap: 0 0.5rem;
+}
+
+input[type="text"] {
+  flex: 1;
+  line-height: 1.5rem;
+  border: none;
+  border-bottom: 1px solid #eee;
+  outline: none;
+
+  font-family: var(--base-font-family);
+  font-size: 1rem;
+}
+
+input[type="submit"] {
+  background: #ddd;
+  border: none;
+  border-radius: 2px;
+  display: none;
+}
+</style>

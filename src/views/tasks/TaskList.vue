@@ -5,13 +5,13 @@ defineProps(["list", "parent"]);
 defineEmits(["click", "dblclick"]);
 </script>
 <template>
-  <div>
-    <TaskListItem
-      v-for="task in list"
-      :task="task"
-      :parent="parent"
-      @click="(task) => $emit('click', task)"
-      @dblclick="(task) => $emit('dblclick', task)"
-    ></TaskListItem>
-  </div>
+  <TaskListItem
+    v-for="task in list"
+    :task="task"
+    :parent="parent"
+    @click="(task) => $emit('click', task)"
+    @dblclick="(task) => $emit('dblclick', task)"
+  ></TaskListItem>
 </template>
+
+<style scoped></style>

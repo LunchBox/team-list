@@ -37,7 +37,10 @@ const onDblClick = (task) => {
       ></TaskList>
 
       <div class="list-item">
-        <TaskInlineForm :parent="task"></TaskInlineForm>
+        <div class="list-item-row flex items-center">
+          <span class="list-item-marker">-</span>
+          <TaskInlineForm :parent="task" class="cell full"></TaskInlineForm>
+        </div>
       </div>
     </div>
 

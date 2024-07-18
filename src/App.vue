@@ -36,15 +36,64 @@ import AppAside from "./views/AppAside.vue";
   display: flex;
 }
 
-.list-item {
-  margin: 4px 0;
-  padding-left: 1rem;
+.items-center {
+  align-items: center;
 }
 
 main {
   flex: 1;
   padding: 0 1rem;
   min-height: 80vh;
-  border-left: 2px solid #f0f0f0;
+  border-left: 1px solid #eee;
+}
+
+/* list item related */
+
+.item-list {
+  position: relative;
+  padding-left: 2rem;
+  line-height: 1.5rem;
+}
+.item-list:before {
+  content: " ";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 2rem;
+  width: 1px;
+  background-color: #eee;
+}
+
+.list-item {
+  margin: 4px 0;
+}
+
+.list-item-row {
+  line-height: initial;
+}
+
+.list-item-row .full {
+  flex: 1;
+}
+
+.list-item.active > .list-item-row:before {
+  content: " ";
+  width: 26px;
+  height: 26px;
+  background: url("@/assets/arrow-right.svg") no-repeat center center;
+
+  position: absolute;
+  margin-left: -16px;
+}
+.list-item-marker {
+  display: inline-block;
+  width: 2rem;
+  text-align: center;
+  margin: 0;
+  padding: 3px 0;
+}
+
+.list-item .cell {
+  padding: 3px;
 }
 </style>

@@ -26,10 +26,11 @@ const contentBlank = computed(() => {
       @after-submit="quickEdit = false"
     ></TaskInlineForm>
 
-    <div v-else class="item-summary">
+    <div v-else class="list-item-row flex items-center">
       <template v-if="contentBlank">
         <span class="list-item-marker">-</span>
         <span
+          class="full"
           @click.prevent="$emit('click', task)"
           @dblclick="$emit('dblclick', task)"
           style="padding: 3px"
@@ -47,6 +48,7 @@ const contentBlank = computed(() => {
         </a>
         <a
           href="#"
+          class="full"
           @click.prevent="$emit('click', task)"
           @dblclick="$emit('dblclick', task)"
         >
@@ -58,43 +60,15 @@ const contentBlank = computed(() => {
       </template>
     </div>
 
-    <div v-if="task.exp">
+    <template v-if="task.exp">
       <TaskList
         :list="task.children"
         :parent="task"
         @click="(task) => $emit('click', task)"
         @dblclick="(task) => $emit('dblclick', task)"
       ></TaskList>
-    </div>
+    </template>
   </div>
 </template>
 
-<style scoped>
-.list-item.active > .item-summary:after {
-  content: "<--";
-  margin-left: 0.5rem;
-}
-.del {
-  color: #ccc;
-  font-style: italic;
-}
-
-li .del {
-  display: none;
-}
-li:hover > .item-summary .del {
-  display: initial;
-}
-
-.list-item-marker {
-  display: inline-block;
-  width: 1.5rem;
-  text-align: center;
-  margin: 0;
-  padding: 3px;
-}
-
-.item-summary {
-  line-height: initial;
-}
-</style>
+<style scoped></style>
