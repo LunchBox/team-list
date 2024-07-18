@@ -28,13 +28,19 @@ const onSubmit = () => {
 };
 </script>
 <template>
-  <form @submit.prevent="onSubmit" @keydown.stop>
-    <div class="flex">
-      <input type="text" v-model="formData.title" autofocus required />
-      <input type="submit" value="Submit" />
+  <div class="list-item">
+    <div class="list-item-row flex items-center">
+      <span class="list-item-marker">-</span>
+
+      <form class="cell full" @submit.prevent="onSubmit" @keydown.stop>
+        <div class="flex">
+          <input type="text" v-model="formData.title" autofocus required />
+          <input type="submit" value="Submit" />
+        </div>
+        <!-- <input type="button" value="reset" @click.prevent="reloadForm" /> -->
+      </form>
     </div>
-    <!-- <input type="button" value="reset" @click.prevent="reloadForm" /> -->
-  </form>
+  </div>
 </template>
 
 <style scoped>

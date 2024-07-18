@@ -28,21 +28,14 @@ const onDblClick = (task) => {
       {{ task.content }}
     </div>
 
-    <div class="a-list">
-      <TaskList
-        :list="task.children"
-        :parent="task"
-        @click="(task) => (focusing = task)"
-        @dblclick="onDblClick"
-      ></TaskList>
-
-      <div class="list-item">
-        <div class="list-item-row flex items-center">
-          <span class="list-item-marker">-</span>
-          <TaskInlineForm :parent="task" class="cell full"></TaskInlineForm>
-        </div>
-      </div>
-    </div>
+    <TaskList
+      :list="task.children"
+      :parent="task"
+      @click="(task) => (focusing = task)"
+      @dblclick="onDblClick"
+    >
+      <TaskInlineForm :parent="task"></TaskInlineForm>
+    </TaskList>
 
     <template v-if="false">
       <div>This is a testing of a vue excel editor</div>

@@ -30,7 +30,11 @@ import AppAside from "./views/AppAside.vue";
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.flex {
+  gap: 0 1rem;
+}
+</style>
 <style>
 .flex {
   display: flex;
@@ -50,17 +54,22 @@ main {
 /* list item related */
 .a-list {
   position: relative;
-  padding-left: 2rem;
   line-height: 1.5rem;
 
-  &:before {
-    content: " ";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 2rem;
-    width: 1px;
-    background-color: #eee;
+  /* left padding except the root list */
+  .a-list {
+    padding-left: 2rem;
+
+    /* display left border except the root list */
+    &:before {
+      content: " ";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 2rem;
+      width: 1px;
+      background-color: #eee;
+    }
   }
 
   .list-item {
