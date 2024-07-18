@@ -1,6 +1,9 @@
 <script setup>
 import { editing, destroy } from "@/stores/tasks.js";
 
+import TaskList from "./TaskList.vue";
+import TaskInlineForm from "./TaskInlineForm.vue";
+
 defineProps(["task", "parent"]);
 
 const jsondata = [
@@ -54,12 +57,22 @@ const jsondata = [
 
       <a href="#" @click="destroy(task)">Delete</a>
     </div>
+
     <div class="content">
       {{ task.content }}
     </div>
 
-    <div>This is a testing of a vue excel editor</div>
-    <vue-excel-editor v-model="jsondata" filter-row />
+    <div class="list">
+      <TaskList :list="task.children" :parent="task"></TaskList>
+      <div class="list-item">
+        <TaskInlineForm :parent="task"></TaskInlineForm>
+      </div>
+    </div>
+
+    <template v-if="false">
+      <div>This is a testing of a vue excel editor</div>
+      <vue-excel-editor v-model="jsondata" filter-row />
+    </template>
   </div>
 </template>
 

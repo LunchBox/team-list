@@ -7,14 +7,11 @@ import { focusing } from "@/stores/tasks.js";
 defineProps(["list", "parent"]);
 </script>
 <template>
-  <ol>
+  <div>
     <TaskListItem
       v-for="task in list"
       :task="task"
       :parent="parent"
     ></TaskListItem>
-    <li v-if="(!focusing && !parent) || focusing === parent">
-      <TaskInlineForm :parent="parent"></TaskInlineForm>
-    </li>
-  </ol>
+  </div>
 </template>

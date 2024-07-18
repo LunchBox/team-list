@@ -14,8 +14,9 @@ import {
 } from "@/stores/tasks.js";
 
 import TaskDetails from "./tasks/TaskDetails.vue";
-import TaskForm from "./tasks/TaskForm.vue";
 import TaskList from "./tasks/TaskList.vue";
+import TaskForm from "./tasks/TaskForm.vue";
+import TaskInlineForm from "./tasks/TaskInlineForm.vue";
 
 // 點在畫面上其他地方都 release focus
 autoBind(document, "click", () => (focusing.value = null));
@@ -74,6 +75,20 @@ const clear = () => {
 <template>
   <div>
     <div class="flex" @click.stop>
+      <aside>
+        <div style="margin: 1rem 0">
+          Tools:
+          <a href="#" @click.prevent="expandAll">Expand All</a> &middot;
+          <a href="#" @click.prevent="collapseAll">Collapse All</a> &middot;
+          <a href="#" @click.prevent="clear">Delete All</a>
+        </div>
+        <div class="list">
+          <TaskList :list="rootTasks"></TaskList>
+          <div class="list-item">
+            <TaskInlineForm></TaskInlineForm>
+          </div>
+        </div>
+      </aside>
       <main>
         <div v-if="editing">
           <TaskForm :task="editing"></TaskForm>
@@ -82,15 +97,6 @@ const clear = () => {
           <TaskDetails :task="focusing"></TaskDetails>
         </div>
       </main>
-      <aside>
-        <div style="margin: 1rem 0">
-          Tools:
-          <a href="#" @click.prevent="expandAll">Expand All</a> &middot;
-          <a href="#" @click.prevent="collapseAll">Collapse All</a> &middot;
-          <a href="#" @click.prevent="clear">Delete All</a>
-        </div>
-        <TaskList :list="rootTasks"></TaskList>
-      </aside>
     </div>
   </div>
 </template>
@@ -100,11 +106,20 @@ const clear = () => {
   display: flex;
 }
 
-.flex > * {
-  flex: 1;
+aside {
+  flex: 0 0 30%;
+  padding: 1rem;
 }
 
 main {
+  flex: 1;
+  padding: 1rem;
   min-height: 80vh;
+  border-left: 2px solid #f0f0f0;
+}
+
+:deep(.list-item) {
+  margin: 4px 0;
+  padding-left: 1rem;
 }
 </style>
