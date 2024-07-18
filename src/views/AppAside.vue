@@ -53,6 +53,6 @@ const onClick = (task) => {
 
 aside {
   flex: 0 0 30%;
-  padding: 1rem;
+  padding: 0 1rem;
 }
 </style>

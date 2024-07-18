@@ -43,7 +43,7 @@ import AppAside from "./views/AppAside.vue";
 
 main {
   flex: 1;
-  padding: 1rem;
+  padding: 0 1rem;
   min-height: 80vh;
   border-left: 2px solid #f0f0f0;
 }

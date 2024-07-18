@@ -85,6 +85,15 @@ class Task {
     return last(this.children)?.seq ?? -1;
   }
 
+  // ---- path, for breadcrumbs
+  getPath(arr = []) {
+    arr.unshift(this);
+    if (this.parent) {
+      this.parent.getPath(arr);
+    }
+    return arr;
+  }
+
   // ---- collapse & expend
 
   collapse() {

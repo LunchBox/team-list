@@ -28,12 +28,14 @@ const contentBlank = computed(() => {
 
     <div v-else class="item-summary">
       <template v-if="contentBlank">
-        <span class="list-item-marker"> - </span>
+        <span class="list-item-marker">-</span>
         <span
           @click.prevent="$emit('click', task)"
           @dblclick="$emit('dblclick', task)"
-          >{{ task.title }}</span
+          style="padding: 3px"
         >
+          {{ task.title }}
+        </span>
       </template>
       <template v-else>
         <a
@@ -50,11 +52,10 @@ const contentBlank = computed(() => {
         >
           {{ task.title }}
         </a>
+        <span style="color: #ccc; font-style: italic; font-size: smaller">
+          ({{ task.children.length }} : {{ task.allChildrenLen }})
+        </span>
       </template>
-
-      <span style="color: #ccc; font-style: italic; font-size: smaller">
-        ({{ task.children.length }} : {{ task.allChildrenLen }})
-      </span>
     </div>
 
     <div v-if="task.exp">
