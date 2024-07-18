@@ -12,10 +12,16 @@ export default () => {
     if (!focusing.value) return;
     const ft = focusing.value;
 
+    const exec = (f) => {
+      if (!f) return;
+
+      e.preventDefault();
+      e.stopPropagation();
+      return f();
+    };
+
     // 按住 shift 移動
     if (e.shiftKey) {
-      e.preventDefault();
-
       const fs = {
         ArrowUp: () => moveUp(ft),
         ArrowDown: () => moveDown(ft),
@@ -23,7 +29,7 @@ export default () => {
         ArrowRight: () => increaseIndent(ft),
       };
 
-      fs[e.key]?.();
+      exec(fs[e.key]);
     } else {
       // 不按 shift 只是移動 focus
       const fs = {
@@ -49,7 +55,7 @@ export default () => {
         },
       };
 
-      const target = fs[e.key]?.();
+      const target = exec(fs[e.key]);
       target && (focusing.value = target);
     }
   });

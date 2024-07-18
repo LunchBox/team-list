@@ -7,12 +7,22 @@ import TaskInlineForm from "./TaskInlineForm.vue";
 
 import { jsondata } from "./sample.js";
 
-defineProps(["task", "parent"]);
+const props = defineProps(["task", "parent"]);
 
 const router = useRouter();
 const onDblClick = (task) => {
   router.push({ path: `/nodes/${task.id}` });
   focusing.value = task;
+};
+
+const onDelete = () => {
+  const task = props.task;
+  const parent = task.parent;
+  destroy(task);
+
+  if (parent) {
+    router.push({ path: `/nodes/${parent.id}` });
+  }
 };
 </script>
 <template>
@@ -21,7 +31,7 @@ const onDblClick = (task) => {
     <div style="margin: 1rem 0">
       <RouterLink :to="`/nodes/${task.id}/edit`">Edit</RouterLink> &middot;
 
-      <a href="#" @click="destroy(task)">Delete</a>
+      <a href="#" @click="onDelete">Delete</a>
     </div>
 
     <div v-if="!task.isContentBlank" class="content">
