@@ -20,7 +20,7 @@ const quickEdit = ref(false);
     ></TaskInlineForm>
 
     <div v-else class="list-item-row flex items-center">
-      <template v-if="task.isContentBlank">
+      <template v-if="task.isContentBlank && task.isChildrenBlank">
         <span class="list-item-marker">-</span>
         <span
           class="full"

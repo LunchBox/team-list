@@ -87,7 +87,11 @@ class Task {
   // ----
   get isContentBlank() {
     const content = this.content;
-    return (!content || content.trim() === "") && this.children?.length === 0;
+    return !content || content.trim() === "";
+  }
+
+  get isChildrenBlank() {
+    return this.children?.length === 0;
   }
 
   // ---- path, for breadcrumbs
