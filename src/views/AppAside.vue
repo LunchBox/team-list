@@ -25,7 +25,7 @@ const clear = () => {
 
 const router = useRouter();
 const onClick = (task) => {
-  router.push({ path: `/nodes/${task.id}` });
+  router.push({ name: "node", params: { id: task.id } });
   focusing.value = task;
 };
 </script>

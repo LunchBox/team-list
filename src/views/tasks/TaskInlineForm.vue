@@ -49,6 +49,7 @@ const resizeTextarea = () => {
           rows="1"
           autofocus
           required
+          placeholder="what's on your mind?"
           v-model="formData.title"
           @input="resizeTextarea"
           @keydown.enter.ctrl="onSubmit"
@@ -64,7 +65,6 @@ textarea {
   flex: 1;
   line-height: 1.5rem;
   border: none;
-  border-bottom: 1px solid #eee;
   outline: none;
 
   font-family: var(--base-font-family);
@@ -77,6 +77,10 @@ textarea {
   margin: 0;
   padding: 0 3px;
   resize: none;
+}
+
+::placeholder {
+  color: #ddd;
 }
 
 input[type="submit"] {
