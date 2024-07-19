@@ -29,6 +29,10 @@ const rootTasks = computed(() =>
   taskList.value.filter((t) => !t.parentId).sort(bySeq)
 );
 
+const maxRootSeq = computed(() => {
+  return rootTasks.value.map((t) => t.seq ?? 0).sort((a, b) => a - b).last;
+});
+
 const resetTaskList = () => {
   taskList.value = new CusArray();
 };
@@ -122,12 +126,20 @@ class Task {
       this.user = currentUser.value;
       this.id = randomId(16);
 
-      // assign seq
-      const collection = this.parent ? this.parent.children : rootTasks.value;
-      const lastSeq = last(collection)?.seq ?? -1;
-      this.seq = lastSeq + 1;
+      // adjust rest siblings by seq
+      this.siblings
+        .filter((t) => t.seq >= this.seq)
+        .forEach((t, i) => {
+          t.seq = this.seq + i + 1;
+        });
 
       taskList.value.push(this);
+
+      // assign seq
+      // const collection = this.parent ? this.parent.children : rootTasks.value;
+      // const lastSeq = last(collection)?.seq ?? -1;
+      // this.seq = lastSeq + 1;
+
       return this;
     } else {
       const t = find(this.id);
@@ -248,6 +260,7 @@ export {
   Task,
   taskList,
   rootTasks,
+  maxRootSeq,
   focusing,
   currentUser,
   find,

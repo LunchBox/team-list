@@ -1,5 +1,5 @@
 import { ref } from "vue";
-import { autoBind } from "@/utils/bind.js";
+import useEventListener from "@/utils/useEventListener.js";
 import {
   focusing,
   increaseIndent,
@@ -12,10 +12,11 @@ import {
 export default () => {
   const delMark = ref(false);
 
-  autoBind(document, "keydown", (e) => {
+  useEventListener(document, "keydown", (e) => {
     if (!focusing.value) return;
     const ft = focusing.value;
 
+    // double press d to delete a task
     if (e.key === "d") {
       if (delMark.value) {
         delMark.value = false;
@@ -27,6 +28,7 @@ export default () => {
       delMark.value = false;
     }
 
+    // arrow to move cursor, shift arrow to move tasks
     const exec = (f) => {
       if (!f) return;
 

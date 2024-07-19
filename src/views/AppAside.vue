@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from "vue-router";
-import { autoBind } from "@/utils/bind.js";
+import useEventListener from "@/utils/useEventListener.js";
 import {
   rootTasks,
   focusing,
@@ -14,7 +14,7 @@ import TaskList from "./tasks/TaskList.vue";
 import TaskInlineForm from "./tasks/TaskInlineForm.vue";
 
 // 點在畫面上其他地方都 release focus
-autoBind(document, "click", () => (focusing.value = null));
+useEventListener(document, "click", () => (focusing.value = null));
 
 useKeydownHandlers();
 

@@ -1,16 +1,18 @@
 <script setup>
 import { nextTick, ref, watch } from "vue";
 
-import { Task } from "@/stores/tasks.js";
+import { Task, focusing, maxRootSeq } from "@/stores/tasks.js";
 import resize from "@/utils/resizeable.js";
 
-const props = defineProps(["task", "parent"]);
+const props = defineProps(["task", "parent", "seq"]);
 const emit = defineEmits(["after-submit"]);
 
 const formData = ref(null);
 
 const reloadForm = () => {
   formData.value = Object.assign(new Task(), { ...props.task });
+  formData.value.seq =
+    (props.seq ?? props.parent?.maxChildSeq ?? maxRootSeq.value ?? -1) + 1;
 
   if (props.parent) {
     formData.value.parentId = props.parent?.id;
@@ -22,7 +24,9 @@ watch(props, reloadForm, {
 });
 
 const onSubmit = () => {
-  formData.value.save();
+  const obj = formData.value.save();
+  focusing.value = obj;
+
   reloadForm();
 
   // have to wait for the new content to be loaded
@@ -30,13 +34,17 @@ const onSubmit = () => {
     resizeTextarea();
   });
 
-  emit("after-submit");
+  emit("after-submit", obj);
 };
 
 const textEl = ref(null);
 const resizeTextarea = () => {
   textEl.value && resize(textEl.value);
 };
+
+nextTick(() => {
+  textEl.value && textEl.value.focus();
+});
 </script>
 <template>
   <div class="list-item">
@@ -47,7 +55,6 @@ const resizeTextarea = () => {
         <textarea
           ref="textEl"
           rows="1"
-          autofocus
           required
           placeholder="what's on your mind?"
           v-model="formData.title"
@@ -70,6 +77,7 @@ textarea {
   font-family: var(--base-font-family);
   font-size: var(--base-font-size);
   color: var(--color-text);
+  color: #ddd;
 
   display: block;
   box-sizing: border-box;

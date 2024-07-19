@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { focusing, destroy } from "@/stores/tasks.js";
 
@@ -23,6 +24,15 @@ const onDelete = () => {
   if (parent) {
     router.push({ path: `/nodes/${parent.id}` });
   }
+};
+
+const appendingTo = ref(null);
+const onEnter = (task) => {
+  console.log("------- hh", task);
+};
+
+const onKeydown = () => {
+  console.log("-- on key down");
 };
 </script>
 <template>
