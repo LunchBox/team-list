@@ -2,6 +2,7 @@ import { ref } from "vue";
 import useEventListener from "@/utils/useEventListener.js";
 import {
   focusing,
+  appendMode,
   increaseIndent,
   decreaseIndent,
   moveUp,
@@ -15,6 +16,12 @@ export default () => {
   useEventListener(document, "keydown", (e) => {
     if (!focusing.value) return;
     const ft = focusing.value;
+
+    if (e.key === "Enter") {
+      e.preventDefault();
+      e.stopPropagation();
+      appendMode.value = true;
+    }
 
     // double press d to delete a task
     if (e.key === "d") {

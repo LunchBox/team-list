@@ -51,6 +51,7 @@ const onKeydown = () => {
     <TaskList
       :list="task.children"
       :parent="task"
+      :appendable="true"
       @click="(task) => (focusing = task)"
       @dblclick="onDblClick"
     >

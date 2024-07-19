@@ -1,7 +1,7 @@
 <script setup>
 import { nextTick, ref, watch } from "vue";
 
-import { Task, focusing, maxRootSeq } from "@/stores/tasks.js";
+import { Task, focusing, appendMode, maxRootSeq } from "@/stores/tasks.js";
 import resize from "@/utils/resizeable.js";
 
 const props = defineProps(["task", "parent", "seq"]);
@@ -60,6 +60,7 @@ nextTick(() => {
           v-model="formData.title"
           @input="resizeTextarea"
           @keydown.enter.prevent="onSubmit"
+          @keydown.esc.prevent="appendMode = false"
         ></textarea>
         <input type="submit" value="Submit" />
       </form>
@@ -77,7 +78,7 @@ textarea {
   font-family: var(--base-font-family);
   font-size: var(--base-font-size);
   color: var(--color-text);
-  color: #ddd;
+  color: #bbb;
 
   display: block;
   box-sizing: border-box;

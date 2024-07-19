@@ -38,6 +38,7 @@ const resetTaskList = () => {
 };
 
 const focusing = ref(null);
+const appendMode = ref(false);
 
 // ---- Model
 class Task {
@@ -262,6 +263,7 @@ export {
   rootTasks,
   maxRootSeq,
   focusing,
+  appendMode,
   currentUser,
   find,
   collapseAll,

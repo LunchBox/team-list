@@ -1,12 +1,12 @@
 <script setup>
 import { ref } from "vue";
-import { focusing } from "@/stores/tasks.js";
+import { focusing, appendMode } from "@/stores/tasks.js";
 
 import TaskList from "./TaskList.vue";
 import TaskInlineForm from "./TaskInlineForm.vue";
 
-const props = defineProps(["task", "parent", "appending"]);
-const emit = defineEmits(["click", "dblclick", "appending"]);
+const props = defineProps(["task", "parent", "appendable"]);
+const emit = defineEmits(["click", "dblclick"]);
 
 const quickEdit = ref(false);
 //TODO: click within  0.5s and < 1s should activate quick edit mode
@@ -24,12 +24,7 @@ const quickEdit = ref(false);
       @after-submit="quickEdit = false"
     ></TaskInlineForm>
 
-    <div
-      v-else
-      class="list-item-row flex items-center"
-      tabindex="0"
-      @keydown.enter.prevent="$emit('appending', task)"
-    >
+    <div v-else class="list-item-row flex items-center">
       <template v-if="task.isContentBlank && task.isChildrenBlank">
         <span class="list-item-marker">-</span>
         <span
@@ -76,10 +71,9 @@ const quickEdit = ref(false);
   </div>
   <!-- insert contents -->
   <TaskInlineForm
-    v-if="appending"
-    :parent="task.parent"
-    :seq="task.seq"
-    @after-submit="(t) => $emit('appending', t)"
+    v-if="appendable && appendMode && focusing === task"
+    :parent="focusing.parent"
+    :seq="focusing.seq"
   ></TaskInlineForm>
 </template>
 
