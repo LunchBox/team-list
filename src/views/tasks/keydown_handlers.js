@@ -1,3 +1,4 @@
+import { ref } from "vue";
 import { autoBind } from "@/utils/bind.js";
 import {
   focusing,
@@ -5,12 +6,26 @@ import {
   decreaseIndent,
   moveUp,
   moveDown,
+  destroy,
 } from "@/stores/tasks.js";
 
 export default () => {
+  const delMark = ref(false);
+
   autoBind(document, "keydown", (e) => {
     if (!focusing.value) return;
     const ft = focusing.value;
+
+    if (e.key === "d") {
+      if (delMark.value) {
+        delMark.value = false;
+        destroy(ft);
+      } else {
+        delMark.value = true;
+      }
+    } else {
+      delMark.value = false;
+    }
 
     const exec = (f) => {
       if (!f) return;
