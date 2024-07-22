@@ -1,40 +1,44 @@
 <script setup>
-import { ref } from "vue";
-import { focusing, appendMode } from "@/stores/tasks.js";
+import { focusing, appendMode, quickEdit } from "@/stores/tasks.js";
 
 import TaskList from "./TaskList.vue";
 import TaskInlineForm from "./TaskInlineForm.vue";
 
+import MarkedText from "@/components/MarkedText.vue";
+
 const props = defineProps(["task", "parent", "appendable"]);
 const emit = defineEmits(["click", "dblclick"]);
 
-const quickEdit = ref(false);
-//TODO: click within  0.5s and < 1s should activate quick edit mode
+defineOptions({
+  inheritAttrs: false,
+});
 </script>
 <template>
+  <!-- editing mode -->
+  <TaskInlineForm
+    v-if="quickEdit && focusing === task"
+    :task="task"
+    style="border: 1px solid #ccc"
+    @after-submit="quickEdit = false"
+  ></TaskInlineForm>
+  <!-- display mode -->
   <div
+    v-else
     v-bind="$attrs"
     class="list-item"
-    tabindex="0"
     :class="{ active: focusing === task }"
   >
-    <TaskInlineForm
-      v-if="quickEdit"
-      :task="task"
-      @after-submit="quickEdit = false"
-    ></TaskInlineForm>
-
-    <div v-else class="list-item-row flex items-center">
+    <div class="list-item-row flex items-center">
       <template v-if="task.isContentBlank && task.isChildrenBlank">
         <span class="list-item-marker">-</span>
-        <span
+
+        <MarkedText
+          :text="task.title"
           class="full"
           @click.prevent="$emit('click', task)"
           @dblclick="$emit('dblclick', task)"
           style="padding: 3px"
-        >
-          {{ task.title }}
-        </span>
+        ></MarkedText>
       </template>
       <template v-else>
         <a
@@ -69,7 +73,7 @@ const quickEdit = ref(false);
       @dblclick="(task) => $emit('dblclick', task)"
     ></TaskList>
   </div>
-  <!-- insert contents -->
+  <!-- appending mode, append contents after focusing item -->
   <TaskInlineForm
     v-if="appendable && appendMode && focusing === task"
     :parent="focusing.parent"

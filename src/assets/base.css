@@ -24,6 +24,7 @@
     Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans",
     "Helvetica Neue", sans-serif;
   --base-font-size: 15px;
+  --base-line-height: 1.6;
 }
 
 /* semantic color variables for this project */
@@ -68,7 +69,7 @@ body {
   color: var(--color-text);
   background: var(--color-background);
   transition: color 0.5s, background-color 0.5s;
-  line-height: 1.6;
+  line-height: var(--base-line-height);
   font-family: var(--base-font-family);
   font-size: var(--base-font-size);
   text-rendering: optimizeLegibility;

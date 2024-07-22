@@ -43,6 +43,14 @@ const onCancel = backToShow;
       <span>Content</span>
       <textarea v-model="formData.content"></textarea>
     </label>
+    <label>
+      <span>Start Date</span>
+      <input type="date" v-model="formData.start_date" />
+    </label>
+    <label>
+      <span>End Date</span>
+      <input type="date" v-model="formData.end_date" />
+    </label>
     <input type="submit" value="Submit" />
     <input type="button" value="reset" @click.prevent="reloadForm" />
     <input type="button" value="cancel" @click.prevent="onCancel" />

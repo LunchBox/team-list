@@ -25,19 +25,15 @@ const onDelete = () => {
     router.push({ path: `/nodes/${parent.id}` });
   }
 };
-
-const appendingTo = ref(null);
-const onEnter = (task) => {
-  console.log("------- hh", task);
-};
-
-const onKeydown = () => {
-  console.log("-- on key down");
-};
 </script>
 <template>
   <div>
     <h2>{{ task.title }}</h2>
+
+    <div style="margin: 1rem 0">
+      <span>{{ task.start_date }}</span> ~
+      <span>{{ task.end_date }}</span>
+    </div>
     <div style="margin: 1rem 0">
       <RouterLink :to="`/nodes/${task.id}/edit`">Edit</RouterLink> &middot;
 

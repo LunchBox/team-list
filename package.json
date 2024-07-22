@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "marked": "^13.0.2",
     "vue": "^3.4.29",
     "vue-router": "^4.3.3",
     "vue3-excel-editor": "^1.0.40"

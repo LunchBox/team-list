@@ -68,6 +68,7 @@ main {
 
   .list-item {
     margin: 4px 0;
+    border: 1px solid transparent;
 
     &.active > .list-item-row:before {
       content: " ";
@@ -95,6 +96,7 @@ main {
     text-align: center;
     margin: 0;
     padding: 3px 0;
+    align-self: baseline;
   }
 
   .cell {

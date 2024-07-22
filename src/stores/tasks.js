@@ -39,6 +39,7 @@ const resetTaskList = () => {
 
 const focusing = ref(null);
 const appendMode = ref(false);
+const quickEdit = ref(false);
 
 // ---- Model
 class Task {
@@ -47,6 +48,9 @@ class Task {
   parentId = null;
   exp = false;
   seq = 0;
+
+  start_date = null;
+  end_date = null;
 
   // ---- filters
 
@@ -264,6 +268,7 @@ export {
   maxRootSeq,
   focusing,
   appendMode,
+  quickEdit,
   currentUser,
   find,
   collapseAll,

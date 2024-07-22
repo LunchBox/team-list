@@ -3,6 +3,7 @@ import useEventListener from "@/utils/useEventListener.js";
 import {
   focusing,
   appendMode,
+  quickEdit,
   increaseIndent,
   decreaseIndent,
   moveUp,
@@ -21,6 +22,12 @@ export default () => {
       e.preventDefault();
       e.stopPropagation();
       appendMode.value = true;
+    }
+
+    if (e.key === "i" || e.key === "e") {
+      e.preventDefault();
+      e.stopPropagation();
+      quickEdit.value = true;
     }
 
     // double press d to delete a task

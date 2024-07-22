@@ -12,6 +12,7 @@ const formData = ref(null);
 const reloadForm = () => {
   formData.value = Object.assign(new Task(), { ...props.task });
   formData.value.seq =
+    (props.task?.id && props.task?.seq) ??
     (props.seq ?? props.parent?.maxChildSeq ?? maxRootSeq.value ?? -1) + 1;
 
   if (props.parent) {
@@ -43,6 +44,7 @@ const resizeTextarea = () => {
 };
 
 nextTick(() => {
+  resizeTextarea();
   textEl.value && textEl.value.focus();
 });
 </script>
@@ -59,7 +61,7 @@ nextTick(() => {
           placeholder="what's on your mind?"
           v-model="formData.title"
           @input="resizeTextarea"
-          @keydown.enter.prevent="onSubmit"
+          @keydown.enter.ctrl.prevent="onSubmit"
           @keydown.esc.prevent="appendMode = false"
         ></textarea>
         <input type="submit" value="Submit" />
@@ -71,14 +73,15 @@ nextTick(() => {
 <style scoped>
 textarea {
   flex: 1;
-  line-height: 1.5rem;
   border: none;
   outline: none;
 
   font-family: var(--base-font-family);
   font-size: var(--base-font-size);
+  line-height: var(--base-line-height);
+
   color: var(--color-text);
-  color: #bbb;
+  color: #c20;
 
   display: block;
   box-sizing: border-box;
@@ -86,6 +89,9 @@ textarea {
   margin: 0;
   padding: 0 3px;
   resize: none;
+}
+textarea:focus {
+  color: var(--color-text);
 }
 
 ::placeholder {
