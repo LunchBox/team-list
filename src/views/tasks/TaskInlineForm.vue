@@ -51,6 +51,9 @@ nextTick(() => {
 <template>
   <div class="list-item">
     <div class="list-item-row flex items-center">
+      <span class="list-item-cell">
+        <img src="@/assets/arrow-right.svg" alt="focus" class="focus-marker" />
+      </span>
       <span class="list-item-marker">-</span>
 
       <form class="full" @submit.prevent="onSubmit" @keydown.stop>
@@ -87,7 +90,7 @@ textarea {
   box-sizing: border-box;
   width: 100%;
   margin: 0;
-  padding: 0 3px;
+  padding: 0;
   resize: none;
 }
 textarea:focus {

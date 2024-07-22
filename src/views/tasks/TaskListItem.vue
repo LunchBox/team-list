@@ -29,6 +29,9 @@ defineOptions({
     :class="{ active: focusing === task }"
   >
     <div class="list-item-row flex items-center">
+      <RouterLink :to="`/nodes/${task.id}`" class="list-item-cell">
+        <img src="@/assets/arrow-right.svg" alt="focus" class="focus-marker" />
+      </RouterLink>
       <template v-if="task.isContentBlank && task.isChildrenBlank">
         <span class="list-item-marker">-</span>
 
@@ -37,7 +40,6 @@ defineOptions({
           class="full"
           @click.prevent="$emit('click', task)"
           @dblclick="$emit('dblclick', task)"
-          style="padding: 3px"
         ></MarkedText>
       </template>
       <template v-else>

@@ -17,5 +17,11 @@ const mdContent = computed(() => {
 });
 </script>
 <template>
-  <div v-html="mdContent"></div>
+  <div v-html="mdContent" class="marked-content"></div>
 </template>
+
+<style scoped>
+.marked-content {
+  line-height: var(--base-line-height);
+}
+</style>

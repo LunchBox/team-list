@@ -1,8 +1,6 @@
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
 
-import TaskDetails from "./views/tasks/TaskDetails.vue";
-import TaskForm from "./views/tasks/TaskForm.vue";
 import AppAside from "./views/AppAside.vue";
 </script>
 
@@ -70,37 +68,41 @@ main {
     margin: 4px 0;
     border: 1px solid transparent;
 
-    &.active > .list-item-row:before {
-      content: " ";
-      width: 26px;
-      height: 26px;
-      background: url("@/assets/arrow-right.svg") no-repeat center center;
-
-      position: absolute;
-      margin-left: calc(-18px);
+    &.active > .list-item-row .focus-marker {
+      display: block;
     }
   }
 
   .list-item-row {
     position: relative;
-    line-height: initial;
+    align-items: stretch;
+    line-height: var(--base-line-height);
 
     .full {
       flex: 1;
     }
   }
 
-  .list-item-marker {
+  .list-item-cell {
     display: inline-block;
-    width: 2rem;
-    text-align: center;
-    margin: 0;
-    padding: 3px 0;
-    align-self: baseline;
+    width: 1.6rem;
+    height: 1.6rem;
+    position: relative;
   }
 
-  .cell {
-    padding: 3px;
+  .list-item-cell .focus-marker {
+    position: absolute;
+    top: 0;
+    display: none;
+  }
+
+  .list-item-marker {
+    display: inline-block;
+    width: 1.6rem;
+    height: 1.6rem;
+    line-height: 1.6;
+    text-align: center;
+    margin: 0;
   }
 }
 </style>
