@@ -162,13 +162,13 @@ const expandAll = () => nodeList.value.forEach((t) => t.expand());
 watch(
   nodeList,
   () => {
-    localStorage.setItem("tl/tasks", JSON.stringify(nodeList.value, REPLACER));
+    localStorage.setItem("tl/nodes", JSON.stringify(nodeList.value, REPLACER));
   },
   { deep: true }
 );
 
 const load = () => {
-  const ds = localStorage.getItem("tl/tasks");
+  const ds = localStorage.getItem("tl/nodes");
   if (typeof ds === "string") {
     nodeList.value = new CusArray(
       ...JSON.parse(ds).map((attrs) => Object.assign(new Node(), attrs))
