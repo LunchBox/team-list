@@ -62,7 +62,7 @@ nextTick(() => {
           rows="1"
           required
           placeholder="what's on your mind?"
-          v-model="formData.title"
+          v-model="formData.content"
           @input="resizeTextarea"
           @keydown.enter.ctrl.prevent="onSubmit"
           @keydown.esc.prevent="appendMode = false"

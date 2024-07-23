@@ -43,7 +43,6 @@ const quickEdit = ref(false);
 
 // ---- Model
 class Node {
-  title = null;
   content = null;
   parentId = null;
   exp = false;
@@ -94,11 +93,6 @@ class Node {
   }
 
   // ----
-  get isContentBlank() {
-    const content = this.content;
-    return !content || content.trim() === "";
-  }
-
   get isChildrenBlank() {
     return this.children?.length === 0;
   }
@@ -224,7 +218,7 @@ const increaseIndent = (node) => {
   const middle =
     node.prev ??
     Object.assign(new Node(), {
-      title: "N/A",
+      content: "N/A",
       parentId: parent?.id,
     }).save();
 

@@ -28,7 +28,7 @@ const onDelete = () => {
 </script>
 <template>
   <div>
-    <h2>{{ node.title }}</h2>
+    <h2>{{ node.content }}</h2>
 
     <div style="margin: 1rem 0">
       <span>{{ node.start_date }}</span> ~
@@ -38,10 +38,6 @@ const onDelete = () => {
       <RouterLink :to="`/nodes/${node.id}/edit`">Edit</RouterLink> &middot;
 
       <a href="#" @click="onDelete">Delete</a>
-    </div>
-
-    <div v-if="!node.isContentBlank" class="content">
-      {{ node.content }}
     </div>
 
     <NodeList

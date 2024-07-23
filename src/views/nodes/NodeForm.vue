@@ -36,10 +36,6 @@ const onCancel = backToShow;
 <template>
   <form @submit.prevent="onSubmit" @keydown.stop>
     <label>
-      <span>Title</span>
-      <input type="text" v-model="formData.title" required />
-    </label>
-    <label>
       <span>Content</span>
       <textarea v-model="formData.content"></textarea>
     </label>

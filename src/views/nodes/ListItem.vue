@@ -32,11 +32,11 @@ defineOptions({
       <RouterLink :to="`/nodes/${node.id}`" class="list-item-cell">
         <img src="@/assets/arrow-right.svg" alt="focus" class="focus-marker" />
       </RouterLink>
-      <template v-if="node.isContentBlank && node.isChildrenBlank">
+      <template v-if="node.isChildrenBlank">
         <span class="list-item-marker">-</span>
 
         <MarkedText
-          :text="node.title"
+          :text="node.content"
           class="full"
           @click.prevent="$emit('click', node)"
           @dblclick="$emit('dblclick', node)"
@@ -56,7 +56,7 @@ defineOptions({
           @click.prevent="$emit('click', node)"
           @dblclick="$emit('dblclick', node)"
         >
-          {{ node.title }}
+          {{ node.content }}
         </a>
         <span style="color: #ccc; font-style: italic; font-size: smaller">
           ({{ node.children.length }} : {{ node.allChildrenLen }})
