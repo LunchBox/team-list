@@ -1,5 +1,5 @@
 <script setup>
-import { computed, reactive, ref } from "vue";
+import { computed, reactive, ref, watch } from "vue";
 
 import { focusing } from "@/stores/nodes.js";
 
@@ -48,14 +48,33 @@ const humanizeDate = (date) => {
   const month = monthNames[date.getMonth()];
   const year = date.getFullYear();
 
-  return `${month}${day}, ${year}`;
+  return `${month} ${day}, ${year}`;
 };
 
-const WEEKS = 13;
-const DAYS = 7 * WEEKS;
+const DAYS = 100;
 const today = new Date();
 
-const startDate = ref(offsetDate(today, -today.getDay()));
+// default 3 days ago
+const startDate = ref(offsetDate(today, -3));
+
+const minStart = computed(() => {
+  const ds = props.list
+    .filter((item) => item.start_date)
+    .map((item) => new Date(item.start_date));
+
+  return Math.min(...ds);
+});
+
+watch(
+  minStart,
+  () => {
+    if (!minStart.value) return;
+    console.log(minStart.value);
+    const fd = Math.min(minStart.value, new Date());
+    startDate.value = offsetDate(fd, -3);
+  },
+  { immediate: true }
+);
 
 const dates = computed(() => {
   return [...Array(DAYS)].map((_, i) => {
@@ -123,8 +142,6 @@ useEventListener(document, "mousemove", (e) => {
 useEventListener(document, "mouseup", () => {
   const threshold = Math.abs(draggingDist.value) > CELL_WIDTH / 2;
 
-  console.log(shadow);
-
   if (dragging.value && draggingType.value && threshold) {
     const item = dragging.value;
     item.start_date = shadow.start_date;
@@ -148,15 +165,15 @@ const fullColumnStyle = computed(() => {
 });
 
 const todayColumnStyle = computed(() => {
-  const offset = Math.floor(daysDiff(new Date(), startDate.value));
+  let offset = Math.floor(daysDiff(new Date(), startDate.value));
+  offset = Math.max(offset, 0);
+
   return {
     ...fullColumnStyle.value,
     "grid-column-start": offset + 1,
     "grid-column-end": offset + 2,
   };
 });
-
-const focusingRowStyle = computed(() => {});
 </script>
 <template>
   <div class="gantt-view">
@@ -165,13 +182,14 @@ const focusingRowStyle = computed(() => {});
       <div class="row">&nbsp;</div>
       <slot name="aside"></slot>
     </aside>
+
     <main>
       <!-- weeks -->
-      <template v-for="d in dates">
+      <template v-for="(d, i) in dates">
         <div
           v-if="d.getDay() === 0"
           class="cell week"
-          :style="{ 'grid-column': `span ${7 - d.getDay()}` }"
+          :style="{ 'grid-column': `${i + 1} / ${i + 8}` }"
         >
           {{ humanizeDate(d) }}
         </div>
@@ -187,25 +205,30 @@ const focusingRowStyle = computed(() => {});
       </div>
 
       <!-- weekend marks -->
-      <template v-for="(_, i) in WEEKS">
-        <!-- sunday -->
+      <template v-for="(d, i) in dates">
         <div
-          class="weekend"
+          v-if="d.getDay() === 0"
+          class="weekend sunday"
           :style="{
             ...fullColumnStyle,
-            'grid-column-start': 1 + 7 * i,
-            'grid-column-end': 2 + 7 * i,
+            'grid-column-start': 1 + i,
+            'grid-column-end': 2 + i,
           }"
-        ></div>
-        <!-- saturday -->
+        >
+          <!-- sunday -->
+        </div>
+
         <div
-          class="weekend"
+          v-if="d.getDay() === 6"
+          class="weekend saturday"
           :style="{
             ...fullColumnStyle,
-            'grid-column-start': 7 + 7 * i,
-            'grid-column-end': 8 + 7 * i,
+            'grid-column-start': 8 + i,
+            'grid-column-end': 9 + i,
           }"
-        ></div>
+        >
+          <!-- saturday -->
+        </div>
       </template>
 
       <!-- today marker -->
@@ -277,7 +300,7 @@ main {
 
 main {
   display: grid;
-  grid-template-columns: repeat(91, var(--line-height));
+  grid-template-columns: repeat(91, 2rem);
   grid-auto-rows: var(--line-height);
 
   gap: 2px 0;
