@@ -1,10 +1,10 @@
 <script setup>
-import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { focusing, destroy } from "@/stores/nodes.js";
+import { focusing } from "@/stores/nodes.js";
 
 import NodeList from "./NodeList.vue";
 import InlineForm from "./InlineForm.vue";
+import Header from "./Header.vue";
 
 import { jsondata } from "./sample.js";
 
@@ -15,30 +15,10 @@ const onDblClick = (node) => {
   router.push({ path: `/nodes/${node.id}` });
   focusing.value = node;
 };
-
-const onDelete = () => {
-  const node = props.node;
-  const parent = node.parent;
-  destroy(node);
-
-  if (parent) {
-    router.push({ path: `/nodes/${parent.id}` });
-  }
-};
 </script>
 <template>
   <div>
-    <h2>{{ node.content }}</h2>
-
-    <div style="margin: 1rem 0">
-      <span>{{ node.start_date }}</span> ~
-      <span>{{ node.end_date }}</span>
-    </div>
-    <div style="margin: 1rem 0">
-      <RouterLink :to="`/nodes/${node.id}/edit`">Edit</RouterLink> &middot;
-
-      <a href="#" @click="onDelete">Delete</a>
-    </div>
+    <Header :node="node"></Header>
 
     <div style="padding-bottom: 80vh">
       <NodeList
@@ -59,11 +39,4 @@ const onDelete = () => {
   </div>
 </template>
 
-<style scoped>
-.content {
-  background: #efefef;
-  padding: 0.5rem;
-  margin-bottom: 1rem;
-  white-space: pre;
-}
-</style>
+<style scoped></style>

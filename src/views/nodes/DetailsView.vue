@@ -12,11 +12,13 @@ const node = computed(() => {
 });
 </script>
 <template>
-  <template v-if="node">
-    <Breadcrumbs :node="node"></Breadcrumbs>
-    <NodeDetails :node="node"></NodeDetails>
-  </template>
-  <div v-else>Not Found...</div>
+  <div>
+    <template v-if="node">
+      <Breadcrumbs :node="node"></Breadcrumbs>
+      <NodeDetails :node="node"></NodeDetails>
+    </template>
+    <div v-else>Not Found...</div>
+  </div>
 </template>
 
 <style scoped></style>

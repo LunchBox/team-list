@@ -30,9 +30,8 @@ const onClick = (node) => {
 };
 </script>
 <template>
-  <aside>
-    <div style="margin: 1rem 0">
-      Tools:
+  <div>
+    <div class="toolbar">
       <a href="#" @click.prevent="expandAll">Expand All</a> &middot;
       <a href="#" @click.prevent="collapseAll">Collapse All</a> &middot;
       <a href="#" @click.prevent="clear">Delete All</a>
@@ -41,11 +40,12 @@ const onClick = (node) => {
     <NodeList :list="rootNodes" @click="onClick">
       <InlineForm></InlineForm>
     </NodeList>
-  </aside>
+  </div>
 </template>
 
 <style scoped>
-aside {
-  flex: 0 0 30%;
+.toolbar {
+  font-size: smaller;
+  margin: 1rem 0;
 }
 </style>
