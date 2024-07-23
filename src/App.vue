@@ -61,7 +61,7 @@ main {
 /* list item related */
 .a-list {
   position: relative;
-  line-height: 1.5rem;
+  line-height: 1.6rem;
 
   /* left padding except the root list */
   .a-list {
@@ -80,9 +80,6 @@ main {
   }
 
   .list-item {
-    margin: 4px 0;
-    border: 1px solid transparent;
-
     &.active > .list-item-row .focus-marker {
       display: block;
     }

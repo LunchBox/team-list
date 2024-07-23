@@ -1,5 +1,8 @@
 <script setup>
 import { computed, reactive, ref } from "vue";
+
+import { focusing } from "@/stores/nodes.js";
+
 import useEventListener from "@/utils/useEventListener.js";
 
 import ItemView from "./ItemView.vue";
@@ -152,6 +155,8 @@ const todayColumnStyle = computed(() => {
     "grid-column-end": offset + 2,
   };
 });
+
+const focusingRowStyle = computed(() => {});
 </script>
 <template>
   <div class="gantt-view">
@@ -203,9 +208,21 @@ const todayColumnStyle = computed(() => {
         ></div>
       </template>
 
+      <!-- today marker -->
       <div class="today" :style="todayColumnStyle"></div>
 
       <template v-for="(item, row) in list">
+        <div
+          v-if="focusing === item"
+          class="focusing"
+          :style="{
+            'grid-row-start': row + 3,
+            'grid-row-end': row + 4,
+            'grid-column-start': 1,
+            'grid-column-end': DAYS + 1,
+          }"
+        ></div>
+
         <ItemView
           v-if="dragging === item"
           class="shadow"
@@ -231,7 +248,7 @@ const todayColumnStyle = computed(() => {
 
 <style scoped>
 .gantt-view {
-  --line-height: 2rem;
+  --line-height: 1.6rem;
   display: flex;
   align-items: stretch;
   line-height: var(--line-height);
@@ -240,6 +257,15 @@ const todayColumnStyle = computed(() => {
 aside {
   flex: 0 0 30%;
   width: 30%;
+}
+:deep(aside .list-item .node-content) {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:deep(aside .list-item.active > .list-item-row) {
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 main {
@@ -251,7 +277,7 @@ main {
 main {
   display: grid;
   grid-template-columns: repeat(91, var(--line-height));
-  grid-auto-rows: 2rem;
+  grid-auto-rows: var(--line-height);
 
   gap: 0;
   height: 100%;
@@ -295,6 +321,10 @@ main {
 
   .shadow {
     background: rgba(0, 0, 0, 0.3);
+  }
+
+  .focusing {
+    background: rgba(0, 0, 0, 0.1);
   }
 }
 </style>

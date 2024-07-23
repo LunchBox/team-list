@@ -40,7 +40,7 @@ defineOptions({
 
         <MarkedText
           :text="node.content"
-          class="full"
+          class="node-content full"
           @click.prevent="$emit('click', node)"
           @dblclick="$emit('dblclick', node)"
         ></MarkedText>
@@ -55,7 +55,7 @@ defineOptions({
         </a>
         <a
           href="#"
-          class="full"
+          class="node-content full"
           @click.prevent="$emit('click', node)"
           @dblclick="$emit('dblclick', node)"
         >
