@@ -147,7 +147,11 @@ useEventListener(document, "mouseup", () => {
       <aside>
         <div class="row">&nbsp;</div>
         <div class="row">&nbsp;</div>
-        <div v-for="item in list" class="row">{{ item.content }}</div>
+        <div v-for="item in list" class="row">
+          <a :href="`#${item.id}`">
+            {{ item.content }}
+          </a>
+        </div>
       </aside>
       <main>
         <!-- weeks -->
@@ -197,7 +201,8 @@ useEventListener(document, "mouseup", () => {
         <!-- tasks -->
         <div
           v-for="(item, row) in list"
-          class="task"
+          class="item"
+          :id="item.id"
           :style="itemCellStyle(item, row)"
           :title="itemTitle(item)"
           @mousedown.stop="draggingHandler(item, 'entire')"
@@ -247,6 +252,7 @@ main {
   gap: 0;
   height: 100%;
   padding: 0 2px;
+  padding-right: 20rem;
 
   .cell {
     background: #fff;
@@ -269,7 +275,7 @@ main {
     background: #efefef;
   }
 
-  .task {
+  .item {
     font-size: smaller;
     background: #c2edd5e6;
     position: relative;
