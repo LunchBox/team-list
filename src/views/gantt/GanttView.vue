@@ -261,8 +261,11 @@ const todayColumnStyle = computed(() => {
           :id="item.id"
           :title="itemTitle(item)"
           @dragging="(type) => draggingHandler(item, type)"
+          @click="focusing = item"
         >
-          {{ item.content }}
+          <span>
+            {{ item.content }}
+          </span>
         </ItemView>
       </template>
     </main>
