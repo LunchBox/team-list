@@ -29,9 +29,12 @@ defineOptions({
     :class="{ active: focusing === node }"
   >
     <div class="list-item-row flex items-center">
-      <RouterLink :to="`/nodes/${node.id}`" class="list-item-cell">
-        <img src="@/assets/arrow-right.svg" alt="focus" class="focus-marker" />
-      </RouterLink>
+      <div class="list-item-cell">
+        <RouterLink :to="`/nodes/${node.id}`" class="focus-marker">
+          <img src="@/assets/arrow-right.svg" alt="focus" />
+        </RouterLink>
+      </div>
+
       <template v-if="node.isChildrenBlank">
         <span class="list-item-marker">-</span>
 

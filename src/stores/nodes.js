@@ -159,16 +159,17 @@ const collapseAll = () => nodeList.value.forEach((t) => t.collapse());
 const expandAll = () => nodeList.value.forEach((t) => t.expand());
 
 // ---- store & load
+const STORAGE_KEY = "tl/nodes";
 watch(
   nodeList,
   () => {
-    localStorage.setItem("tl/nodes", JSON.stringify(nodeList.value, REPLACER));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(nodeList.value, REPLACER));
   },
   { deep: true }
 );
 
 const load = () => {
-  const ds = localStorage.getItem("tl/nodes");
+  const ds = localStorage.getItem(STORAGE_KEY);
   if (typeof ds === "string") {
     nodeList.value = new CusArray(
       ...JSON.parse(ds).map((attrs) => Object.assign(new Node(), attrs))
