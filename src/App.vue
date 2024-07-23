@@ -4,7 +4,7 @@ import { RouterLink, RouterView } from "vue-router";
 
 import AppAside from "./views/AppAside.vue";
 
-const hideAside = ref(true);
+const hideAside = ref(false);
 </script>
 
 <template>
@@ -17,7 +17,7 @@ const hideAside = ref(true);
     </div>
   </header>
 
-  <div class="flex" @click.stop>
+  <div class="flex" :class="{ separated: !hideAside }" @click.stop>
     <aside v-if="!hideAside">
       <AppAside></AppAside>
       <div><a href="#" @click.prevent="hideAside = true">Hide</a></div>
@@ -30,16 +30,23 @@ const hideAside = ref(true);
 
 <style scoped>
 aside {
-  flex: 0 0 30%;
-  width: 30%;
   border-right: 1px solid #eee;
 }
 
 main {
-  flex: 0 0 70%;
-  width: 70%;
+  flex: 1;
+  max-width: 100%;
   padding: 0 1rem;
   min-height: 80vh;
+}
+
+.separated {
+  aside {
+    flex: 0 0 25%;
+  }
+  main {
+    max-width: 75%;
+  }
 }
 </style>
 <style>
@@ -66,7 +73,7 @@ main {
       position: absolute;
       top: 0;
       bottom: 0;
-      left: 2rem;
+      left: 3rem;
       width: 1px;
       background-color: #eee;
     }

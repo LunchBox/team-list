@@ -4,7 +4,6 @@ import { focusing } from "@/stores/nodes.js";
 
 import NodeList from "./NodeList.vue";
 import InlineForm from "./InlineForm.vue";
-import Header from "./Header.vue";
 
 import { jsondata } from "./sample.js";
 
@@ -18,8 +17,6 @@ const onDblClick = (node) => {
 </script>
 <template>
   <div>
-    <Header :node="node"></Header>
-
     <div style="padding-bottom: 80vh">
       <NodeList
         :list="node.children"

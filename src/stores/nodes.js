@@ -48,8 +48,12 @@ class Node {
   exp = false;
   seq = 0;
 
+  // task attributes
   start_date = null;
   end_date = null;
+
+  // view type
+  viewType = null;
 
   // ---- filters
 
@@ -103,6 +107,16 @@ class Node {
     if (this.parent) {
       this.parent.getPath(arr);
     }
+    return arr;
+  }
+
+  getExpanedChildren(arr = []) {
+    this.children.forEach((c) => {
+      arr.push(c);
+      if (c.exp) {
+        c.getExpanedChildren(arr);
+      }
+    });
     return arr;
   }
 

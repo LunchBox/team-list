@@ -4,12 +4,18 @@ import useEventListener from "@/utils/useEventListener.js";
 
 import ItemView from "./ItemView.vue";
 
-defineProps(["list"]);
+const props = defineProps(["list"]);
 
 const offsetDate = (date, offset) => {
   const d = new Date(date);
   d.setDate(d.getDate() + offset);
   return d;
+};
+
+const daysDiff = (d1, d2) => {
+  const t = new Date(d1);
+  const f = new Date(d2);
+  return (t - f) / 3600 / 24 / 1000;
 };
 
 const formatDate = (date) => {
@@ -59,8 +65,6 @@ const isWeekend = (d) => {
 };
 
 const DEFAULT_TASK_DAYS = 3;
-
-const shadowStyle = computed(() => {});
 
 const CELL_WIDTH = 30;
 
@@ -132,87 +136,96 @@ useEventListener(document, "mouseup", () => {
 const itemTitle = (item) => {
   return `${item.start_date} ~ ${item.end_date} ${item.content}`;
 };
+
+const fullColumnStyle = computed(() => {
+  return {
+    "grid-row-start": 3,
+    "grid-row-end": 3 + props.list.length,
+  };
+});
+
+const todayColumnStyle = computed(() => {
+  const offset = Math.floor(daysDiff(new Date(), startDate.value));
+  return {
+    ...fullColumnStyle.value,
+    "grid-column-start": offset + 1,
+    "grid-column-end": offset + 2,
+  };
+});
 </script>
 <template>
-  <div>
-    <div>Gantt View</div>
-    <div class="gantt-view">
-      <aside>
-        <div class="row">&nbsp;</div>
-        <div class="row">&nbsp;</div>
-        <div v-for="item in list" class="row">
-          <a :href="`#${item.id}`">
-            {{ item.content }}
-          </a>
-        </div>
-      </aside>
-      <main>
-        <!-- weeks -->
-        <template v-for="d in dates">
-          <div
-            v-if="d.getDay() === 0"
-            class="cell week"
-            :style="{ 'grid-column': `span ${7 - d.getDay()}` }"
-          >
-            {{ humanizeDate(d) }}
-          </div>
-        </template>
-
-        <!-- days -->
+  <div class="gantt-view">
+    <aside>
+      <div class="row">&nbsp;</div>
+      <div class="row">&nbsp;</div>
+      <slot name="aside"></slot>
+    </aside>
+    <main>
+      <!-- weeks -->
+      <template v-for="d in dates">
         <div
-          class="cell day"
-          :class="{ weekend: isWeekend(d) }"
-          v-for="d in dates"
+          v-if="d.getDay() === 0"
+          class="cell week"
+          :style="{ 'grid-column': `span ${7 - d.getDay()}` }"
         >
-          {{ d.getDate() }}
+          {{ humanizeDate(d) }}
         </div>
+      </template>
 
-        <!-- weekend marks -->
-        <template v-for="(_, i) in WEEKS">
-          <!-- sunday -->
-          <div
-            class="weekend"
-            :style="{
-              'grid-row-start': 3,
-              'grid-row-end': 3 + list.length,
-              'grid-column-start': 1 + 7 * i,
-              'grid-column-end': 2 + 7 * i,
-            }"
-          ></div>
-          <!-- saturday -->
-          <div
-            class="weekend"
-            :style="{
-              'grid-row-start': 3,
-              'grid-row-end': 3 + list.length,
-              'grid-column-start': 7 + 7 * i,
-              'grid-column-end': 8 + 7 * i,
-            }"
-          ></div>
-        </template>
+      <!-- days -->
+      <div
+        class="cell day"
+        :class="{ weekend: isWeekend(d) }"
+        v-for="d in dates"
+      >
+        {{ d.getDate() }}
+      </div>
 
-        <template v-for="(item, row) in list">
-          <ItemView
-            v-if="dragging === item"
-            class="shadow"
-            :item="shadow"
-            :row="row"
-            :start="startDate"
-          ></ItemView>
+      <!-- weekend marks -->
+      <template v-for="(_, i) in WEEKS">
+        <!-- sunday -->
+        <div
+          class="weekend"
+          :style="{
+            ...fullColumnStyle,
+            'grid-column-start': 1 + 7 * i,
+            'grid-column-end': 2 + 7 * i,
+          }"
+        ></div>
+        <!-- saturday -->
+        <div
+          class="weekend"
+          :style="{
+            ...fullColumnStyle,
+            'grid-column-start': 7 + 7 * i,
+            'grid-column-end': 8 + 7 * i,
+          }"
+        ></div>
+      </template>
 
-          <ItemView
-            :item="item"
-            :row="row"
-            :start="startDate"
-            :id="item.id"
-            :title="itemTitle(item)"
-            @dragging="(type) => draggingHandler(item, type)"
-          >
-            {{ item.content }}
-          </ItemView>
-        </template>
-      </main>
-    </div>
+      <div class="today" :style="todayColumnStyle"></div>
+
+      <template v-for="(item, row) in list">
+        <ItemView
+          v-if="dragging === item"
+          class="shadow"
+          :item="shadow"
+          :row="row"
+          :start="startDate"
+        ></ItemView>
+
+        <ItemView
+          :item="item"
+          :row="row"
+          :start="startDate"
+          :id="item.id"
+          :title="itemTitle(item)"
+          @dragging="(type) => draggingHandler(item, type)"
+        >
+          {{ item.content }}
+        </ItemView>
+      </template>
+    </main>
   </div>
 </template>
 
@@ -233,7 +246,6 @@ main {
   flex: 0 0 70%;
   width: 70%;
   overflow-x: scroll;
-  border-left: 2px solid #aaa;
 }
 
 main {
@@ -265,6 +277,20 @@ main {
   }
   .weekend {
     background: #efefef;
+  }
+
+  .today {
+    position: relative;
+
+    &:before {
+      content: " ";
+      position: absolute;
+      width: 1px;
+      height: 100%;
+      top: 0;
+      left: 50%;
+      background: #c30;
+    }
   }
 
   .shadow {
