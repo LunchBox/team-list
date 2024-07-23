@@ -2,16 +2,16 @@
 import { useRouter } from "vue-router";
 import useEventListener from "@/utils/useEventListener.js";
 import {
-  rootTasks,
+  rootNodes,
   focusing,
   expandAll,
   collapseAll,
-  resetTaskList,
-} from "@/stores/tasks.js";
-import useKeydownHandlers from "./tasks/keydown_handlers.js";
+  resetList,
+} from "@/stores/nodes.js";
+import useKeydownHandlers from "@/views/nodes/keydown_handlers.js";
 
-import TaskList from "./tasks/TaskList.vue";
-import TaskInlineForm from "./tasks/TaskInlineForm.vue";
+import NodeList from "@/views/nodes/NodeList.vue";
+import InlineForm from "@/views/nodes/InlineForm.vue";
 
 // 點在畫面上其他地方都 release focus
 useEventListener(document, "click", () => (focusing.value = null));
@@ -20,13 +20,13 @@ useKeydownHandlers();
 
 const clear = () => {
   if (!confirm("Are you sure?")) return;
-  resetTaskList();
+  resetList();
 };
 
 const router = useRouter();
-const onClick = (task) => {
-  router.push({ name: "node", params: { id: task.id } });
-  focusing.value = task;
+const onClick = (node) => {
+  router.push({ name: "node", params: { id: node.id } });
+  focusing.value = node;
 };
 </script>
 <template>
@@ -38,9 +38,9 @@ const onClick = (task) => {
       <a href="#" @click.prevent="clear">Delete All</a>
     </div>
 
-    <TaskList :list="rootTasks" @click="onClick">
-      <TaskInlineForm></TaskInlineForm>
-    </TaskList>
+    <NodeList :list="rootNodes" @click="onClick">
+      <InlineForm></InlineForm>
+    </NodeList>
   </aside>
 </template>
 

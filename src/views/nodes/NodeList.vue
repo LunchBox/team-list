@@ -1,19 +1,19 @@
 <script setup>
-import TaskListItem from "./TaskListItem.vue";
+import ListItem from "./ListItem.vue";
 
 defineProps(["list", "parent", "appendable"]);
 defineEmits(["click", "dblclick"]);
 </script>
 <template>
   <div class="a-list">
-    <TaskListItem
-      v-for="task in list"
-      :task="task"
+    <ListItem
+      v-for="node in list"
+      :node="node"
       :parent="parent"
       :appendable="appendable"
-      @click="(task) => $emit('click', task)"
-      @dblclick="(task) => $emit('dblclick', task)"
-    ></TaskListItem>
+      @click="(node) => $emit('click', node)"
+      @dblclick="(node) => $emit('dblclick', node)"
+    ></ListItem>
     <slot></slot>
   </div>
 </template>

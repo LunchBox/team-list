@@ -1,15 +1,15 @@
 <script setup>
 import { computed } from "vue";
-const props = defineProps(["task"]);
+const props = defineProps(["node"]);
 
-const tasks = computed(() => {
-  return props.task.getPath();
+const nodes = computed(() => {
+  return props.node.getPath();
 });
 </script>
 
 <template>
   <div class="breadcrumbs">
-    <template v-for="t in tasks">
+    <template v-for="t in nodes">
       <span>/</span>
       <RouterLink :to="`/nodes/${t.id}`">
         {{ t.title }}

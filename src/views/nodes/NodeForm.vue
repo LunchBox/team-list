@@ -2,14 +2,14 @@
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 
-import { Task } from "@/stores/tasks.js";
+import { Node } from "@/stores/nodes.js";
 
-const props = defineProps(["task", "parent"]);
+const props = defineProps(["node", "parent"]);
 
 const formData = ref(null);
 
 const reloadForm = () => {
-  formData.value = Object.assign(new Task(), { ...props.task });
+  formData.value = Object.assign(new Node(), { ...props.node });
 
   if (props.parent) {
     formData.value.parentId = props.parent?.id;
@@ -22,7 +22,7 @@ watch(props, reloadForm, {
 
 const router = useRouter();
 const backToShow = () => {
-  router.push({ name: "node", id: props.task.id });
+  router.push({ name: "node", id: props.node.id });
 };
 
 const onSubmit = () => {

@@ -1,18 +1,18 @@
 <script setup>
 import { nextTick, ref, watch } from "vue";
 
-import { Task, focusing, appendMode, maxRootSeq } from "@/stores/tasks.js";
+import { Node, focusing, appendMode, maxRootSeq } from "@/stores/nodes.js";
 import resize from "@/utils/resizeable.js";
 
-const props = defineProps(["task", "parent", "seq"]);
+const props = defineProps(["node", "parent", "seq"]);
 const emit = defineEmits(["after-submit"]);
 
 const formData = ref(null);
 
 const reloadForm = () => {
-  formData.value = Object.assign(new Task(), { ...props.task });
+  formData.value = Object.assign(new Node(), { ...props.node });
   formData.value.seq =
-    (props.task?.id && props.task?.seq) ??
+    (props.node?.id && props.node?.seq) ??
     (props.seq ?? props.parent?.maxChildSeq ?? maxRootSeq.value ?? -1) + 1;
 
   if (props.parent) {

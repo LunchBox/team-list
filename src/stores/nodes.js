@@ -23,18 +23,18 @@ class CusArray extends Array {
 // TODO: move to other place
 const currentUser = ref("daniel");
 
-const taskList = ref(new CusArray());
+const nodeList = ref(new CusArray());
 
-const rootTasks = computed(() =>
-  taskList.value.filter((t) => !t.parentId).sort(bySeq)
+const rootNodes = computed(() =>
+  nodeList.value.filter((t) => !t.parentId).sort(bySeq)
 );
 
 const maxRootSeq = computed(() => {
-  return rootTasks.value.map((t) => t.seq ?? 0).sort((a, b) => a - b).last;
+  return rootNodes.value.map((t) => t.seq ?? 0).sort((a, b) => a - b).last;
 });
 
-const resetTaskList = () => {
-  taskList.value = new CusArray();
+const resetList = () => {
+  nodeList.value = new CusArray();
 };
 
 const focusing = ref(null);
@@ -42,7 +42,7 @@ const appendMode = ref(false);
 const quickEdit = ref(false);
 
 // ---- Model
-class Task {
+class Node {
   title = null;
   content = null;
   parentId = null;
@@ -55,11 +55,11 @@ class Task {
   // ---- filters
 
   get parent() {
-    return taskList.value.find((t) => t.id === this.parentId);
+    return nodeList.value.find((t) => t.id === this.parentId);
   }
 
   get children() {
-    return taskList.value.filter((t) => t.parentId === this.id).sort(bySeq);
+    return nodeList.value.filter((t) => t.parentId === this.id).sort(bySeq);
   }
 
   get lastChild() {
@@ -74,7 +74,7 @@ class Task {
 
   // with same parent
   get siblings() {
-    return (this.parent ? this.parent.children : rootTasks.value).sort(bySeq);
+    return (this.parent ? this.parent.children : rootNodes.value).sort(bySeq);
   }
 
   get restSiblings() {
@@ -138,10 +138,10 @@ class Task {
           t.seq = this.seq + i + 1;
         });
 
-      taskList.value.push(this);
+      nodeList.value.push(this);
 
       // assign seq
-      // const collection = this.parent ? this.parent.children : rootTasks.value;
+      // const collection = this.parent ? this.parent.children : rootNodes.value;
       // const lastSeq = last(collection)?.seq ?? -1;
       // this.seq = lastSeq + 1;
 
@@ -156,19 +156,19 @@ class Task {
 
 // ---- filters
 
-const find = (id) => taskList.value.find((t) => t.id === id);
+const find = (id) => nodeList.value.find((t) => t.id === id);
 
 // ---- collapse & expend
 
-const collapseAll = () => taskList.value.forEach((t) => t.collapse());
+const collapseAll = () => nodeList.value.forEach((t) => t.collapse());
 
-const expandAll = () => taskList.value.forEach((t) => t.expand());
+const expandAll = () => nodeList.value.forEach((t) => t.expand());
 
 // ---- store & load
 watch(
-  taskList,
+  nodeList,
   () => {
-    localStorage.setItem("tl/tasks", JSON.stringify(taskList.value, REPLACER));
+    localStorage.setItem("tl/tasks", JSON.stringify(nodeList.value, REPLACER));
   },
   { deep: true }
 );
@@ -176,8 +176,8 @@ watch(
 const load = () => {
   const ds = localStorage.getItem("tl/tasks");
   if (typeof ds === "string") {
-    taskList.value = new CusArray(
-      ...JSON.parse(ds).map((attrs) => Object.assign(new Task(), attrs))
+    nodeList.value = new CusArray(
+      ...JSON.parse(ds).map((attrs) => Object.assign(new Node(), attrs))
     );
   }
 };
@@ -185,12 +185,12 @@ load();
 
 // ---- delete
 
-const destroy = (task) => {
+const destroy = (node) => {
   if (!confirm("Are you sure?")) return false;
 
-  const idx = taskList.value.findIndex((t) => t.id === task.id);
+  const idx = nodeList.value.findIndex((t) => t.id === node.id);
   if (idx > -1) {
-    taskList.value.splice(idx, 1);
+    nodeList.value.splice(idx, 1);
   }
 
   focusing.value = null;
@@ -198,46 +198,46 @@ const destroy = (task) => {
 
 // ---- move up/down
 
-const moveUp = (task) => {
-  if (!task.prev) return;
+const moveUp = (node) => {
+  if (!node.prev) return;
 
-  const seq = task.prev.seq;
-  task.prev.seq = task.seq;
-  task.seq = seq;
+  const seq = node.prev.seq;
+  node.prev.seq = node.seq;
+  node.seq = seq;
 };
 
-const moveDown = (task) => {
-  if (!task.next) return;
+const moveDown = (node) => {
+  if (!node.next) return;
 
-  const seq = task.next.seq;
-  task.next.seq = task.seq;
-  task.seq = seq;
+  const seq = node.next.seq;
+  node.next.seq = node.seq;
+  node.seq = seq;
 };
 
 // ---- increase / decrease indent
 
-const increaseIndent = (task) => {
-  const parent = task.parent;
+const increaseIndent = (node) => {
+  const parent = node.parent;
 
   // 如果有前一個 node 就用前一個 node 做 parent
   // 沒有就新增一個
   const middle =
-    task.prev ??
-    Object.assign(new Task(), {
+    node.prev ??
+    Object.assign(new Node(), {
       title: "N/A",
       parentId: parent?.id,
     }).save();
 
   // 將自己移到前一個 node 的最末尾
-  task.parentId = middle.id;
-  task.seq = middle.maxChildSeq + 1;
+  node.parentId = middle.id;
+  node.seq = middle.maxChildSeq + 1;
 
   // 展開方便查看
-  task.parent?.expand();
+  node.parent?.expand();
 };
 
-const decreaseIndent = (task) => {
-  const parent = task.parent;
+const decreaseIndent = (node) => {
+  const parent = node.parent;
 
   if (parent) {
     const grandPa = parent.parent;
@@ -246,25 +246,24 @@ const decreaseIndent = (task) => {
     parent.restSiblings.forEach((t) => (t.seq += 1));
 
     // 和自己同級剩下的 items 變成自己的 children
-    const offset = task.maxChildSeq;
-    task.restSiblings.forEach((t) => {
-      t.parentId = task.id;
+    const offset = node.maxChildSeq;
+    node.restSiblings.forEach((t) => {
+      t.parentId = node.id;
       t.seq += offset + 1;
     });
 
     // 將自身移到 parent 的後一個
-    task.parentId = grandPa?.id;
-    task.seq = parent.seq + 1;
+    node.parentId = grandPa?.id;
+    node.seq = parent.seq + 1;
 
     // 展開方便查看
-    task.expand();
+    node.expand();
   }
 };
 
 export {
-  Task,
-  taskList,
-  rootTasks,
+  Node,
+  rootNodes,
   maxRootSeq,
   focusing,
   appendMode,
@@ -278,5 +277,5 @@ export {
   decreaseIndent,
   moveUp,
   moveDown,
-  resetTaskList,
+  resetList,
 };

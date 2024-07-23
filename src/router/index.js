@@ -20,12 +20,12 @@ const router = createRouter({
     {
       path: "/nodes/:id",
       name: "node",
-      component: () => import("../views/tasks/TaskDetailsView.vue"),
+      component: () => import("../views/nodes/DetailsView.vue"),
     },
     {
       path: "/nodes/:id/edit",
       name: "edit_node",
-      component: () => import("../views/tasks/TaskEditView.vue"),
+      component: () => import("../views/nodes/EditView.vue"),
     },
   ],
 });

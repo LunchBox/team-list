@@ -1,12 +1,12 @@
 <script setup>
-import { focusing, appendMode, quickEdit } from "@/stores/tasks.js";
+import { focusing, appendMode, quickEdit } from "@/stores/nodes.js";
 
-import TaskList from "./TaskList.vue";
-import TaskInlineForm from "./TaskInlineForm.vue";
+import NodeList from "./NodeList.vue";
+import InlineForm from "./InlineForm.vue";
 
 import MarkedText from "@/components/MarkedText.vue";
 
-const props = defineProps(["task", "parent", "appendable"]);
+const props = defineProps(["node", "parent", "appendable"]);
 const emit = defineEmits(["click", "dblclick"]);
 
 defineOptions({
@@ -15,72 +15,72 @@ defineOptions({
 </script>
 <template>
   <!-- editing mode -->
-  <TaskInlineForm
-    v-if="quickEdit && focusing === task"
-    :task="task"
+  <InlineForm
+    v-if="quickEdit && focusing === node"
+    :node="node"
     style="border: 1px solid #ccc"
     @after-submit="quickEdit = false"
-  ></TaskInlineForm>
+  ></InlineForm>
   <!-- display mode -->
   <div
     v-else
     v-bind="$attrs"
     class="list-item"
-    :class="{ active: focusing === task }"
+    :class="{ active: focusing === node }"
   >
     <div class="list-item-row flex items-center">
-      <RouterLink :to="`/nodes/${task.id}`" class="list-item-cell">
+      <RouterLink :to="`/nodes/${node.id}`" class="list-item-cell">
         <img src="@/assets/arrow-right.svg" alt="focus" class="focus-marker" />
       </RouterLink>
-      <template v-if="task.isContentBlank && task.isChildrenBlank">
+      <template v-if="node.isContentBlank && node.isChildrenBlank">
         <span class="list-item-marker">-</span>
 
         <MarkedText
-          :text="task.title"
+          :text="node.title"
           class="full"
-          @click.prevent="$emit('click', task)"
-          @dblclick="$emit('dblclick', task)"
+          @click.prevent="$emit('click', node)"
+          @dblclick="$emit('dblclick', node)"
         ></MarkedText>
       </template>
       <template v-else>
         <a
           href="#"
           class="list-item-marker"
-          @click.prevent="task.exp = !task.exp"
+          @click.prevent="node.exp = !node.exp"
         >
-          {{ task.exp ? "-" : "+" }}
+          {{ node.exp ? "-" : "+" }}
         </a>
         <a
           href="#"
           class="full"
-          @click.prevent="$emit('click', task)"
-          @dblclick="$emit('dblclick', task)"
+          @click.prevent="$emit('click', node)"
+          @dblclick="$emit('dblclick', node)"
         >
-          {{ task.title }}
+          {{ node.title }}
         </a>
         <span style="color: #ccc; font-style: italic; font-size: smaller">
-          ({{ task.children.length }} : {{ task.allChildrenLen }})
+          ({{ node.children.length }} : {{ node.allChildrenLen }})
         </span>
       </template>
       <span style="font-size: smaller; color: #ccc; padding: 0 0.5rem">{{
-        task.seq
+        node.seq
       }}</span>
     </div>
 
-    <TaskList
-      v-if="task.exp"
-      :list="task.children"
-      :parent="task"
-      @click="(task) => $emit('click', task)"
-      @dblclick="(task) => $emit('dblclick', task)"
-    ></TaskList>
+    <NodeList
+      v-if="node.exp"
+      :list="node.children"
+      :parent="node"
+      @click="(node) => $emit('click', node)"
+      @dblclick="(node) => $emit('dblclick', node)"
+    ></NodeList>
   </div>
   <!-- appending mode, append contents after focusing item -->
-  <TaskInlineForm
-    v-if="appendable && appendMode && focusing === task"
+  <InlineForm
+    v-if="appendable && appendMode && focusing === node"
     :parent="focusing.parent"
     :seq="focusing.seq"
-  ></TaskInlineForm>
+  ></InlineForm>
 </template>
 
 <style scoped>

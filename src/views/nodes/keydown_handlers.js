@@ -9,7 +9,7 @@ import {
   moveUp,
   moveDown,
   destroy,
-} from "@/stores/tasks.js";
+} from "@/stores/nodes.js";
 
 export default () => {
   const delMark = ref(false);
@@ -30,7 +30,7 @@ export default () => {
       quickEdit.value = true;
     }
 
-    // double press d to delete a task
+    // double press d to delete a node
     if (e.key === "d") {
       if (delMark.value) {
         delMark.value = false;
@@ -42,7 +42,7 @@ export default () => {
       delMark.value = false;
     }
 
-    // arrow to move cursor, shift arrow to move tasks
+    // arrow to move cursor, shift arrow to move nodes
     const exec = (f) => {
       if (!f) return;
 
