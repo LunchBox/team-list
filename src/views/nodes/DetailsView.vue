@@ -19,8 +19,4 @@ const node = computed(() => {
   <div v-else>Not Found...</div>
 </template>
 
-<style scoped>
-.node-details {
-  padding-bottom: 6rem;
-}
-</style>
+<style scoped></style>

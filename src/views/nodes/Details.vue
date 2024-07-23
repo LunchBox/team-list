@@ -40,15 +40,17 @@ const onDelete = () => {
       <a href="#" @click="onDelete">Delete</a>
     </div>
 
-    <NodeList
-      :list="node.children"
-      :parent="node"
-      :appendable="true"
-      @click="(node) => (focusing = node)"
-      @dblclick="onDblClick"
-    >
-      <InlineForm :parent="node"></InlineForm>
-    </NodeList>
+    <div style="padding-bottom: 80vh">
+      <NodeList
+        :list="node.children"
+        :parent="node"
+        :appendable="true"
+        @click="(node) => (focusing = node)"
+        @dblclick="onDblClick"
+      >
+        <InlineForm :parent="node"></InlineForm>
+      </NodeList>
+    </div>
 
     <template v-if="false">
       <div>This is a testing of a vue excel editor</div>
