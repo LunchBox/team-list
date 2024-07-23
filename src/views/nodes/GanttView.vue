@@ -5,7 +5,7 @@ import NodeList from "./NodeList.vue";
 import InlineForm from "./InlineForm.vue";
 
 import { focusing } from "@/stores/nodes.js";
-import InlineDateForm from "./InlineDateForm.vue";
+import DateRangeForm from "@/components/DateRangeForm.vue";
 
 const props = defineProps(["node"]);
 
@@ -46,10 +46,10 @@ const dateRange = computed(() => {
     </template>
 
     <template #before-container>
-      <InlineDateForm
+      <DateRangeForm
         :date_range="dateRange"
         @submit="onDateChanged"
-      ></InlineDateForm>
+      ></DateRangeForm>
     </template>
   </GanttView>
 </template>
