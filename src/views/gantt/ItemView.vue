@@ -1,13 +1,10 @@
 <script setup>
 import { computed } from "vue";
+
+import { daysDiff } from "@/utils/dates.js";
+
 const props = defineProps(["item", "row", "start"]);
 defineEmits(["dragging"]);
-
-const daysDiff = (d1, d2) => {
-  const t = new Date(d1);
-  const f = new Date(d2);
-  return (t - f) / 3600 / 24 / 1000;
-};
 
 const DEFAULT_TASK_DAYS = 3;
 const itemCellStyle = computed(() => {

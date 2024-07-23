@@ -5,11 +5,31 @@ import NodeList from "./NodeList.vue";
 import InlineForm from "./InlineForm.vue";
 
 import { focusing } from "@/stores/nodes.js";
+import InlineDateForm from "./InlineDateForm.vue";
 
 const props = defineProps(["node"]);
 
 const itemList = computed(() => {
   return props.node.getExpanedChildren();
+});
+
+const onDateChanged = (formData) => {
+  if (!focusing.value) return;
+
+  const { start_date, end_date } = formData;
+  const item = focusing.value;
+  item.start_date = start_date;
+  item.end_date = end_date;
+};
+
+const dateRange = computed(() => {
+  if (!focusing.value) return;
+
+  const { start_date, end_date } = focusing.value;
+  return {
+    start_date,
+    end_date,
+  };
 });
 </script>
 <template>
@@ -23,6 +43,13 @@ const itemList = computed(() => {
       >
         <InlineForm :parent="node"></InlineForm>
       </NodeList>
+    </template>
+
+    <template #before-container>
+      <InlineDateForm
+        :date_range="dateRange"
+        @submit="onDateChanged"
+      ></InlineDateForm>
     </template>
   </GanttView>
 </template>

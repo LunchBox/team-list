@@ -3,53 +3,18 @@ import { computed, reactive, ref, watch } from "vue";
 
 import { focusing } from "@/stores/nodes.js";
 
+import {
+  offsetDate,
+  humanizeDate,
+  daysDiff,
+  formatDate,
+} from "@/utils/dates.js";
+
 import useEventListener from "@/utils/useEventListener.js";
 
 import ItemView from "./ItemView.vue";
 
 const props = defineProps(["list"]);
-
-const offsetDate = (date, offset) => {
-  const d = new Date(date);
-  d.setDate(d.getDate() + offset);
-  return d;
-};
-
-const daysDiff = (d1, d2) => {
-  const t = new Date(d1);
-  const f = new Date(d2);
-  return (t - f) / 3600 / 24 / 1000;
-};
-
-const formatDate = (date) => {
-  const d = new Date(date);
-  const year = d.getFullYear();
-  const month = (d.getMonth() + 1).toString().padStart(2, "0");
-  const day = d.getDate().toString().padStart(2, "0");
-  return `${year}-${month}-${day}`;
-};
-
-const humanizeDate = (date) => {
-  const monthNames = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  const day = date.getDate();
-  const month = monthNames[date.getMonth()];
-  const year = date.getFullYear();
-
-  return `${month} ${day}, ${year}`;
-};
 
 const DAYS = 100;
 const today = new Date();
@@ -177,13 +142,17 @@ const todayColumnStyle = computed(() => {
 </script>
 <template>
   <div class="gantt-view">
-    <aside>
+    <div class="aside">
       <div class="row">&nbsp;</div>
       <div class="row">&nbsp;</div>
       <slot name="aside"></slot>
-    </aside>
+    </div>
 
-    <main>
+    <div class="before-container">
+      <slot name="before-container"></slot>
+    </div>
+
+    <div class="gantt-container">
       <!-- weeks -->
       <template v-for="(d, i) in dates">
         <div
@@ -268,40 +237,50 @@ const todayColumnStyle = computed(() => {
           </span>
         </ItemView>
       </template>
-    </main>
+    </div>
   </div>
 </template>
 
 <style scoped>
 .gantt-view {
   --line-height: 1.6rem;
-  display: flex;
+
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: auto auto;
+
   align-items: stretch;
   line-height: var(--line-height);
 }
 
-aside {
-  flex: 0 0 30%;
-  width: 30%;
+.aside {
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+
   padding: 2px 0;
 }
-:deep(aside .list-item .node-content) {
+:deep(.aside .list-item .node-content) {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-:deep(aside .list-item.active > .list-item-row) {
+:deep(.aside .list-item.active > .list-item-row) {
   background-color: rgba(0, 0, 0, 0.1);
 }
 
-main {
-  flex: 0 0 70%;
-  width: 70%;
+.before-container {
+  grid-column: 3 / 4;
+  grid-row: 1 / 2;
+}
+.gantt-container {
+  grid-column: 3 / 4;
+  grid-row: 2 / 3;
+
   overflow-x: scroll;
 }
 
-main {
+.gantt-container {
   display: grid;
   grid-template-columns: repeat(91, 2rem);
   grid-auto-rows: var(--line-height);
