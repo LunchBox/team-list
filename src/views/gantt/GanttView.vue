@@ -1,6 +1,8 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed, reactive, ref } from "vue";
 import useEventListener from "@/utils/useEventListener.js";
+
+import ItemView from "./ItemView.vue";
 
 defineProps(["list"]);
 
@@ -8,12 +10,6 @@ const offsetDate = (date, offset) => {
   const d = new Date(date);
   d.setDate(d.getDate() + offset);
   return d;
-};
-
-const daysDiff = (d1, d2) => {
-  const t = new Date(d1);
-  const f = new Date(d2);
-  return (t - f) / 3600 / 24 / 1000;
 };
 
 const formatDate = (date) => {
@@ -63,82 +59,79 @@ const isWeekend = (d) => {
 };
 
 const DEFAULT_TASK_DAYS = 3;
-const itemCellStyle = (item, row) => {
-  const { start_date, end_date } = item;
-  let colStart = new Date().getDay() + 1;
-  if (start_date) {
-    colStart = Math.floor(daysDiff(start_date, startDate.value)) + 2;
-  }
 
-  let colLen = DEFAULT_TASK_DAYS - 1;
-  if (start_date && end_date) {
-    colLen = Math.floor(daysDiff(end_date, start_date));
-    colLen = Math.max(colLen, 1);
-  }
-
-  return {
-    "grid-row-start": 3 + row,
-    "grid-row-end": 4 + row,
-    "grid-column-start": colStart,
-    "grid-column-end": colStart + colLen + 1,
-  };
-};
-
-const itemTitle = (item) =>
-  `${item.start_date} ~ ${item.end_date} ${item.content}`;
+const shadowStyle = computed(() => {});
 
 const CELL_WIDTH = 30;
 
 const dragging = ref(null);
 const draggingType = ref(null);
 const draggingDist = ref(0);
+
+const shadow = reactive({
+  start_date: null,
+  end_date: null,
+});
+
 const draggingHandler = (item, type) => {
   dragging.value = item;
   draggingType.value = type;
   draggingDist.value = 0;
+
+  // assign default dates
+  if (!item.start_date) {
+    item.start_date = formatDate(new Date());
+    item.end_date = formatDate(offsetDate(new Date(), DEFAULT_TASK_DAYS - 1));
+  } else if (!item.end_date) {
+    item.end_date = formatDate(
+      offsetDate(item.start_date, DEFAULT_TASK_DAYS - 1)
+    );
+  }
+
+  const { start_date, end_date } = item;
+  shadow.start_date = start_date;
+  shadow.end_date = end_date;
 };
 
 useEventListener(document, "mousemove", (e) => {
   if (!dragging.value || !draggingType.value) return;
   draggingDist.value += e.movementX;
+
+  const item = dragging.value;
+  const moved = Math.round(draggingDist.value / CELL_WIDTH);
+
+  if (draggingType.value === "entire") {
+    shadow.start_date = formatDate(offsetDate(item.start_date, moved));
+    shadow.end_date = formatDate(offsetDate(item.end_date, moved));
+  }
+
+  const datekey = `${draggingType.value}_date`;
+  if (shadow[datekey]) {
+    shadow[datekey] = formatDate(offsetDate(item[datekey], moved));
+  } else {
+    shadow[datekey] = formatDate(new Date());
+  }
 });
 
 useEventListener(document, "mouseup", () => {
   const threshold = Math.abs(draggingDist.value) > CELL_WIDTH / 2;
-  console.log(threshold);
+
+  console.log(shadow);
 
   if (dragging.value && draggingType.value && threshold) {
     const item = dragging.value;
-
-    // assign default dates
-    if (!item.start_date) {
-      item.start_date = formatDate(new Date());
-      item.end_date = formatDate(offsetDate(new Date(), DEFAULT_TASK_DAYS - 1));
-    } else if (!item.end_date) {
-      item.end_date = formatDate(
-        offsetDate(item.start_date, DEFAULT_TASK_DAYS - 1)
-      );
-    }
-
-    const moved = Math.round(draggingDist.value / CELL_WIDTH);
-
-    if (draggingType.value === "entire") {
-      item.start_date = formatDate(offsetDate(item.start_date, moved));
-      item.end_date = formatDate(offsetDate(item.end_date, moved));
-    }
-
-    const datekey = `${draggingType.value}_date`;
-    if (item[datekey]) {
-      item[datekey] = formatDate(offsetDate(item[datekey], moved));
-    } else {
-      item[datekey] = formatDate(new Date());
-    }
+    item.start_date = shadow.start_date;
+    item.end_date = shadow.end_date;
   }
 
   dragging.value = null;
   draggingType.value = null;
   draggingDist.value = 0;
 });
+
+const itemTitle = (item) => {
+  return `${item.start_date} ~ ${item.end_date} ${item.content}`;
+};
 </script>
 <template>
   <div>
@@ -198,27 +191,26 @@ useEventListener(document, "mouseup", () => {
           ></div>
         </template>
 
-        <!-- tasks -->
-        <div
-          v-for="(item, row) in list"
-          class="item"
-          :id="item.id"
-          :style="itemCellStyle(item, row)"
-          :title="itemTitle(item)"
-          @mousedown.stop="draggingHandler(item, 'entire')"
-        >
-          <div
-            class="handler start"
-            @mousedown.stop="draggingHandler(item, 'start')"
-          ></div>
-          <span>
+        <template v-for="(item, row) in list">
+          <ItemView
+            v-if="dragging === item"
+            class="shadow"
+            :item="shadow"
+            :row="row"
+            :start="startDate"
+          ></ItemView>
+
+          <ItemView
+            :item="item"
+            :row="row"
+            :start="startDate"
+            :id="item.id"
+            :title="itemTitle(item)"
+            @dragging="(type) => draggingHandler(item, type)"
+          >
             {{ item.content }}
-          </span>
-          <div
-            class="handler end"
-            @mousedown.stop="draggingHandler(item, 'end')"
-          ></div>
-        </div>
+          </ItemView>
+        </template>
       </main>
     </div>
   </div>
@@ -241,7 +233,7 @@ main {
   flex: 0 0 70%;
   width: 70%;
   overflow-x: scroll;
-  border-left: 2px solid #333;
+  border-left: 2px solid #aaa;
 }
 
 main {
@@ -275,39 +267,8 @@ main {
     background: #efefef;
   }
 
-  .item {
-    font-size: smaller;
-    background: #c2edd5e6;
-    position: relative;
-    padding: 0 0.5rem;
-
-    user-select: none;
-
-    > span {
-      display: block;
-      width: 100%;
-      height: 100%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .handler {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 4px;
-
-      cursor: col-resize;
-    }
-
-    .handler.start {
-      left: 0;
-    }
-
-    .handler.end {
-      right: 0;
-    }
+  .shadow {
+    background: rgba(0, 0, 0, 0.3);
   }
 }
 </style>
