@@ -80,6 +80,9 @@ main {
   }
 
   .list-item {
+    margin: 2px 0;
+
+    &:hover > .list-item-row .focus-marker,
     &.active > .list-item-row .focus-marker {
       display: block;
     }

@@ -257,6 +257,7 @@ const focusingRowStyle = computed(() => {});
 aside {
   flex: 0 0 30%;
   width: 30%;
+  padding: 2px 0;
 }
 :deep(aside .list-item .node-content) {
   white-space: nowrap;
@@ -279,7 +280,7 @@ main {
   grid-template-columns: repeat(91, var(--line-height));
   grid-auto-rows: var(--line-height);
 
-  gap: 0;
+  gap: 2px 0;
   height: 100%;
   padding: 0 2px;
   padding-right: 20rem;
