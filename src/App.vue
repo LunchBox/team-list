@@ -4,7 +4,7 @@ import { RouterLink, RouterView } from "vue-router";
 
 import AppAside from "./views/AppAside.vue";
 
-const hideAside = ref(false);
+const hideAside = ref(true);
 </script>
 
 <template>
@@ -31,11 +31,13 @@ const hideAside = ref(false);
 <style scoped>
 aside {
   flex: 0 0 30%;
+  width: 30%;
   border-right: 1px solid #eee;
 }
 
 main {
-  flex: 1;
+  flex: 0 0 70%;
+  width: 70%;
   padding: 0 1rem;
   min-height: 80vh;
 }
