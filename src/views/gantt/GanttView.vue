@@ -3,14 +3,13 @@ import { computed, reactive, ref, watch } from "vue";
 
 import { focusing } from "@/stores/nodes.js";
 
-import {
-  offsetDate,
-  humanizeDate,
-  daysDiff,
-  formatDate,
-} from "@/utils/dates.js";
+import { offsetDate, humanizeDate } from "@/utils/dates.js";
 
 import useEventListener from "@/utils/useEventListener.js";
+
+import useDates from "./useDates.js";
+import useDraggingItems from "./useDraggingItems.js";
+import useDraggingContainer from "./useDraggingContainer.js";
 
 import bus from "@/views/gantt/eventBus.js";
 
@@ -19,158 +18,33 @@ import GridColumn from "./GridColumn.vue";
 
 const props = defineProps(["list"]);
 
-const today = new Date();
-const firstDayOffset = 3; // display from at least 3 days from firstday or today
-const lastDayOffset = 10;
-
-// default 3 days ago
-const startDate = ref(offsetDate(today, -firstDayOffset));
-
-const minStart = computed(() => {
-  const listStartDates = props.list
-    .filter((item) => item.start_date)
-    .map((item) => new Date(item.start_date));
-
-  if (listStartDates.length === 0) return today;
-
-  return Math.min(...listStartDates);
+const scheduledList = computed(() => {
+  return props.list.filter((t) => t.start_date && t.end_date);
 });
 
-const maxEnd = computed(() => {
-  const listEndDates = props.list
-    .filter((item) => item.end_date)
-    .map((item) => new Date(item.end_date));
-
-  if (listEndDates.length === 0) return today;
-
-  return Math.max(...listEndDates);
-});
-
-const totalDays = computed(() => {
-  const firstDay = startDate.value;
-  let days = Math.ceil(daysDiff(maxEnd.value, firstDay));
-
-  // at least display 30 days
-  return Math.max(days, 30) + firstDayOffset + lastDayOffset;
-});
-
-const dates = computed(() => {
-  const firstDay = startDate.value;
-  const days = totalDays.value;
-
-  return [...Array(days)].map((_, i) => {
-    return offsetDate(firstDay, i);
-  });
-});
-
-// update start date if any item changed the minimun start date
-watch(
-  minStart,
-  () => {
-    if (!minStart.value) return;
-    const fd = Math.min(minStart.value, new Date());
-    startDate.value = offsetDate(fd, -3);
-  },
-  { immediate: true }
-);
-
-const isWeekend = (d) => {
-  return [0, 6].includes(d.getDay());
-};
-
-// display 3 slots for a task that have no start_date or end_date
-const DEFAULT_TASK_DAYS = 3;
-
-const CELL_WIDTH = 30;
-
-// --------------- dragging item
-
-const dragging = ref(null);
-const draggingType = ref(null);
-const draggingDist = ref(0);
-
-const shadow = reactive({
-  start_date: null,
-  end_date: null,
-});
-
+const isWeekend = (d) => [0, 6].includes(d.getDay());
 const rowOf = (item) => props.list.indexOf(item);
 
-const draggingHandler = (item = null, type = null) => {
-  dragging.value = item;
-  draggingType.value = type;
-  draggingDist.value = 0;
+const today = new Date();
 
-  // assign default dates
-  if (!item.start_date) {
-    item.start_date = formatDate(new Date());
-    item.end_date = formatDate(offsetDate(new Date(), DEFAULT_TASK_DAYS - 1));
-  } else if (!item.end_date) {
-    item.end_date = formatDate(
-      offsetDate(item.start_date, DEFAULT_TASK_DAYS - 1)
-    );
-  }
+const { startDate, totalDays, dates } = useDates(props, today);
 
-  const { start_date, end_date } = item;
-  shadow.start_date = start_date;
-  shadow.end_date = end_date;
-};
+// dragging items
+const { dragging, shadow, draggingHandler } = useDraggingItems();
 
+//  drag & drop item
 bus.$on("item-mousedown", ([e, item] = {}) => {
-  draggingHandler(item, "entire", props.list.indexOf(item));
+  // draggingHandler(item, "entire", props.list.indexOf(item));
 });
 
-useEventListener(document, "mousemove", (e) => {
-  if (!dragging.value || !draggingType.value) return;
-  draggingDist.value += e.movementX;
+// dragging container
+const containerEl = ref(null);
+const { draggingContainer } = useDraggingContainer(containerEl);
 
-  const item = dragging.value;
-  const moved = Math.round(draggingDist.value / CELL_WIDTH);
-
-  if (draggingType.value === "entire") {
-    shadow.start_date = formatDate(offsetDate(item.start_date, moved));
-    shadow.end_date = formatDate(offsetDate(item.end_date, moved));
-  }
-
-  const datekey = `${draggingType.value}_date`;
-  if (shadow[datekey]) {
-    shadow[datekey] = formatDate(offsetDate(item[datekey], moved));
-  } else {
-    shadow[datekey] = formatDate(new Date());
-  }
-});
-
-useEventListener(document, "mouseup", () => {
-  const threshold = Math.abs(draggingDist.value) > CELL_WIDTH / 2;
-
-  if (dragging.value && draggingType.value && threshold) {
-    const item = dragging.value;
-    item.start_date = shadow.start_date;
-    item.end_date = shadow.end_date;
-  }
-
-  dragging.value = null;
-  draggingType.value = null;
-  draggingDist.value = 0;
-});
-
+// others
 const itemTitle = (item) => {
   return `${item.start_date} ~ ${item.end_date} ${item.content}`;
 };
-
-// --------------- dragging container
-const draggingContainer = ref(false);
-const containerEl = ref(null);
-
-useEventListener(window, "mousemove", (e) => {
-  if (draggingContainer.value && containerEl.value) {
-    containerEl.value.scrollLeft -= e.movementX;
-  }
-});
-
-useEventListener(window, "mouseup", () => {
-  draggingContainer.value = false;
-});
 </script>
 <template>
   <div class="gantt-view" :style="{ '--cols': totalDays }">
@@ -228,6 +102,7 @@ useEventListener(window, "mouseup", () => {
         ></GridColumn>
       </template>
 
+      <!-- today marker -->
       <GridColumn
         class="today"
         :rows="list.length"
@@ -243,32 +118,33 @@ useEventListener(window, "mouseup", () => {
         :start="startDate"
       ></GridRowItem>
 
-      <template v-for="(item, row) in list">
-        <div
-          v-if="focusing === item"
-          class="focusing"
-          :style="{
-            'grid-row-start': row + 3,
-            'grid-row-end': row + 4,
-            'grid-column-start': 1,
-            'grid-column-end': totalDays + 1,
-          }"
-        ></div>
+      <!-- highlight entire row -->
+      <div
+        v-if="focusing"
+        class="focusing"
+        :style="{
+          'grid-row-start': rowOf(focusing) + 3,
+          'grid-row-end': rowOf(focusing) + 4,
+          'grid-column-start': 1,
+          'grid-column-end': totalDays + 1,
+        }"
+      ></div>
 
-        <GridRowItem
-          :item="item"
-          :row="row"
-          :start="startDate"
-          :id="item.id"
-          :title="itemTitle(item)"
-          @dragging="(type) => draggingHandler(item, type)"
-          @click="focusing = item"
-        >
-          <span>
-            {{ item.content }}
-          </span>
-        </GridRowItem>
-      </template>
+      <!-- the draggable items -->
+      <GridRowItem
+        v-for="item in scheduledList"
+        :item="item"
+        :row="rowOf(item)"
+        :start="startDate"
+        :id="item.id"
+        :title="itemTitle(item)"
+        @dragging="(type) => draggingHandler(item, type)"
+        @click="focusing = item"
+      >
+        <span>
+          {{ item.content }}
+        </span>
+      </GridRowItem>
     </div>
   </div>
 </template>

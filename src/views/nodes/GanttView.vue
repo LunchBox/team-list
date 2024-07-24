@@ -44,6 +44,7 @@ const dateRange = computed(() => {
 });
 
 const onItemMousedown = (...args) => bus.$emit("item-mousedown", args);
+const onItemDragstart = (...args) => bus.$emit("item-dragstart", args);
 </script>
 <template>
   <div>
@@ -56,7 +57,9 @@ const onItemMousedown = (...args) => bus.$emit("item-mousedown", args);
           <NodeList
             :list="node.children"
             :parent="node"
+            :itemDraggable="true"
             @item-mousedown="onItemMousedown"
+            @item-dragstart="onItemDragstart"
           >
             <InlineForm :parent="node"></InlineForm>
           </NodeList>

@@ -7,7 +7,7 @@ import NodeList from "./NodeList.vue";
 import InlineForm from "./InlineForm.vue";
 import ExpandMarker from "./ExpandMarker.vue";
 
-const props = defineProps(["node", "parent", "appendable"]);
+const props = defineProps(["node", "parent", "appendable", "draggable"]);
 const emit = defineEmits(["item-mousedown", "item-clicked", "dblclick"]);
 
 const { select, toggleSelect, hasSelected } = selection;
@@ -47,6 +47,7 @@ const onNodeClicked = (e) => {
   >
     <div
       class="list-item-row flex items-center"
+      :draggable="draggable"
       @mousedown="$emit('item-mousedown', $event, node)"
       @click.left.prevent="onNodeClicked"
     >

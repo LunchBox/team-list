@@ -1,8 +1,13 @@
 <script setup>
 import ListItem from "./ListItem.vue";
 
-const props = defineProps(["list", "parent", "appendable"]);
-const emit = defineEmits(["item-mousedown", "item-clicked", "dblclick"]);
+const props = defineProps(["list", "parent", "appendable", "itemDraggable"]);
+const emit = defineEmits([
+  "item-dragstart",
+  "item-mousedown",
+  "item-clicked",
+  "dblclick",
+]);
 </script>
 <template>
   <div class="a-list">
@@ -11,6 +16,8 @@ const emit = defineEmits(["item-mousedown", "item-clicked", "dblclick"]);
       :node="node"
       :parent="parent"
       :appendable="appendable"
+      :draggable="itemDraggable"
+      @dragstart="(...args) => $emit('item-dragstart', ...args)"
       @item-mousedown="(...args) => $emit('item-mousedown', ...args)"
       @item-clicked="(...args) => $emit('item-clicked', ...args)"
       @dblclick="(node) => $emit('dblclick', node)"
