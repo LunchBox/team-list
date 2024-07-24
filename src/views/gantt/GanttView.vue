@@ -13,6 +13,7 @@ import {
 import useEventListener from "@/utils/useEventListener.js";
 
 import { dateToGridColumn as dtc } from "./utils.js";
+import bus from "@/views/gantt/eventBus.js";
 
 import ItemView from "./ItemView.vue";
 
@@ -178,6 +179,10 @@ const todayColumnStyle = computed(() => {
 const draggingContainer = ref(false);
 const containerEl = ref(null);
 
+bus.$on("item-mousedown", () => {
+  console.log("-- item mouse down in gantt");
+});
+
 useEventListener(window, "mousemove", (e) => {
   if (draggingContainer.value && containerEl.value) {
     containerEl.value.scrollLeft -= e.movementX;
@@ -193,10 +198,7 @@ useEventListener(window, "mouseup", () => {
     <div class="aside">
       <div class="row">&nbsp;</div>
       <div class="row">&nbsp;</div>
-      <slot
-        name="aside"
-        @item-mousedown="(item, row) => draggingHandler(item, 'entire', row)"
-      ></slot>
+      <slot name="aside"></slot>
     </div>
 
     <div class="before-container">

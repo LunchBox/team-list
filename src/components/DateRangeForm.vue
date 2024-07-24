@@ -14,10 +14,8 @@ const reloadForm = () => {
   if (!props.date_range) return;
 
   const { start_date, end_date } = props.date_range;
-  formData.start_date = start_date
-    ? formatDate(new Date(start_date))
-    : new Date();
-  formData.end_date = end_date ? formatDate(new Date(end_date)) : new Date();
+  formData.start_date = formatDate(start_date ? start_date : new Date());
+  formData.end_date = formatDate(end_date ? end_date : new Date());
 };
 
 watch(props, reloadForm, {

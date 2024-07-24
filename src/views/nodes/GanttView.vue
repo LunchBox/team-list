@@ -4,6 +4,8 @@ import { useRoute } from "vue-router";
 
 import { find, focusing } from "@/stores/nodes.js";
 
+import bus from "@/views/gantt/eventBus.js";
+
 import GanttView from "@/views/gantt/GanttView.vue";
 import NodeList from "./NodeList.vue";
 import InlineForm from "./InlineForm.vue";
@@ -49,7 +51,11 @@ const dateRange = computed(() => {
 
       <GanttView :list="itemList">
         <template #aside>
-          <NodeList :list="node.children" :parent="node" :appendable="true">
+          <NodeList
+            :list="node.children"
+            :parent="node"
+            @item-mousedown="bus.$emit('item-mousedown')"
+          >
             <InlineForm :parent="node"></InlineForm>
           </NodeList>
         </template>
