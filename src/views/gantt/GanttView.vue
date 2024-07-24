@@ -12,14 +12,13 @@ import {
 
 import useEventListener from "@/utils/useEventListener.js";
 
-import { dateToGridColumn as dtc } from "./utils.js";
 import bus from "@/views/gantt/eventBus.js";
 
-import ItemView from "./ItemView.vue";
+import GridRowItem from "./GridRowItem.vue";
+import GridColumn from "./GridColumn.vue";
 
 const props = defineProps(["list"]);
 
-// const DAYS = 100;
 const today = new Date();
 const firstDayOffset = 3; // display from at least 3 days from firstday or today
 const lastDayOffset = 10;
@@ -47,7 +46,7 @@ const maxEnd = computed(() => {
   return Math.max(...listEndDates);
 });
 
-const displayDays = computed(() => {
+const totalDays = computed(() => {
   const firstDay = startDate.value;
   let days = Math.ceil(daysDiff(maxEnd.value, firstDay));
 
@@ -57,7 +56,7 @@ const displayDays = computed(() => {
 
 const dates = computed(() => {
   const firstDay = startDate.value;
-  const days = displayDays.value;
+  const days = totalDays.value;
 
   return [...Array(days)].map((_, i) => {
     return offsetDate(firstDay, i);
@@ -69,7 +68,6 @@ watch(
   minStart,
   () => {
     if (!minStart.value) return;
-    console.log(minStart.value);
     const fd = Math.min(minStart.value, new Date());
     startDate.value = offsetDate(fd, -3);
   },
@@ -85,9 +83,10 @@ const DEFAULT_TASK_DAYS = 3;
 
 const CELL_WIDTH = 30;
 
+// --------------- dragging item
+
 const dragging = ref(null);
 const draggingType = ref(null);
-const draggingRow = ref(null);
 const draggingDist = ref(0);
 
 const shadow = reactive({
@@ -95,10 +94,11 @@ const shadow = reactive({
   end_date: null,
 });
 
-const draggingHandler = (item = null, type = null, row = null) => {
+const rowOf = (item) => props.list.indexOf(item);
+
+const draggingHandler = (item = null, type = null) => {
   dragging.value = item;
   draggingType.value = type;
-  draggingRow.value = row;
   draggingDist.value = 0;
 
   // assign default dates
@@ -151,7 +151,6 @@ useEventListener(document, "mouseup", () => {
 
   dragging.value = null;
   draggingType.value = null;
-  draggingRow.value = null;
   draggingDist.value = 0;
 });
 
@@ -159,26 +158,6 @@ const itemTitle = (item) => {
   return `${item.start_date} ~ ${item.end_date} ${item.content}`;
 };
 
-const fullColumnStyle = computed(() => {
-  return {
-    "grid-row-start": 3,
-    "grid-row-end": 3 + props.list.length,
-  };
-});
-
-const dateToGridColumn = (date) => {
-  return dtc(date, startDate.value);
-};
-
-const todayColumnStyle = computed(() => {
-  const offset = dateToGridColumn(today);
-
-  return {
-    ...fullColumnStyle.value,
-    "grid-column-start": offset,
-    "grid-column-end": offset + 1,
-  };
-});
 // --------------- dragging container
 const draggingContainer = ref(false);
 const containerEl = ref(null);
@@ -194,7 +173,7 @@ useEventListener(window, "mouseup", () => {
 });
 </script>
 <template>
-  <div class="gantt-view" :style="{ '--cols': displayDays }">
+  <div class="gantt-view" :style="{ '--cols': totalDays }">
     <div class="aside">
       <div class="row">&nbsp;</div>
       <div class="row">&nbsp;</div>
@@ -232,41 +211,37 @@ useEventListener(window, "mouseup", () => {
 
       <!-- weekend marks -->
       <template v-for="(d, i) in dates">
-        <div
+        <GridColumn
           v-if="d.getDay() === 0"
           class="weekend sunday"
-          :style="{
-            ...fullColumnStyle,
-            'grid-column-start': dateToGridColumn(d),
-            'grid-column-end': dateToGridColumn(d) + 1,
-          }"
-        >
-          <!-- sunday -->
-        </div>
+          :rows="list.length"
+          :startDate="startDate"
+          :date="d"
+        ></GridColumn>
 
-        <div
+        <GridColumn
           v-if="d.getDay() === 6"
           class="weekend saturday"
-          :style="{
-            ...fullColumnStyle,
-            'grid-column-start': dateToGridColumn(d),
-            'grid-column-end': dateToGridColumn(d) + 1,
-          }"
-        >
-          <!-- saturday -->
-        </div>
+          :rows="list.length"
+          :startDate="startDate"
+          :date="d"
+        ></GridColumn>
       </template>
 
-      <!-- today marker -->
-      <div class="today" :style="todayColumnStyle"></div>
+      <GridColumn
+        class="today"
+        :rows="list.length"
+        :startDate="startDate"
+        :date="today"
+      ></GridColumn>
 
-      <ItemView
+      <GridRowItem
         v-if="dragging"
         class="shadow"
         :item="shadow"
-        :row="draggingRow"
+        :row="rowOf(dragging)"
         :start="startDate"
-      ></ItemView>
+      ></GridRowItem>
 
       <template v-for="(item, row) in list">
         <div
@@ -276,23 +251,23 @@ useEventListener(window, "mouseup", () => {
             'grid-row-start': row + 3,
             'grid-row-end': row + 4,
             'grid-column-start': 1,
-            'grid-column-end': displayDays + 1,
+            'grid-column-end': totalDays + 1,
           }"
         ></div>
 
-        <ItemView
+        <GridRowItem
           :item="item"
           :row="row"
           :start="startDate"
           :id="item.id"
           :title="itemTitle(item)"
-          @dragging="(type) => draggingHandler(item, type, row)"
+          @dragging="(type) => draggingHandler(item, type)"
           @click="focusing = item"
         >
           <span>
             {{ item.content }}
           </span>
-        </ItemView>
+        </GridRowItem>
       </template>
     </div>
   </div>
