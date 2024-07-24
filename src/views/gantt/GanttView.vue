@@ -80,6 +80,7 @@ const CELL_WIDTH = 30;
 
 const dragging = ref(null);
 const draggingType = ref(null);
+const draggingRow = ref(null);
 const draggingDist = ref(0);
 
 const shadow = reactive({
@@ -87,9 +88,10 @@ const shadow = reactive({
   end_date: null,
 });
 
-const draggingHandler = (item, type) => {
+const draggingHandler = (item = null, type = null, row = null) => {
   dragging.value = item;
   draggingType.value = type;
+  draggingRow.value = row;
   draggingDist.value = 0;
 
   // assign default dates
@@ -138,6 +140,7 @@ useEventListener(document, "mouseup", () => {
 
   dragging.value = null;
   draggingType.value = null;
+  draggingRow.value = null;
   draggingDist.value = 0;
 });
 
@@ -226,6 +229,14 @@ const todayColumnStyle = computed(() => {
       <!-- today marker -->
       <div class="today" :style="todayColumnStyle"></div>
 
+      <ItemView
+        v-if="dragging"
+        class="shadow"
+        :item="shadow"
+        :row="draggingRow"
+        :start="startDate"
+      ></ItemView>
+
       <template v-for="(item, row) in list">
         <div
           v-if="focusing === item"
@@ -239,20 +250,12 @@ const todayColumnStyle = computed(() => {
         ></div>
 
         <ItemView
-          v-if="dragging === item"
-          class="shadow"
-          :item="shadow"
-          :row="row"
-          :start="startDate"
-        ></ItemView>
-
-        <ItemView
           :item="item"
           :row="row"
           :start="startDate"
           :id="item.id"
           :title="itemTitle(item)"
-          @dragging="(type) => draggingHandler(item, type)"
+          @dragging="(type) => draggingHandler(item, type, row)"
           @click="focusing = item"
         >
           <span>
