@@ -49,12 +49,7 @@ const dateRange = computed(() => {
 
       <GanttView :list="itemList">
         <template #aside>
-          <NodeList
-            :list="node.children"
-            :parent="node"
-            :appendable="true"
-            @item-clicked="(e, node) => (focusing = node)"
-          >
+          <NodeList :list="node.children" :parent="node" :appendable="true">
             <InlineForm :parent="node"></InlineForm>
           </NodeList>
         </template>

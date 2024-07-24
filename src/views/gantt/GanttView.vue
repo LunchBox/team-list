@@ -175,7 +175,10 @@ const todayColumnStyle = computed(() => {
     <div class="aside">
       <div class="row">&nbsp;</div>
       <div class="row">&nbsp;</div>
-      <slot name="aside"></slot>
+      <slot
+        name="aside"
+        @item-mousedown="(item, row) => draggingHandler(item, 'entire', row)"
+      ></slot>
     </div>
 
     <div class="before-container">

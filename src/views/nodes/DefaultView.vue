@@ -1,7 +1,4 @@
 <script setup>
-import { useRouter } from "vue-router";
-import { focusing } from "@/stores/nodes.js";
-
 import useKeydownHandlers from "@/views/nodes/keydown_handlers.js";
 
 import NodeList from "./NodeList.vue";
@@ -12,23 +9,11 @@ import { jsondata } from "./sample.js";
 const props = defineProps(["node", "parent"]);
 
 useKeydownHandlers();
-
-const router = useRouter();
-const onDblClick = (node) => {
-  router.push({ path: `/nodes/${node.id}` });
-  focusing.value = node;
-};
 </script>
 <template>
   <div>
     <div style="padding-bottom: 80vh">
-      <NodeList
-        :list="node.children"
-        :parent="node"
-        :appendable="true"
-        @item-clicked="onNodeClicked"
-        @dblclick="onDblClick"
-      >
+      <NodeList :list="node.children" :parent="node" :appendable="true">
         <InlineForm :parent="node"></InlineForm>
       </NodeList>
     </div>

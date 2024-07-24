@@ -29,7 +29,6 @@ const clear = () => {
 const router = useRouter();
 const onItemClick = (e, node) => {
   router.push({ name: "node", params: { id: node.id } });
-  focusing.value = node;
 };
 </script>
 <template>

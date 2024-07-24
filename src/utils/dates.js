@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const offsetDate = (date, offset) => {
   const d = new Date(date);
   d.setDate(d.getDate() + offset);
@@ -11,7 +13,12 @@ export const daysDiff = (d1, d2) => {
 };
 
 export const formatDate = (date) => {
-  return new Date(date).toISOString().slice(0, 10);
+  if (date instanceof Date) {
+    return moment(date).format("YYYY-MM-DD").toString();
+  } else {
+    console.log(date);
+    return date;
+  }
 };
 
 export const humanizeDate = (date) => {
