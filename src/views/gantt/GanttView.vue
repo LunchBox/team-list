@@ -174,6 +174,19 @@ const todayColumnStyle = computed(() => {
     "grid-column-end": offset + 1,
   };
 });
+
+const draggingContainer = ref(false);
+const containerEl = ref(null);
+
+useEventListener(window, "mousemove", (e) => {
+  if (draggingContainer.value && containerEl.value) {
+    containerEl.value.scrollLeft -= e.movementX;
+  }
+});
+
+useEventListener(window, "mouseup", () => {
+  draggingContainer.value = false;
+});
 </script>
 <template>
   <div class="gantt-view" :style="{ '--cols': displayDays }">
@@ -190,7 +203,11 @@ const todayColumnStyle = computed(() => {
       <slot name="before-container"></slot>
     </div>
 
-    <div class="gantt-container">
+    <div
+      class="gantt-container"
+      ref="containerEl"
+      @mousedown="draggingContainer = true"
+    >
       <!-- weeks -->
       <template v-for="(d, i) in dates">
         <div
