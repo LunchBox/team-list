@@ -33,7 +33,8 @@ const today = new Date();
 const { startDate, totalDays, dates } = useDates(props, today);
 
 // dragging items
-const { dragging, shadow, draggingHandler } = useDraggingItems(editMode);
+const { dragging, shadow, hoverDate, draggingHandler } =
+  useDraggingItems(editMode);
 
 //  drag & drop item
 const { onDropToDate } = useDroppable(editMode);
@@ -111,6 +112,7 @@ const selectedDate = ref(null);
         :startDate="startDate"
         :date="d"
         :title="formatDate(d)"
+        @mouseover="hoverDate = d"
         @click="selectedDate = d"
         @drop="onDropToDate(d)"
         @dragover.prevent
@@ -239,6 +241,10 @@ strong {
       left: 50%;
       background: #c30;
     }
+  }
+
+  .event-through {
+    pointer-events: none;
   }
 
   .shadow {

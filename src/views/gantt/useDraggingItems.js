@@ -1,17 +1,19 @@
-import { ref, reactive } from "vue";
+import { ref, reactive, nextTick } from "vue";
 import useEventListener from "@/utils/useEventListener.js";
 
-import { offsetDate, formatDate } from "@/utils/dates.js";
+import { offsetDate, formatDate, daysDiff } from "@/utils/dates.js";
 
 // display 3 slots for a task that have no start_date or end_date
 const DEFAULT_TASK_DAYS = 3;
 
-const CELL_WIDTH = 30;
-
 export default (editMode) => {
   const dragging = ref(null);
   const draggingType = ref(null);
-  const draggingDist = ref(0);
+
+  // the date column that cursor on
+  const hoverDate = ref(null);
+
+  const draggingStartDate = ref(null);
 
   const shadow = reactive({
     start_date: null,
@@ -23,7 +25,6 @@ export default (editMode) => {
 
     dragging.value = item;
     draggingType.value = type;
-    draggingDist.value = 0;
 
     // assign default dates
     if (!item.start_date) {
@@ -38,25 +39,28 @@ export default (editMode) => {
     const { start_date, end_date } = item;
     shadow.start_date = start_date;
     shadow.end_date = end_date;
+
+    // 開始 dragging 的實際日期
+    draggingStartDate.value = hoverDate.value;
   };
 
   useEventListener(document, "mousemove", (e) => {
     if (!editMode.value) return;
 
     if (!dragging.value || !draggingType.value) return;
-    draggingDist.value += e.movementX;
 
     const item = dragging.value;
-    const moved = Math.round(draggingDist.value / CELL_WIDTH);
 
     if (draggingType.value === "entire") {
-      shadow.start_date = formatDate(offsetDate(item.start_date, moved));
-      shadow.end_date = formatDate(offsetDate(item.end_date, moved));
+      const diffs = daysDiff(hoverDate.value, draggingStartDate.value);
+
+      shadow.start_date = formatDate(offsetDate(item.start_date, diffs));
+      shadow.end_date = formatDate(offsetDate(item.end_date, diffs));
     }
 
     const datekey = `${draggingType.value}_date`;
     if (shadow[datekey]) {
-      shadow[datekey] = formatDate(offsetDate(item[datekey], moved));
+      shadow[datekey] = formatDate(hoverDate.value);
     } else {
       shadow[datekey] = formatDate(new Date());
     }
@@ -65,9 +69,7 @@ export default (editMode) => {
   useEventListener(document, "mouseup", () => {
     if (!editMode.value) return;
 
-    const threshold = Math.abs(draggingDist.value) > CELL_WIDTH / 2;
-
-    if (dragging.value && draggingType.value && threshold) {
+    if (dragging.value && draggingType.value) {
       const item = dragging.value;
       item.start_date = shadow.start_date;
       item.end_date = shadow.end_date;
@@ -75,8 +77,9 @@ export default (editMode) => {
 
     dragging.value = null;
     draggingType.value = null;
-    draggingDist.value = 0;
+
+    draggingStartDate.value = null;
   });
 
-  return { dragging, shadow, draggingHandler };
+  return { dragging, shadow, hoverDate, draggingHandler };
 };
