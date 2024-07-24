@@ -7,13 +7,19 @@ import {
   expandAll,
   collapseAll,
   resetList,
+  selection,
 } from "@/stores/nodes.js";
 
 import NodeList from "@/views/nodes/NodeList.vue";
 import InlineForm from "@/views/nodes/InlineForm.vue";
 
+const { clearSelection } = selection;
+
 // 點在畫面上其他地方都 release focus
-useEventListener(document, "click", () => (focusing.value = null));
+useEventListener(document, "click", () => {
+  focusing.value = null;
+  clearSelection();
+});
 
 const clear = () => {
   if (!confirm("Are you sure?")) return;

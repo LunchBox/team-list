@@ -3,7 +3,7 @@ import { computed, ref } from "vue";
 export default function useSelection() {
   const _items = ref(new Set());
 
-  const clear = () => {
+  const clearSelection = () => {
     _items.value.clear();
   };
 
@@ -14,7 +14,7 @@ export default function useSelection() {
 
   // clear first then add the item into list
   const select = (item) => {
-    clear();
+    clearSelection();
     add(item);
   };
 
@@ -55,7 +55,7 @@ export default function useSelection() {
     any,
     first,
     last,
-    clear,
+    clearSelection,
     select,
     toggleSelect,
     hasSelected,
