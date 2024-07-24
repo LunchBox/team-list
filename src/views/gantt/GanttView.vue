@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, nextTick } from "vue";
 
 import { focusing } from "@/stores/nodes.js";
 
@@ -18,6 +18,22 @@ const props = defineProps(["list"]);
 
 const editMode = ref(false);
 const cellWidth = ref(32);
+
+const targetDate = ref(formatDate(new Date()));
+
+const scrollTo = () => {
+  nextTick(() => {
+    const el = document.querySelector(`#d_${formatDate(targetDate.value)}`);
+    console.log(el);
+    if (el) {
+      el.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "nearest",
+      });
+    }
+  });
+};
 
 // only show items that have start and end date
 const scheduledList = computed(() => {
@@ -75,6 +91,11 @@ const selectedDate = ref(null);
     <div class="before-container">
       <div class="flex">
         <slot name="before-container"></slot>
+
+        <form style="margin-left: auto" @submit.prevent="scrollTo">
+          <input type="date" v-model="targetDate" />
+          <input type="submit" value="Goto" />
+        </form>
       </div>
     </div>
 
@@ -98,6 +119,7 @@ const selectedDate = ref(null);
       <div
         v-for="d in dates"
         class="cell day"
+        :id="`d_${formatDate(d)}`"
         :class="{ weekend: isWeekend(d) }"
       >
         <span>{{ d.getDate() }}</span>
