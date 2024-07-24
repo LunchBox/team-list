@@ -44,6 +44,8 @@ const { draggingContainer } = useDraggingContainer(containerEl);
 const itemTitle = (item) => {
   return `${item.start_date} ~ ${item.end_date} ${item.content}`;
 };
+
+const selectedDate = ref(null);
 </script>
 <template>
   <div class="gantt-view" :style="{ '--cols': totalDays }">
@@ -82,25 +84,6 @@ const itemTitle = (item) => {
         {{ d.getDate() }}
       </div>
 
-      <!-- weekend marks -->
-      <template v-for="d in dates">
-        <GridColumn
-          v-if="d.getDay() === 0"
-          class="weekend sunday"
-          :rows="list.length"
-          :startDate="startDate"
-          :date="d"
-        ></GridColumn>
-
-        <GridColumn
-          v-if="d.getDay() === 6"
-          class="weekend saturday"
-          :rows="list.length"
-          :startDate="startDate"
-          :date="d"
-        ></GridColumn>
-      </template>
-
       <!-- today marker -->
       <GridColumn
         class="today"
@@ -109,10 +92,29 @@ const itemTitle = (item) => {
         :date="today"
       ></GridColumn>
 
+      <!-- droppable area -->
+      <GridColumn
+        v-for="d in dates"
+        class="droppable"
+        :class="{
+          selected: selectedDate === d,
+          weekend: isWeekend(d),
+          sunday: d.getDay() === 0,
+          saturday: d.getDay() === 6,
+        }"
+        :rows="list.length"
+        :startDate="startDate"
+        :date="d"
+        :title="formatDate(d)"
+        @click="selectedDate = d"
+        @drop="onDropToDate(d)"
+        @dragover.prevent
+      ></GridColumn>
+
       <!-- highlight entire row -->
       <div
         v-if="focusing"
-        class="focusing"
+        class="row focusing"
         :style="{
           'grid-row-start': rowOf(focusing) + 3,
           'grid-row-end': rowOf(focusing) + 4,
@@ -120,18 +122,6 @@ const itemTitle = (item) => {
           'grid-column-end': totalDays + 1,
         }"
       ></div>
-
-      <!-- droppable area -->
-      <GridColumn
-        v-for="d in dates"
-        class="dropable"
-        :rows="list.length"
-        :startDate="startDate"
-        :date="d"
-        :title="formatDate(d)"
-        @drop="onDropToDate(d)"
-        @dragover.prevent
-      ></GridColumn>
 
       <!-- shadow item to indicate the positions -->
       <GridRowItem
@@ -226,8 +216,6 @@ const itemTitle = (item) => {
   }
 
   .weekend {
-    user-select: none;
-    pointer-events: none;
     background: #efefef;
   }
 
@@ -251,7 +239,12 @@ const itemTitle = (item) => {
     background: rgba(0, 0, 0, 0.3);
   }
 
-  .focusing {
+  .weekend.selected,
+  .droppable.selected {
+    background-color: #ff9d004f;
+  }
+
+  .row.focusing {
     background: rgba(0, 0, 0, 0.1);
   }
 }

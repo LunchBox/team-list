@@ -21,7 +21,7 @@ const itemCellStyle = computed(() => {
   let colLen = DEFAULT_TASK_DAYS - 1;
   if (start_date && end_date) {
     colLen = Math.floor(daysDiff(end_date, start_date));
-    colLen = Math.max(colLen, 1);
+    colLen = Math.max(colLen, 0);
   }
 
   return {
