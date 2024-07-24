@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from "vue-router";
-import { focusing, selection } from "@/stores/nodes.js";
+import { focusing } from "@/stores/nodes.js";
 
 import useKeydownHandlers from "@/views/nodes/keydown_handlers.js";
 
@@ -17,18 +17,6 @@ const router = useRouter();
 const onDblClick = (node) => {
   router.push({ path: `/nodes/${node.id}` });
   focusing.value = node;
-};
-
-const { select, toggleSelect } = selection;
-
-const onNodeClicked = (e, node) => {
-  focusing.value = node;
-
-  if (e.ctrlKey) {
-    toggleSelect(node);
-  } else {
-    select(node);
-  }
 };
 </script>
 <template>

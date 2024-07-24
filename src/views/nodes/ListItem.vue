@@ -10,11 +10,25 @@ import ExpandMarker from "./ExpandMarker.vue";
 const props = defineProps(["node", "parent", "appendable"]);
 const emit = defineEmits(["item-clicked", "dblclick"]);
 
-const { hasSelected } = selection;
+const { select, toggleSelect, hasSelected } = selection;
 
 defineOptions({
   inheritAttrs: false,
 });
+
+const onNodeClicked = (e) => {
+  const node = props.node;
+
+  focusing.value = node;
+
+  if (e.ctrlKey) {
+    toggleSelect(node);
+  } else {
+    select(node);
+  }
+
+  emit("item-clicked", e, node);
+};
 </script>
 <template>
   <!-- editing mode -->
@@ -33,7 +47,7 @@ defineOptions({
   >
     <div
       class="list-item-row flex items-center"
-      @click.prevent="$emit('item-clicked', $event, node)"
+      @click.left.prevent="onNodeClicked"
     >
       <div class="list-item-cell">
         <RouterLink :to="`/nodes/${node.id}`" class="focus-marker">
