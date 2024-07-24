@@ -1,5 +1,6 @@
 import { ref, watch, computed } from "vue";
 import randomId from "@/utils/random_id.js";
+import useSelection from "@/utils/useSelection.js";
 
 const REPLACER = (key, value) => {
   return key.startsWith("_") || key.startsWith("$") ? undefined : value;
@@ -40,6 +41,9 @@ const resetList = () => {
 const focusing = ref(null);
 const appendMode = ref(false);
 const quickEdit = ref(false);
+
+// init a global selection
+const selection = useSelection();
 
 // ---- Model
 class Node {
@@ -275,6 +279,7 @@ export {
   appendMode,
   quickEdit,
   currentUser,
+  selection,
   find,
   collapseAll,
   expandAll,

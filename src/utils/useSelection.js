@@ -7,14 +7,6 @@ export default function useSelection() {
     _items.value.clear();
   };
 
-  const toggle = (item) => {
-    if (_items.value.has(item)) {
-      _items.value.delete(item);
-    } else {
-      _items.value.add(item);
-    }
-  };
-
   // just add a item into the selection
   const add = (item) => {
     _items.value.add(item);
@@ -26,13 +18,21 @@ export default function useSelection() {
     add(item);
   };
 
+  const toggleSelect = (item) => {
+    if (_items.value.has(item)) {
+      _items.value.delete(item);
+    } else {
+      _items.value.add(item);
+    }
+  };
+
   const toArray = () => {
     return [..._items.value];
   };
 
-  const has = computed((item) => {
+  const hasSelected = (item) => {
     return _items.value.has(item);
-  });
+  };
 
   const onlyOne = computed(() => {
     return _items.value.size === 1;
@@ -56,9 +56,8 @@ export default function useSelection() {
     first,
     last,
     clear,
-    toggle,
-    add,
     select,
-    has,
+    toggleSelect,
+    hasSelected,
   };
 }

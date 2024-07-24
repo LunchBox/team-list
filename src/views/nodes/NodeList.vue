@@ -2,7 +2,7 @@
 import ListItem from "./ListItem.vue";
 
 defineProps(["list", "parent", "appendable"]);
-defineEmits(["click", "dblclick"]);
+defineEmits(["item-clicked", "dblclick"]);
 </script>
 <template>
   <div class="a-list">
@@ -11,7 +11,7 @@ defineEmits(["click", "dblclick"]);
       :node="node"
       :parent="parent"
       :appendable="appendable"
-      @click="(node) => $emit('click', node)"
+      @item-clicked="(e, node) => $emit('item-clicked', e, node)"
       @dblclick="(node) => $emit('dblclick', node)"
     ></ListItem>
     <slot></slot>

@@ -53,7 +53,7 @@ const dateRange = computed(() => {
             :list="node.children"
             :parent="node"
             :appendable="true"
-            @click="(node) => (focusing = node)"
+            @item-clicked="(e, node) => (focusing = node)"
           >
             <InlineForm :parent="node"></InlineForm>
           </NodeList>

@@ -296,9 +296,9 @@ const todayColumnStyle = computed(() => {
   text-overflow: ellipsis;
 }
 
-:deep(.aside .list-item.active > .list-item-row) {
+/* :deep(.aside .list-item.active > .list-item-row) {
   background-color: rgba(0, 0, 0, 0.1);
-}
+} */
 
 .before-container {
   grid-column: 3 / 4;

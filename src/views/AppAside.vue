@@ -8,7 +8,6 @@ import {
   collapseAll,
   resetList,
 } from "@/stores/nodes.js";
-import useKeydownHandlers from "@/views/nodes/keydown_handlers.js";
 
 import NodeList from "@/views/nodes/NodeList.vue";
 import InlineForm from "@/views/nodes/InlineForm.vue";
@@ -16,15 +15,13 @@ import InlineForm from "@/views/nodes/InlineForm.vue";
 // 點在畫面上其他地方都 release focus
 useEventListener(document, "click", () => (focusing.value = null));
 
-useKeydownHandlers();
-
 const clear = () => {
   if (!confirm("Are you sure?")) return;
   resetList();
 };
 
 const router = useRouter();
-const onClick = (node) => {
+const onItemClick = (e, node) => {
   router.push({ name: "node", params: { id: node.id } });
   focusing.value = node;
 };
@@ -37,7 +34,7 @@ const onClick = (node) => {
       <a href="#" @click.prevent="clear">Delete All</a>
     </div>
 
-    <NodeList :list="rootNodes" @click="onClick">
+    <NodeList :list="rootNodes" @item-clicked="onItemClick">
       <InlineForm></InlineForm>
     </NodeList>
   </div>

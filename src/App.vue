@@ -83,8 +83,12 @@ main {
     margin: 2px 0;
 
     &:hover > .list-item-row .focus-marker,
-    &.active > .list-item-row .focus-marker {
+    &.focusing > .list-item-row .focus-marker {
       display: block;
+    }
+
+    &.selected > .list-item-row {
+      background: rgba(0, 0, 0, 0.1);
     }
   }
 
