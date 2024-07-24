@@ -121,15 +121,6 @@ const itemTitle = (item) => {
         }"
       ></div>
 
-      <!-- shadow item to indicate the positions -->
-      <GridRowItem
-        v-if="dragging"
-        class="shadow"
-        :item="shadow"
-        :row="rowOf(dragging)"
-        :start="startDate"
-      ></GridRowItem>
-
       <!-- droppable area -->
       <GridColumn
         v-for="d in dates"
@@ -141,6 +132,15 @@ const itemTitle = (item) => {
         @drop="onDropToDate(d)"
         @dragover.prevent
       ></GridColumn>
+
+      <!-- shadow item to indicate the positions -->
+      <GridRowItem
+        v-if="dragging"
+        class="shadow"
+        :item="shadow"
+        :row="rowOf(dragging)"
+        :start="startDate"
+      ></GridRowItem>
 
       <!-- the draggable items -->
       <GridRowItem
@@ -226,6 +226,8 @@ const itemTitle = (item) => {
   }
 
   .weekend {
+    user-select: none;
+    pointer-events: none;
     background: #efefef;
   }
 
@@ -244,6 +246,8 @@ const itemTitle = (item) => {
   }
 
   .shadow {
+    user-select: none;
+    pointer-events: none;
     background: rgba(0, 0, 0, 0.3);
   }
 
