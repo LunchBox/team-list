@@ -52,22 +52,16 @@ const selectedDate = ref(null);
 <template>
   <div class="gantt-view" :style="{ '--cols': totalDays }">
     <div class="aside">
-      <div class="row">&nbsp;</div>
+      <div class="row">
+        mode: <strong>{{ editMode ? "Edit" : "View" }}</strong> &middot;
+        <a href="#" @click.prevent="editMode = !editMode"> toggle </a>
+      </div>
       <div class="row">&nbsp;</div>
       <slot name="aside"></slot>
     </div>
 
     <div class="before-container">
-      <div class="flex">
-        <slot name="before-container"></slot>
-        <a
-          href="#"
-          @click.prevent="editMode = !editMode"
-          style="margin-left: auto; white-space: nowrap"
-        >
-          {{ editMode ? "Edit" : "View" }} Mode
-        </a>
-      </div>
+      <slot name="before-container"></slot>
     </div>
 
     <div
@@ -163,6 +157,9 @@ const selectedDate = ref(null);
 </template>
 
 <style scoped>
+strong {
+  font-weight: 700;
+}
 .gantt-view {
   --line-height: 1.6rem;
   --cols: 20;
@@ -180,6 +177,10 @@ const selectedDate = ref(null);
   grid-row: 2 / 3;
 
   padding: 2px 0;
+}
+
+.aside a {
+  white-space: nowrap;
 }
 :deep(.aside .list-item .node-content) {
   white-space: nowrap;
