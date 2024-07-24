@@ -1,16 +1,25 @@
 <script setup>
 import { computed } from "vue";
+import { useRoute } from "vue-router";
+
+import { find, focusing } from "@/stores/nodes.js";
+
 import GanttView from "@/views/gantt/GanttView.vue";
 import NodeList from "./NodeList.vue";
 import InlineForm from "./InlineForm.vue";
 
-import { focusing } from "@/stores/nodes.js";
 import DateRangeForm from "@/components/DateRangeForm.vue";
+import Breadcrumbs from "./Breadcrumbs.vue";
 
-const props = defineProps(["node"]);
+import Header from "./Header.vue";
+
+const route = useRoute();
+const node = computed(() => {
+  return find(route.params.id);
+});
 
 const itemList = computed(() => {
-  return props.node.getExpanedChildren();
+  return node.value.getExpanedChildren();
 });
 
 const onDateChanged = (formData) => {
@@ -33,23 +42,31 @@ const dateRange = computed(() => {
 });
 </script>
 <template>
-  <GanttView :list="itemList">
-    <template #aside>
-      <NodeList
-        :list="node.children"
-        :parent="node"
-        :appendable="true"
-        @click="(node) => (focusing = node)"
-      >
-        <InlineForm :parent="node"></InlineForm>
-      </NodeList>
-    </template>
+  <div>
+    <div v-if="node">
+      <Breadcrumbs :node="node"></Breadcrumbs>
+      <Header :node="node"></Header>
 
-    <template #before-container>
-      <DateRangeForm
-        :date_range="dateRange"
-        @submit="onDateChanged"
-      ></DateRangeForm>
-    </template>
-  </GanttView>
+      <GanttView :list="itemList">
+        <template #aside>
+          <NodeList
+            :list="node.children"
+            :parent="node"
+            :appendable="true"
+            @click="(node) => (focusing = node)"
+          >
+            <InlineForm :parent="node"></InlineForm>
+          </NodeList>
+        </template>
+
+        <template #before-container>
+          <DateRangeForm
+            :date_range="dateRange"
+            @submit="onDateChanged"
+          ></DateRangeForm>
+        </template>
+      </GanttView>
+    </div>
+    <div v-else>loading...</div>
+  </div>
 </template>

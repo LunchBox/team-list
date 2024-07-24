@@ -23,9 +23,10 @@ const onDelete = () => {
     <div class="toolbar">
       <span>{{ node.start_date }}</span> ~
       <span>{{ node.end_date }}</span> &middot;
-      <RouterLink :to="`/nodes/${node.id}/edit`">Edit</RouterLink> &middot; view
-      as: <a href="#" @click.prevent="node.viewType = null">default</a> &middot;
-      <a href="#" @click.prevent="node.viewType = 'gantt'">gantt</a> &middot;
+      <RouterLink :to="`/nodes/${node.id}`">default</RouterLink> &middot;
+      <RouterLink :to="`/nodes/${node.id}/gantt`">gantt</RouterLink> &middot;
+      <RouterLink :to="`/nodes/${node.id}/edit`">Edit</RouterLink> &middot;
+
       <a href="#" @click.prevent="onDelete" style="color: #999">Delete</a>
     </div>
   </div>

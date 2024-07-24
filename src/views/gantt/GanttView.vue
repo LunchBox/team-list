@@ -29,6 +29,8 @@ const minStart = computed(() => {
     .filter((item) => item.start_date)
     .map((item) => new Date(item.start_date));
 
+  if (listStartDates.length === 0) return today;
+
   return Math.min(...listStartDates);
 });
 
@@ -36,6 +38,8 @@ const maxEnd = computed(() => {
   const listEndDates = props.list
     .filter((item) => item.end_date)
     .map((item) => new Date(item.end_date));
+
+  if (listEndDates.length === 0) return today;
 
   return Math.max(...listEndDates);
 });
@@ -273,7 +277,7 @@ const todayColumnStyle = computed(() => {
   --cols: 20;
 
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: minmax(300px, 1fr) 2fr;
   grid-template-rows: auto auto;
 
   align-items: stretch;

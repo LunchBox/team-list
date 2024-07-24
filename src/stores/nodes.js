@@ -52,9 +52,6 @@ class Node {
   start_date = null;
   end_date = null;
 
-  // view type
-  viewType = null;
-
   // ---- filters
 
   get parent() {

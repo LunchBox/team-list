@@ -17,15 +17,21 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import("../views/AboutView.vue"),
     },
-    {
-      path: "/nodes/:id",
-      name: "node",
-      component: () => import("../views/nodes/DetailsView.vue"),
-    },
+
     {
       path: "/nodes/:id/edit",
       name: "edit_node",
       component: () => import("../views/nodes/EditView.vue"),
+    },
+    {
+      path: "/nodes/:id/gantt",
+      name: "node_gantt_view",
+      component: () => import("../views/nodes/GanttView.vue"),
+    },
+    {
+      path: "/nodes/:id",
+      name: "node",
+      component: () => import("../views/nodes/ListView.vue"),
     },
   ],
 });
