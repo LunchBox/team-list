@@ -175,13 +175,14 @@ const expandAll = () => nodeList.value.forEach((t) => t.expand());
 
 // ---- store & load
 const STORAGE_KEY = "tl/nodes";
-watch(
-  nodeList,
-  () => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(nodeList.value, REPLACER));
-  },
-  { deep: true }
-);
+
+const saveToStorage = (sKey = STORAGE_KEY) => {
+  localStorage.setItem(sKey, JSON.stringify(nodeList.value, REPLACER));
+};
+
+const backup = () => saveToStorage("tl/nodes_backup");
+
+watch(nodeList, saveToStorage, { deep: true });
 
 const load = () => {
   const ds = localStorage.getItem(STORAGE_KEY);
@@ -289,4 +290,5 @@ export {
   moveUp,
   moveDown,
   resetList,
+  backup,
 };

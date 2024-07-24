@@ -8,6 +8,7 @@ import {
   collapseAll,
   resetList,
   selection,
+  backup,
 } from "@/stores/nodes.js";
 
 import NodeList from "@/views/nodes/NodeList.vue";
@@ -34,8 +35,9 @@ const onItemClick = (e, node) => {
 <template>
   <div>
     <div class="toolbar">
-      <a href="#" @click.prevent="expandAll">Expand All</a> &middot;
-      <a href="#" @click.prevent="collapseAll">Collapse All</a> &middot;
+      <a href="#" @click.prevent="backup">Backup</a> &middot;
+      <a href="#" @click.prevent="expandAll">Expand</a> &middot;
+      <a href="#" @click.prevent="collapseAll">Collapse</a> &middot;
       <a href="#" @click.prevent="clear">Delete All</a>
     </div>
 
@@ -47,7 +49,7 @@ const onItemClick = (e, node) => {
 
 <style scoped>
 .toolbar {
-  font-size: smaller;
+  font-size: small;
   margin: 1rem 0;
 }
 </style>
