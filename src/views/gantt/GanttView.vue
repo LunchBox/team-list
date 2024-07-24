@@ -17,6 +17,7 @@ import GridColumn from "./GridColumn.vue";
 const props = defineProps(["list"]);
 
 const editMode = ref(false);
+const cellWidth = ref(32);
 
 // only show items that have start and end date
 const scheduledList = computed(() => {
@@ -33,8 +34,10 @@ const today = new Date();
 const { startDate, totalDays, dates } = useDates(props, today);
 
 // dragging items
-const { dragging, shadow, hoverDate, draggingHandler } =
-  useDraggingItems(editMode);
+const { dragging, shadow, draggingHandler } = useDraggingItems(
+  editMode,
+  cellWidth
+);
 
 //  drag & drop item
 const { onDropToDate } = useDroppable(editMode);
@@ -48,10 +51,14 @@ const itemTitle = (item) => {
   return `${item.start_date} ~ ${item.end_date} ${item.content}`;
 };
 
+const generalStyle = computed(() => {
+  return { "--cols": totalDays.value, "--cell-width": `${cellWidth.value}px` };
+});
+
 const selectedDate = ref(null);
 </script>
 <template>
-  <div class="gantt-view" :style="{ '--cols': totalDays }">
+  <div class="gantt-view" :style="generalStyle">
     <div class="aside">
       <div class="row">
         mode: <strong>{{ editMode ? "Edit" : "View" }}</strong> &middot;
@@ -112,7 +119,6 @@ const selectedDate = ref(null);
         :startDate="startDate"
         :date="d"
         :title="formatDate(d)"
-        @mouseover="hoverDate = d"
         @click="selectedDate = d"
         @drop="onDropToDate(d)"
         @dragover.prevent
@@ -165,6 +171,7 @@ strong {
 }
 .gantt-view {
   --line-height: 1.6rem;
+  --cell-width: 32;
   --cols: 20;
 
   display: grid;
@@ -204,7 +211,7 @@ strong {
 
 .gantt-container {
   display: grid;
-  grid-template-columns: repeat(var(--cols), 2rem);
+  grid-template-columns: repeat(var(--cols), var(--cell-width));
   grid-auto-rows: var(--line-height);
 
   gap: 2px 0;

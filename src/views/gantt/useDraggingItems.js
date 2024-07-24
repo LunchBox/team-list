@@ -6,14 +6,10 @@ import { offsetDate, formatDate, daysDiff } from "@/utils/dates.js";
 // display 3 slots for a task that have no start_date or end_date
 const DEFAULT_TASK_DAYS = 3;
 
-export default (editMode) => {
+export default (editMode, cellWidth) => {
   const dragging = ref(null);
   const draggingType = ref(null);
-
-  // the date column that cursor on
-  const hoverDate = ref(null);
-
-  const draggingStartDate = ref(null);
+  const draggingDist = ref(0);
 
   const shadow = reactive({
     start_date: null,
@@ -25,6 +21,7 @@ export default (editMode) => {
 
     dragging.value = item;
     draggingType.value = type;
+    draggingDist.value = 0;
 
     // assign default dates
     if (!item.start_date) {
@@ -39,9 +36,6 @@ export default (editMode) => {
     const { start_date, end_date } = item;
     shadow.start_date = start_date;
     shadow.end_date = end_date;
-
-    // 開始 dragging 的實際日期
-    draggingStartDate.value = hoverDate.value;
   };
 
   useEventListener(document, "mousemove", (e) => {
@@ -51,16 +45,18 @@ export default (editMode) => {
 
     const item = dragging.value;
 
-    if (draggingType.value === "entire") {
-      const diffs = daysDiff(hoverDate.value, draggingStartDate.value);
+    draggingDist.value += e.movementX;
 
+    const diffs = Math.floor(draggingDist.value / cellWidth.value);
+
+    if (draggingType.value === "entire") {
       shadow.start_date = formatDate(offsetDate(item.start_date, diffs));
       shadow.end_date = formatDate(offsetDate(item.end_date, diffs));
     }
 
     const datekey = `${draggingType.value}_date`;
     if (shadow[datekey]) {
-      shadow[datekey] = formatDate(hoverDate.value);
+      shadow[datekey] = formatDate(offsetDate(item[datekey], diffs));
     } else {
       shadow[datekey] = formatDate(new Date());
     }
@@ -77,9 +73,8 @@ export default (editMode) => {
 
     dragging.value = null;
     draggingType.value = null;
-
-    draggingStartDate.value = null;
+    draggingDist.value = 0;
   });
 
-  return { dragging, shadow, hoverDate, draggingHandler };
+  return { dragging, shadow, draggingHandler };
 };
