@@ -182,7 +182,7 @@ const saveToStorage = (sKey = STORAGE_KEY) => {
 
 const backup = () => saveToStorage("tl/nodes_backup");
 
-watch(nodeList, saveToStorage, { deep: true });
+watch(nodeList, () => saveToStorage(), { deep: true });
 
 const load = () => {
   const ds = localStorage.getItem(STORAGE_KEY);
