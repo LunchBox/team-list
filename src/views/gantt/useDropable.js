@@ -5,12 +5,11 @@ import bus from "@/views/gantt/eventBus.js";
 export default () => {
   const draggingItem = ref(null);
 
-  bus.$on("item-mousedown", ([e, item] = {}) => {
+  bus.$on("item-dragstart", ([e, item] = {}) => {
     draggingItem.value = item;
   });
 
   const onDropToDate = (date) => {
-    console.log("-- drop on ", date);
     if (!draggingItem.value) return;
 
     const item = draggingItem.value;

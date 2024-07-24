@@ -8,7 +8,12 @@ import InlineForm from "./InlineForm.vue";
 import ExpandMarker from "./ExpandMarker.vue";
 
 const props = defineProps(["node", "parent", "appendable", "draggable"]);
-const emit = defineEmits(["item-mousedown", "item-clicked", "dblclick"]);
+const emit = defineEmits([
+  "item-dragstart",
+  "item-mousedown",
+  "item-clicked",
+  "dblclick",
+]);
 
 const { select, toggleSelect, hasSelected } = selection;
 
@@ -48,6 +53,7 @@ const onNodeClicked = (e) => {
     <div
       class="list-item-row flex items-center"
       :draggable="draggable"
+      @dragstart="$emit('item-dragstart', $event, node)"
       @mousedown="$emit('item-mousedown', $event, node)"
       @click.left.prevent="onNodeClicked"
     >
@@ -86,7 +92,10 @@ const onNodeClicked = (e) => {
       v-if="node.exp"
       :list="node.children"
       :parent="node"
-      @item-clicked="(e, node) => $emit('item-clicked', e, node)"
+      :itemDraggable="draggable"
+      @item-dragstart="(...args) => $emit('item-dragstart', ...args)"
+      @item-mousedown="(...args) => $emit('item-mousedown', ...args)"
+      @item-clicked="(...args) => $emit('item-clicked', ...args)"
       @dblclick="(node) => $emit('dblclick', node)"
     ></NodeList>
   </div>

@@ -46,8 +46,6 @@ const hover = ref(false);
 .col {
   position: relative;
 }
-.hover {
-}
 .hover:before {
   content: " ";
   position: absolute;

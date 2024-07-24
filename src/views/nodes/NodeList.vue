@@ -17,7 +17,7 @@ const emit = defineEmits([
       :parent="parent"
       :appendable="appendable"
       :draggable="itemDraggable"
-      @dragstart="(...args) => $emit('item-dragstart', ...args)"
+      @item-dragstart="(...args) => $emit('item-dragstart', ...args)"
       @item-mousedown="(...args) => $emit('item-mousedown', ...args)"
       @item-clicked="(...args) => $emit('item-clicked', ...args)"
       @dblclick="(node) => $emit('dblclick', node)"
