@@ -1,41 +1,40 @@
 <script setup>
-import { computed, reactive, ref, watch } from "vue";
+import { computed, ref } from "vue";
 
 import { focusing } from "@/stores/nodes.js";
 
-import { offsetDate, humanizeDate } from "@/utils/dates.js";
-
-import useEventListener from "@/utils/useEventListener.js";
+import { humanizeDate, formatDate } from "@/utils/dates.js";
 
 import useDates from "./useDates.js";
 import useDraggingItems from "./useDraggingItems.js";
 import useDraggingContainer from "./useDraggingContainer.js";
 
-import bus from "@/views/gantt/eventBus.js";
+import useDroppable from "./useDropable.js";
 
 import GridRowItem from "./GridRowItem.vue";
 import GridColumn from "./GridColumn.vue";
 
 const props = defineProps(["list"]);
 
+// only show items that have start and end date
 const scheduledList = computed(() => {
   return props.list.filter((t) => t.start_date && t.end_date);
 });
 
+// util functions
 const isWeekend = (d) => [0, 6].includes(d.getDay());
 const rowOf = (item) => props.list.indexOf(item);
 
 const today = new Date();
 
+// init dates
 const { startDate, totalDays, dates } = useDates(props, today);
 
 // dragging items
 const { dragging, shadow, draggingHandler } = useDraggingItems();
 
 //  drag & drop item
-bus.$on("item-mousedown", ([e, item] = {}) => {
-  // draggingHandler(item, "entire", props.list.indexOf(item));
-});
+const { onDropToDate } = useDroppable();
 
 // dragging container
 const containerEl = ref(null);
@@ -74,7 +73,7 @@ const itemTitle = (item) => {
         </div>
       </template>
 
-      <!-- days -->
+      <!-- days in header -->
       <div
         class="cell day"
         :class="{ weekend: isWeekend(d) }"
@@ -84,7 +83,7 @@ const itemTitle = (item) => {
       </div>
 
       <!-- weekend marks -->
-      <template v-for="(d, i) in dates">
+      <template v-for="d in dates">
         <GridColumn
           v-if="d.getDay() === 0"
           class="weekend sunday"
@@ -110,14 +109,6 @@ const itemTitle = (item) => {
         :date="today"
       ></GridColumn>
 
-      <GridRowItem
-        v-if="dragging"
-        class="shadow"
-        :item="shadow"
-        :row="rowOf(dragging)"
-        :start="startDate"
-      ></GridRowItem>
-
       <!-- highlight entire row -->
       <div
         v-if="focusing"
@@ -129,6 +120,27 @@ const itemTitle = (item) => {
           'grid-column-end': totalDays + 1,
         }"
       ></div>
+
+      <!-- shadow item to indicate the positions -->
+      <GridRowItem
+        v-if="dragging"
+        class="shadow"
+        :item="shadow"
+        :row="rowOf(dragging)"
+        :start="startDate"
+      ></GridRowItem>
+
+      <!-- droppable area -->
+      <GridColumn
+        v-for="d in dates"
+        class="dropable"
+        :rows="list.length"
+        :startDate="startDate"
+        :date="d"
+        :title="formatDate(d)"
+        @drop="onDropToDate(d)"
+        @dragover.prevent
+      ></GridColumn>
 
       <!-- the draggable items -->
       <GridRowItem
@@ -174,10 +186,6 @@ const itemTitle = (item) => {
   text-overflow: ellipsis;
 }
 
-/* :deep(.aside .list-item.active > .list-item-row) {
-  background-color: rgba(0, 0, 0, 0.1);
-} */
-
 .before-container {
   grid-column: 3 / 4;
   grid-row: 1 / 2;
@@ -216,6 +224,7 @@ const itemTitle = (item) => {
       font-size: small;
     }
   }
+
   .weekend {
     background: #efefef;
   }

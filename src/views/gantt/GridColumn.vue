@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from "vue";
+import { ref, computed } from "vue";
 import { dateToGridColumn } from "./utils.js";
 
 const props = defineProps({
@@ -25,10 +25,36 @@ const colStyle = computed(() => {
     "grid-column-end": colStart.value + cols,
   };
 });
+
+const hover = ref(false);
 </script>
 
 <template>
-  <div :style="colStyle">
+  <div
+    class="col"
+    :class="{ hover }"
+    :style="colStyle"
+    @dragenter="hover = true"
+    @dragleave="hover = false"
+    @drop="hover = false"
+  >
     <slot></slot>
   </div>
 </template>
+
+<style scoped>
+.col {
+  position: relative;
+}
+.hover {
+}
+.hover:before {
+  content: " ";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  background: #ccc;
+}
+</style>
