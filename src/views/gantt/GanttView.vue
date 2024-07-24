@@ -16,20 +16,48 @@ import ItemView from "./ItemView.vue";
 
 const props = defineProps(["list"]);
 
-const DAYS = 100;
+// const DAYS = 100;
 const today = new Date();
+const firstDayOffset = 3; // display from at least 3 days from firstday or today
+const lastDayOffset = 10;
 
 // default 3 days ago
-const startDate = ref(offsetDate(today, -3));
+const startDate = ref(offsetDate(today, -firstDayOffset));
 
 const minStart = computed(() => {
-  const ds = props.list
+  const listStartDates = props.list
     .filter((item) => item.start_date)
     .map((item) => new Date(item.start_date));
 
-  return Math.min(...ds);
+  return Math.min(...listStartDates);
 });
 
+const maxEnd = computed(() => {
+  const listEndDates = props.list
+    .filter((item) => item.end_date)
+    .map((item) => new Date(item.end_date));
+
+  return Math.max(...listEndDates);
+});
+
+const displayDays = computed(() => {
+  const firstDay = startDate.value;
+  let days = Math.ceil(daysDiff(maxEnd.value, firstDay));
+
+  // at least display 30 days
+  return Math.max(days, 30) + firstDayOffset + lastDayOffset;
+});
+
+const dates = computed(() => {
+  const firstDay = startDate.value;
+  const days = displayDays.value;
+
+  return [...Array(days)].map((_, i) => {
+    return offsetDate(firstDay, i);
+  });
+});
+
+// update start date if any item changed the minimun start date
 watch(
   minStart,
   () => {
@@ -41,16 +69,11 @@ watch(
   { immediate: true }
 );
 
-const dates = computed(() => {
-  return [...Array(DAYS)].map((_, i) => {
-    return offsetDate(startDate.value, i);
-  });
-});
-
 const isWeekend = (d) => {
   return [0, 6].includes(d.getDay());
 };
 
+// display 3 slots for a task that have no start_date or end_date
 const DEFAULT_TASK_DAYS = 3;
 
 const CELL_WIDTH = 30;
@@ -141,7 +164,7 @@ const todayColumnStyle = computed(() => {
 });
 </script>
 <template>
-  <div class="gantt-view">
+  <div class="gantt-view" :style="{ '--cols': displayDays }">
     <div class="aside">
       <div class="row">&nbsp;</div>
       <div class="row">&nbsp;</div>
@@ -211,7 +234,7 @@ const todayColumnStyle = computed(() => {
             'grid-row-start': row + 3,
             'grid-row-end': row + 4,
             'grid-column-start': 1,
-            'grid-column-end': DAYS + 1,
+            'grid-column-end': displayDays + 1,
           }"
         ></div>
 
@@ -244,6 +267,7 @@ const todayColumnStyle = computed(() => {
 <style scoped>
 .gantt-view {
   --line-height: 1.6rem;
+  --cols: 20;
 
   display: grid;
   grid-template-columns: 1fr 2fr;
@@ -282,7 +306,7 @@ const todayColumnStyle = computed(() => {
 
 .gantt-container {
   display: grid;
-  grid-template-columns: repeat(91, 2rem);
+  grid-template-columns: repeat(var(--cols), 2rem);
   grid-auto-rows: var(--line-height);
 
   gap: 2px 0;
