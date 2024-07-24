@@ -147,6 +147,7 @@ const selectedDate = ref(null);
         :start="startDate"
         :id="item.id"
         :title="itemTitle(item)"
+        :class="{ 'event-through': dragging === item }"
         @dragging="(type) => draggingHandler(item, type)"
         @click="focusing = item"
       >
