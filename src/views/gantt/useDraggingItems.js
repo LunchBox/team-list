@@ -40,12 +40,9 @@ export default (editMode) => {
     shadow.end_date = end_date;
   };
 
-  if (!editMode.value) {
-    return { dragging, shadow, draggingHandler };
-  }
-  // not necessary to bind events if it is not edit mode
-
   useEventListener(document, "mousemove", (e) => {
+    if (!editMode.value) return;
+
     if (!dragging.value || !draggingType.value) return;
     draggingDist.value += e.movementX;
 
@@ -66,6 +63,8 @@ export default (editMode) => {
   });
 
   useEventListener(document, "mouseup", () => {
+    if (!editMode.value) return;
+
     const threshold = Math.abs(draggingDist.value) > CELL_WIDTH / 2;
 
     if (dragging.value && draggingType.value && threshold) {

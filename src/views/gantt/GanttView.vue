@@ -58,7 +58,16 @@ const selectedDate = ref(null);
     </div>
 
     <div class="before-container">
-      <slot name="before-container"></slot>
+      <div class="flex">
+        <slot name="before-container"></slot>
+        <a
+          href="#"
+          @click.prevent="editMode = !editMode"
+          style="margin-left: auto; white-space: nowrap"
+        >
+          {{ editMode ? "Edit" : "View" }} Mode
+        </a>
+      </div>
     </div>
 
     <div
