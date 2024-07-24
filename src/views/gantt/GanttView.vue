@@ -116,6 +116,10 @@ const draggingHandler = (item = null, type = null, row = null) => {
   shadow.end_date = end_date;
 };
 
+bus.$on("item-mousedown", ([e, item] = {}) => {
+  draggingHandler(item, "entire", props.list.indexOf(item));
+});
+
 useEventListener(document, "mousemove", (e) => {
   if (!dragging.value || !draggingType.value) return;
   draggingDist.value += e.movementX;
@@ -175,13 +179,9 @@ const todayColumnStyle = computed(() => {
     "grid-column-end": offset + 1,
   };
 });
-
+// --------------- dragging container
 const draggingContainer = ref(false);
 const containerEl = ref(null);
-
-bus.$on("item-mousedown", () => {
-  console.log("-- item mouse down in gantt");
-});
 
 useEventListener(window, "mousemove", (e) => {
   if (draggingContainer.value && containerEl.value) {

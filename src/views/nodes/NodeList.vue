@@ -11,8 +11,8 @@ const emit = defineEmits(["item-mousedown", "item-clicked", "dblclick"]);
       :node="node"
       :parent="parent"
       :appendable="appendable"
-      @item-mousedown="$emit('item-mousedown', $event, node)"
-      @item-clicked="(e, node) => $emit('item-clicked', e, node)"
+      @item-mousedown="(...args) => $emit('item-mousedown', ...args)"
+      @item-clicked="(...args) => $emit('item-clicked', ...args)"
       @dblclick="(node) => $emit('dblclick', node)"
     ></ListItem>
     <slot></slot>

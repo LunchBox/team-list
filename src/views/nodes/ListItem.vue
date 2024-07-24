@@ -47,7 +47,7 @@ const onNodeClicked = (e) => {
   >
     <div
       class="list-item-row flex items-center"
-      @mousedown="$emit('item-mousedown')"
+      @mousedown="$emit('item-mousedown', $event, node)"
       @click.left.prevent="onNodeClicked"
     >
       <div class="list-item-cell">

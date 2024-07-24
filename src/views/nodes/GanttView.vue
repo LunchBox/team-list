@@ -42,6 +42,8 @@ const dateRange = computed(() => {
     end_date,
   };
 });
+
+const onItemMousedown = (...args) => bus.$emit("item-mousedown", args);
 </script>
 <template>
   <div>
@@ -54,7 +56,7 @@ const dateRange = computed(() => {
           <NodeList
             :list="node.children"
             :parent="node"
-            @item-mousedown="bus.$emit('item-mousedown')"
+            @item-mousedown="onItemMousedown"
           >
             <InlineForm :parent="node"></InlineForm>
           </NodeList>
