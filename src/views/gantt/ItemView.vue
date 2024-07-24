@@ -3,6 +3,8 @@ import { computed } from "vue";
 
 import { daysDiff } from "@/utils/dates.js";
 
+import { dateToGridColumn } from "./utils.js";
+
 const props = defineProps(["item", "row", "start"]);
 defineEmits(["dragging"]);
 
@@ -13,7 +15,7 @@ const itemCellStyle = computed(() => {
 
   let colStart = new Date().getDay() + 1;
   if (start_date) {
-    colStart = Math.floor(daysDiff(start_date, start)) + 2;
+    colStart = dateToGridColumn(start_date, props.start);
   }
 
   let colLen = DEFAULT_TASK_DAYS - 1;

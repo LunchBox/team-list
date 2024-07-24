@@ -12,6 +12,8 @@ import {
 
 import useEventListener from "@/utils/useEventListener.js";
 
+import { dateToGridColumn as dtc } from "./utils.js";
+
 import ItemView from "./ItemView.vue";
 
 const props = defineProps(["list"]);
@@ -159,14 +161,17 @@ const fullColumnStyle = computed(() => {
   };
 });
 
+const dateToGridColumn = (date) => {
+  return dtc(date, startDate.value);
+};
+
 const todayColumnStyle = computed(() => {
-  let offset = Math.floor(daysDiff(new Date(), startDate.value));
-  offset = Math.max(offset, 0);
+  const offset = dateToGridColumn(today);
 
   return {
     ...fullColumnStyle.value,
-    "grid-column-start": offset + 1,
-    "grid-column-end": offset + 2,
+    "grid-column-start": offset,
+    "grid-column-end": offset + 1,
   };
 });
 </script>
@@ -213,8 +218,8 @@ const todayColumnStyle = computed(() => {
           class="weekend sunday"
           :style="{
             ...fullColumnStyle,
-            'grid-column-start': 1 + i,
-            'grid-column-end': 2 + i,
+            'grid-column-start': dateToGridColumn(d),
+            'grid-column-end': dateToGridColumn(d) + 1,
           }"
         >
           <!-- sunday -->
@@ -225,8 +230,8 @@ const todayColumnStyle = computed(() => {
           class="weekend saturday"
           :style="{
             ...fullColumnStyle,
-            'grid-column-start': 8 + i,
-            'grid-column-end': 9 + i,
+            'grid-column-start': dateToGridColumn(d),
+            'grid-column-end': dateToGridColumn(d) + 1,
           }"
         >
           <!-- saturday -->
