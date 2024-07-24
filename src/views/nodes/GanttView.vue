@@ -5,6 +5,7 @@ import { useRoute } from "vue-router";
 import { find, focusing } from "@/stores/nodes.js";
 
 import bus from "@/views/gantt/eventBus.js";
+import useKeydownHandlers from "./useKeydownHandlers.js";
 
 import GanttView from "@/views/gantt/GanttView.vue";
 import NodeList from "./NodeList.vue";
@@ -45,6 +46,8 @@ const dateRange = computed(() => {
 
 const onItemMousedown = (...args) => bus.$emit("item-mousedown", args);
 const onItemDragstart = (...args) => bus.$emit("item-dragstart", args);
+
+useKeydownHandlers();
 </script>
 <template>
   <div>

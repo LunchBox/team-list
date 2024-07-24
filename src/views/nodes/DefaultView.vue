@@ -1,5 +1,5 @@
 <script setup>
-import useKeydownHandlers from "@/views/nodes/keydown_handlers.js";
+import useKeydownHandlers from "./useKeydownHandlers.js";
 
 import NodeList from "./NodeList.vue";
 import InlineForm from "./InlineForm.vue";
