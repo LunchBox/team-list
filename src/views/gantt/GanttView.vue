@@ -19,25 +19,6 @@ const props = defineProps(["list"]);
 const editMode = ref(false);
 const cellWidth = ref(32);
 
-const layout = ref("day");
-
-const layoutInitializer = {
-  day: () => {
-    cellWidth.value = 32;
-  },
-  week: () => {
-    cellWidth.value = 24;
-  },
-  month: () => {
-    cellWidth.value = 16;
-  },
-};
-
-const switchLayout = (layoutName) => {
-  layout.value = layoutName;
-  layoutInitializer[layoutName]();
-};
-
 // only show items that have start and end date
 const scheduledList = computed(() => {
   return props.list.filter((t) => t.start_date && t.end_date);
@@ -94,11 +75,6 @@ const selectedDate = ref(null);
     <div class="before-container">
       <div class="flex">
         <slot name="before-container"></slot>
-        <div style="margin-left: auto">
-          <button @click.prevent="switchLayout('day')">day</button>
-          <button @click.prevent="switchLayout('week')">week</button>
-          <button @click.prevent="switchLayout('month')">month</button>
-        </div>
       </div>
     </div>
 
@@ -119,35 +95,13 @@ const selectedDate = ref(null);
       </template>
 
       <!-- days in header -->
-      <template v-if="layout === 'day'">
-        <div
-          v-for="d in dates"
-          class="cell day"
-          :class="{ weekend: isWeekend(d) }"
-        >
-          <span>{{ d.getDate() }}</span>
-        </div>
-      </template>
-
-      <template v-if="layout === 'week--'">
-        <div
-          v-for="d in dates"
-          class="cell day"
-          :class="{ weekend: isWeekend(d) }"
-        >
-          <span>{{ d.getDate() }}</span>
-        </div>
-      </template>
-
-      <template v-if="layout === 'month'">
-        <div
-          v-for="d in dates"
-          class="cell day"
-          :class="{ weekend: isWeekend(d) }"
-        >
-          <span>{{ d.getDate() }}</span>
-        </div>
-      </template>
+      <div
+        v-for="d in dates"
+        class="cell day"
+        :class="{ weekend: isWeekend(d) }"
+      >
+        <span>{{ d.getDate() }}</span>
+      </div>
 
       <!-- today marker -->
       <GridColumn
