@@ -8,7 +8,7 @@ const DEFAULT_TASK_DAYS = 3;
 
 const CELL_WIDTH = 30;
 
-export default () => {
+export default (editMode) => {
   const dragging = ref(null);
   const draggingType = ref(null);
   const draggingDist = ref(0);
@@ -19,6 +19,8 @@ export default () => {
   });
 
   const draggingHandler = (item = null, type = null) => {
+    if (!editMode.value) return;
+
     dragging.value = item;
     draggingType.value = type;
     draggingDist.value = 0;
@@ -37,6 +39,11 @@ export default () => {
     shadow.start_date = start_date;
     shadow.end_date = end_date;
   };
+
+  if (!editMode.value) {
+    return { dragging, shadow, draggingHandler };
+  }
+  // not necessary to bind events if it is not edit mode
 
   useEventListener(document, "mousemove", (e) => {
     if (!dragging.value || !draggingType.value) return;

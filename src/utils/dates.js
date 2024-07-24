@@ -16,7 +16,6 @@ export const formatDate = (date) => {
   if (date instanceof Date) {
     return moment(date).format("YYYY-MM-DD").toString();
   } else {
-    console.log(date);
     return date;
   }
 };

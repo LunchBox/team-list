@@ -2,7 +2,7 @@ import { ref } from "vue";
 import { offsetDate, daysDiff, formatDate } from "@/utils/dates.js";
 import bus from "@/views/gantt/eventBus.js";
 
-export default () => {
+export default (editMode) => {
   const draggingItem = ref(null);
 
   bus.$on("item-dragstart", ([e, item] = {}) => {
@@ -10,6 +10,8 @@ export default () => {
   });
 
   const onDropToDate = (date) => {
+    if (!editMode.value) return;
+
     if (!draggingItem.value) return;
 
     const item = draggingItem.value;

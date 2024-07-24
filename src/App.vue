@@ -87,6 +87,7 @@ main {
       display: block;
     }
 
+    &.focusing > .list-item-row,
     &.selected > .list-item-row {
       background: rgba(0, 0, 0, 0.1);
     }

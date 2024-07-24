@@ -16,6 +16,8 @@ import GridColumn from "./GridColumn.vue";
 
 const props = defineProps(["list"]);
 
+const editMode = ref(false);
+
 // only show items that have start and end date
 const scheduledList = computed(() => {
   return props.list.filter((t) => t.start_date && t.end_date);
@@ -31,10 +33,10 @@ const today = new Date();
 const { startDate, totalDays, dates } = useDates(props, today);
 
 // dragging items
-const { dragging, shadow, draggingHandler } = useDraggingItems();
+const { dragging, shadow, draggingHandler } = useDraggingItems(editMode);
 
 //  drag & drop item
-const { onDropToDate } = useDroppable();
+const { onDropToDate } = useDroppable(editMode);
 
 // dragging container
 const containerEl = ref(null);
@@ -215,10 +217,6 @@ const selectedDate = ref(null);
     }
   }
 
-  .weekend {
-    background: #efefef;
-  }
-
   .today {
     position: relative;
 
@@ -237,6 +235,10 @@ const selectedDate = ref(null);
     user-select: none;
     pointer-events: none;
     background: rgba(0, 0, 0, 0.3);
+  }
+
+  .weekend {
+    background: rgba(0, 0, 0, 0.1);
   }
 
   .weekend.selected,
