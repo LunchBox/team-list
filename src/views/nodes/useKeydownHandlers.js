@@ -18,6 +18,11 @@ export default ({ scopeRef = null } = {}) => {
     if (!focusing.value) return;
     const ft = focusing.value;
 
+    // not allow to leave the scope
+    const leaveScope = () => {
+      return ft.parent && ft.parent === scopeRef?.value;
+    };
+
     if (e.key === "Enter") {
       e.preventDefault();
       e.stopPropagation();
@@ -34,7 +39,10 @@ export default ({ scopeRef = null } = {}) => {
     if (e.key === "d") {
       if (delMark.value) {
         delMark.value = false;
+
+        const prev = ft.prev;
         destroy(ft);
+        focusing.value = prev;
       } else {
         delMark.value = true;
       }
@@ -68,7 +76,7 @@ export default ({ scopeRef = null } = {}) => {
           return (
             (ft.prev && ft.prev.exp && ft.prev.children.last) ||
             ft.prev ||
-            ft.parent
+            (leaveScope() ? ft : ft.parent)
           );
         },
         ArrowDown: () => {
@@ -78,8 +86,7 @@ export default ({ scopeRef = null } = {}) => {
           if (focusing.value.exp) {
             focusing.value.collapse();
           } else {
-            // not allow to leave the scope
-            if (ft.parent && ft.parent === scopeRef?.value) return;
+            if (leaveScope()) return;
             return ft.parent;
           }
         },
