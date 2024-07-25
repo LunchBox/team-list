@@ -37,7 +37,7 @@ const router = createRouter({
         {
           path: ":id",
           name: "node",
-          component: () => import("../views/nodes/ListView.vue"),
+          component: () => import("../views/nodes/DefaultView.vue"),
         },
       ],
     },

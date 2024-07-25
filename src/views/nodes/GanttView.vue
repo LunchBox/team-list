@@ -47,7 +47,7 @@ const dateRange = computed(() => {
 const onItemMousedown = (...args) => bus.$emit("item-mousedown", args);
 const onItemDragstart = (...args) => bus.$emit("item-dragstart", args);
 
-useKeydownHandlers();
+useKeydownHandlers({ scopeRef: node });
 </script>
 <template>
   <div>

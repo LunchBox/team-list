@@ -11,7 +11,7 @@ import {
   destroy,
 } from "@/stores/nodes.js";
 
-export default () => {
+export default ({ scopeRef = null } = {}) => {
   const delMark = ref(false);
 
   useEventListener(document, "keydown", (e) => {
@@ -56,7 +56,7 @@ export default () => {
       const fs = {
         ArrowUp: () => moveUp(ft),
         ArrowDown: () => moveDown(ft),
-        ArrowLeft: () => decreaseIndent(ft),
+        ArrowLeft: () => decreaseIndent(ft, scopeRef),
         ArrowRight: () => increaseIndent(ft),
       };
 
@@ -78,6 +78,8 @@ export default () => {
           if (focusing.value.exp) {
             focusing.value.collapse();
           } else {
+            // not allow to leave the scope
+            if (ft.parent && ft.parent === scopeRef?.value) return;
             return ft.parent;
           }
         },

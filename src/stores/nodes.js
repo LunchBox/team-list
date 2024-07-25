@@ -161,6 +161,16 @@ class Node {
       return t;
     }
   }
+
+  destroy() {
+    // cascading children destroy first
+    this.children.forEach((c) => c.destroy());
+
+    const idx = nodeList.value.findIndex((t) => t.id === this.id);
+    if (idx > -1) {
+      nodeList.value.splice(idx, 1);
+    }
+  }
 }
 
 // ---- filters
@@ -226,15 +236,12 @@ const loadFromFile = () => {
   input.click();
 };
 
-// ---- delete
+// ---- delete node and its children
 
 const destroy = (node) => {
   if (!confirm("Are you sure?")) return false;
 
-  const idx = nodeList.value.findIndex((t) => t.id === node.id);
-  if (idx > -1) {
-    nodeList.value.splice(idx, 1);
-  }
+  node.destroy();
 
   focusing.value = null;
 };
@@ -258,7 +265,6 @@ const moveDown = (node) => {
 };
 
 // ---- increase / decrease indent
-
 const increaseIndent = (node) => {
   const parent = node.parent;
 
@@ -279,8 +285,11 @@ const increaseIndent = (node) => {
   node.parent?.expand();
 };
 
-const decreaseIndent = (node) => {
+const decreaseIndent = (node, scopeRef = null) => {
   const parent = node.parent;
+
+  // scope is a node, do not allow children excape the scope
+  if (parent && parent === scopeRef?.value) return;
 
   if (parent) {
     const grandPa = parent.parent;
