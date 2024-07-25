@@ -176,8 +176,10 @@ const expandAll = () => nodeList.value.forEach((t) => t.expand());
 // ---- store & load
 const STORAGE_KEY = "tl/nodes";
 
+const dumpJSON = () => JSON.stringify(nodeList.value, REPLACER);
+
 const saveToStorage = (sKey = STORAGE_KEY) => {
-  localStorage.setItem(sKey, JSON.stringify(nodeList.value, REPLACER));
+  localStorage.setItem(sKey, dumpJSON());
 };
 
 const backup = () => saveToStorage("tl/nodes_backup");
@@ -193,6 +195,16 @@ const load = () => {
   }
 };
 load();
+
+const saveToFile = () => {
+  const link = document.createElement("a");
+
+  const file = new Blob([dumpJSON()], { type: "application/json" });
+  link.href = URL.createObjectURL(file);
+  link.download = "data.json";
+  link.click();
+  URL.revokeObjectURL(link.href);
+};
 
 // ---- delete
 
@@ -291,4 +303,5 @@ export {
   moveDown,
   resetList,
   backup,
+  saveToFile,
 };

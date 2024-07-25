@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Dashboard from "../views/Dashboard.vue";
+import Dashboard from "@/views/Dashboard.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,19 +19,27 @@ const router = createRouter({
     },
 
     {
-      path: "/nodes/:id/edit",
-      name: "edit_node",
-      component: () => import("../views/nodes/EditView.vue"),
-    },
-    {
       path: "/nodes/:id/gantt",
       name: "node_gantt_view",
       component: () => import("../views/nodes/GanttView.vue"),
     },
+
     {
-      path: "/nodes/:id",
-      name: "node",
-      component: () => import("../views/nodes/ListView.vue"),
+      path: "/nodes",
+      name: "nodes",
+      component: () => import("../views/nodes/NodesDashboard.vue"),
+      children: [
+        {
+          path: ":id/edit",
+          name: "edit_node",
+          component: () => import("../views/nodes/EditView.vue"),
+        },
+        {
+          path: ":id",
+          name: "node",
+          component: () => import("../views/nodes/ListView.vue"),
+        },
+      ],
     },
   ],
 });
