@@ -2,23 +2,18 @@
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 import { find } from "@/stores/nodes.js";
+import useSelection from "@/utils/useSelection.js";
+
 import Breadcrumbs from "./Breadcrumbs.vue";
 
 import Header from "./Header.vue";
-import useKeydownHandlers from "./useKeydownHandlers.js";
 
-import NodeList from "./NodeList.vue";
-import InlineForm from "./InlineForm.vue";
+import EditableNodeList from "./EditableNodeList.vue";
 
-// just a excel layout data, delete it later
-import { jsondata } from "./sample.js";
+const selection = useSelection();
 
 const route = useRoute();
-const node = computed(() => {
-  return find(route.params.id);
-});
-
-useKeydownHandlers({ scopeRef: node });
+const node = computed(() => find(route.params.id));
 </script>
 <template>
   <div>
@@ -26,11 +21,7 @@ useKeydownHandlers({ scopeRef: node });
       <Breadcrumbs :node="node"></Breadcrumbs>
       <Header :node="node"></Header>
 
-      <div style="padding-bottom: 80vh">
-        <NodeList :list="node.children" :parent="node" :appendable="true">
-          <InlineForm :parent="node"></InlineForm>
-        </NodeList>
-      </div>
+      <EditableNodeList :node="node" :selection="selection"></EditableNodeList>
 
       <template v-if="false">
         <div>This is a testing of a vue excel editor</div>
@@ -41,4 +32,15 @@ useKeydownHandlers({ scopeRef: node });
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.node-list {
+  padding-bottom: 80vh;
+
+  &.activated {
+    outline: 2px solid #222;
+  }
+}
+.node-list:focus {
+  outline: 2px solid #ccc;
+}
+</style>

@@ -1,14 +1,11 @@
 <script setup>
 import { ref } from "vue";
 import { RouterView } from "vue-router";
-import useEventListener from "@/utils/useEventListener.js";
 import NodesAside from "./NodesAside.vue";
 
 import {
-  focusing,
   expandAll,
   collapseAll,
-  selection,
   saveToFile,
   loadFromFile,
   resetList,
@@ -20,14 +17,6 @@ const clear = () => {
   if (!confirm("Are you sure?")) return;
   resetList();
 };
-
-const { clearSelection } = selection;
-
-// 點在畫面上其他地方都 release focus
-useEventListener(document, "click", () => {
-  focusing.value = null;
-  clearSelection();
-});
 </script>
 
 <template>
@@ -41,7 +30,7 @@ useEventListener(document, "click", () => {
         <a href="#" @click.prevent="clear">Delete All</a>
       </div>
     </div>
-    <div class="flex" :class="{ separated: !hideAside }" @click.stop>
+    <div class="flex" :class="{ separated: !hideAside }">
       <aside v-if="!hideAside">
         <NodesAside></NodesAside>
         <div><a href="#" @click.prevent="hideAside = true">Hide</a></div>

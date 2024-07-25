@@ -1,11 +1,11 @@
 <script setup>
 import { nextTick, ref, watch } from "vue";
 
-import { Node, focusing, appendMode, maxRootSeq } from "@/stores/nodes.js";
+import { Node, maxRootSeq } from "@/stores/nodes.js";
 import resize from "@/utils/resizeable.js";
 
 const props = defineProps(["node", "parent", "seq"]);
-const emit = defineEmits(["after-submit"]);
+const emit = defineEmits(["after-submit", "cancel"]);
 
 const formData = ref(null);
 
@@ -26,7 +26,6 @@ watch(props, reloadForm, {
 
 const onSubmit = () => {
   const obj = formData.value.save();
-  focusing.value = obj;
 
   reloadForm();
 
@@ -47,6 +46,11 @@ nextTick(() => {
   resizeTextarea();
   textEl.value && textEl.value.focus();
 });
+
+const onCancel = () => {
+  //TODO: should check the content here
+  emit("cancel");
+};
 </script>
 <template>
   <div class="list-item">
@@ -64,8 +68,8 @@ nextTick(() => {
           placeholder="what's on your mind?"
           v-model="formData.content"
           @input="resizeTextarea"
+          @keydown.esc="onCancel"
           @keydown.enter.ctrl.prevent="onSubmit"
-          @keydown.esc.prevent="appendMode = false"
         ></textarea>
         <input type="submit" value="Submit" />
       </form>

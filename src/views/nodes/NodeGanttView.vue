@@ -2,19 +2,19 @@
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 
-import { find, focusing } from "@/stores/nodes.js";
+import { find } from "@/stores/nodes.js";
+
+import useSelection from "@/utils/useSelection.js";
 
 import bus from "@/views/gantt/eventBus.js";
-import useKeydownHandlers from "./useKeydownHandlers.js";
 
 import GanttView from "@/views/gantt/GanttView.vue";
-import NodeList from "./NodeList.vue";
-import InlineForm from "./InlineForm.vue";
 
 import DateRangeForm from "@/components/DateRangeForm.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
 
 import Header from "./Header.vue";
+import EditableNodeList from "./EditableNodeList.vue";
 
 const route = useRoute();
 const node = computed(() => {
@@ -25,29 +25,39 @@ const itemList = computed(() => {
   return node.value.getExpanedChildren();
 });
 
+const selection = useSelection();
+
+const selectedItems = computed(() => {
+  return selection.selectedItems;
+});
+
+const theOnlyFirstItem = computed(() => {
+  return selection.selectedItems.length === 1 ? selection.first.value : null;
+});
+
 const onDateChanged = (formData) => {
-  if (!focusing.value) return;
+  if (!theOnlyFirstItem.value) return;
 
   const { start_date, end_date } = formData;
-  const item = focusing.value;
+  const item = theOnlyFirstItem.value;
+
   item.start_date = start_date;
   item.end_date = end_date;
 };
 
 const dateRange = computed(() => {
-  if (!focusing.value) return;
+  if (!theOnlyFirstItem.value) return;
 
-  const { start_date, end_date } = focusing.value;
+  const { start_date, end_date } = theOnlyFirstItem.value;
   return {
     start_date,
     end_date,
   };
 });
 
-const onItemMousedown = (...args) => bus.$emit("item-mousedown", args);
+// const onItemMousedown = (...args) => bus.$emit("item-mousedown", args);
+// TODO: 這裡交給 bus 處理也不是很 ok
 const onItemDragstart = (...args) => bus.$emit("item-dragstart", args);
-
-useKeydownHandlers({ scopeRef: node });
 </script>
 <template>
   <div>
@@ -55,9 +65,15 @@ useKeydownHandlers({ scopeRef: node });
       <Breadcrumbs :node="node"></Breadcrumbs>
       <Header :node="node"></Header>
 
-      <GanttView :list="itemList">
+      <GanttView :list="itemList" :selection="selection">
         <template #aside>
-          <NodeList
+          <EditableNodeList
+            :node="node"
+            :selection="selection"
+            :itemDraggable="true"
+            @item-dragstart="onItemDragstart"
+          ></EditableNodeList>
+          <!-- <NodeList
             :list="node.children"
             :parent="node"
             :itemDraggable="true"
@@ -65,7 +81,7 @@ useKeydownHandlers({ scopeRef: node });
             @item-dragstart="onItemDragstart"
           >
             <InlineForm :parent="node"></InlineForm>
-          </NodeList>
+          </NodeList> -->
         </template>
 
         <template #before-container>

@@ -1,9 +1,9 @@
 import { ref } from "vue";
 import useEventListener from "@/utils/useEventListener.js";
 import {
-  focusing,
-  appendMode,
-  quickEdit,
+  // focusing,
+  // appendMode,
+  // quickEdit,
   increaseIndent,
   decreaseIndent,
   moveUp,
@@ -11,38 +11,48 @@ import {
   destroy,
 } from "@/stores/nodes.js";
 
-export default ({ scopeRef = null } = {}) => {
+export default ({
+  scopeRef = null,
+  selection = null,
+  activated = null,
+} = {}) => {
+  if (!selection) return;
+
+  const { select, selectedItems, anySelected } = selection;
+
   const delMark = ref(false);
 
+  const isActivated = () => activated.value;
+
   useEventListener(document, "keydown", (e) => {
-    if (!focusing.value) return;
-    const ft = focusing.value;
+    // 如果未 activate， keydown 不做任何處理
+    if (!isActivated()) return;
 
-    // not allow to leave the scope
-    const leaveScope = () => {
-      return ft.parent && ft.parent === scopeRef?.value;
+    // 如果沒有選中任何 item 也不用處理？
+    if (!anySelected.value) return;
+
+    const items = selectedItems.value;
+
+    // 是否離開指定的 scope
+    const onRootScope = () => {
+      if (!scopeRef?.value) return false;
+
+      for (const n in items) {
+        if (n.parent && n.parent === scopeRef?.value) {
+          return true;
+        }
+      }
+      return false;
     };
-
-    if (e.key === "Enter") {
-      e.preventDefault();
-      e.stopPropagation();
-      appendMode.value = true;
-    }
-
-    if (e.key === "i" || e.key === "e") {
-      e.preventDefault();
-      e.stopPropagation();
-      quickEdit.value = true;
-    }
 
     // double press d to delete a node
     if (e.key === "d") {
       if (delMark.value) {
         delMark.value = false;
 
-        const prev = ft.prev;
-        destroy(ft);
-        focusing.value = prev;
+        const prev = items.first.prev;
+        items.forEach(destroy);
+        select(prev);
       } else {
         delMark.value = true;
       }
@@ -58,6 +68,8 @@ export default ({ scopeRef = null } = {}) => {
       e.stopPropagation();
       return f();
     };
+
+    const ft = items.first;
 
     // 按住 shift 移動
     if (e.shiftKey) {
@@ -76,27 +88,32 @@ export default ({ scopeRef = null } = {}) => {
           return (
             (ft.prev && ft.prev.exp && ft.prev.children.last) ||
             ft.prev ||
-            (leaveScope() ? ft : ft.parent)
+            (onRootScope() ? ft : ft.parent)
           );
         },
         ArrowDown: () => {
           return (ft.exp && ft.children.first) || ft.next || ft.parent?.next;
         },
         ArrowLeft: () => {
-          if (focusing.value.exp) {
-            focusing.value.collapse();
-          } else {
-            if (leaveScope()) return;
-            return ft.parent;
+          // there are no requirement for multiple nodes here?
+          if (items.length === 1) {
+            if (items.first.exp) {
+              items.first.collapse();
+            } else {
+              if (onRootScope()) return;
+              return ft.parent;
+            }
           }
         },
         ArrowRight: () => {
-          focusing.value.expand();
+          // focusing.value.expand();
+          items.forEach((n) => n.expand());
         },
       };
 
       const target = exec(fs[e.key]);
-      target && (focusing.value = target);
+      // target && (focusing.value = target);
+      target && select(target);
     }
   });
 };

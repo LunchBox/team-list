@@ -1,6 +1,7 @@
 import { ref, watch, computed } from "vue";
 import randomId from "@/utils/random_id.js";
 import useSelection from "@/utils/useSelection.js";
+import CusArray from "@/utils/cus_array";
 
 const REPLACER = (key, value) => {
   return key.startsWith("_") || key.startsWith("$") ? undefined : value;
@@ -10,16 +11,6 @@ const bySeq = (a, b) => a.seq - b.seq;
 
 const first = (arr) => arr[0];
 const last = (arr) => arr[arr.length - 1];
-
-class CusArray extends Array {
-  get first() {
-    return this[0];
-  }
-
-  get last() {
-    return this[this.length - 1];
-  }
-}
 
 // TODO: move to other place
 const currentUser = ref("daniel");
@@ -38,9 +29,9 @@ const resetList = () => {
   nodeList.value = new CusArray();
 };
 
-const focusing = ref(null);
-const appendMode = ref(false);
-const quickEdit = ref(false);
+// const focusing = ref(null);
+// const appendMode = ref(false);
+// const quickEdit = ref(false);
 
 // init a global selection
 const selection = useSelection();
@@ -244,7 +235,7 @@ const destroy = (node) => {
 
   node.destroy();
 
-  focusing.value = null;
+  // focusing.value = null;
 };
 
 // ---- move up/down
@@ -318,9 +309,9 @@ export {
   Node,
   rootNodes,
   maxRootSeq,
-  focusing,
-  appendMode,
-  quickEdit,
+  // focusing,
+  // appendMode,
+  // quickEdit,
   currentUser,
   selection,
   find,

@@ -1,5 +1,7 @@
 import { computed, ref } from "vue";
 
+import CusArray from "@/utils/cus_array";
+
 export default function useSelection() {
   const _items = ref(new Set());
 
@@ -13,9 +15,9 @@ export default function useSelection() {
   };
 
   // clear first then add the item into list
-  const select = (item) => {
+  const select = (...items) => {
     clearSelection();
-    add(item);
+    items.forEach(add);
   };
 
   const toggleSelect = (item) => {
@@ -27,8 +29,10 @@ export default function useSelection() {
   };
 
   const toArray = () => {
-    return [..._items.value];
+    return new CusArray(..._items.value);
   };
+
+  const selectedItems = computed(toArray);
 
   const hasSelected = (item) => {
     return _items.value.has(item);
@@ -38,7 +42,7 @@ export default function useSelection() {
     return _items.value.size === 1;
   });
 
-  const any = computed(() => {
+  const anySelected = computed(() => {
     return _items.value.size > 0;
   });
 
@@ -52,9 +56,10 @@ export default function useSelection() {
 
   return {
     onlyOne,
-    any,
+    anySelected,
     first,
     last,
+    selectedItems,
     clearSelection,
     select,
     toggleSelect,

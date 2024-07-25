@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, nextTick } from "vue";
 
-import { focusing } from "@/stores/nodes.js";
+// import { focusing } from "@/stores/nodes.js";
 
 import { humanizeDate, formatDate } from "@/utils/dates.js";
 
@@ -14,7 +14,9 @@ import useDroppable from "./useDropable.js";
 import GridRowItem from "./GridRowItem.vue";
 import GridColumn from "./GridColumn.vue";
 
-const props = defineProps(["list"]);
+const props = defineProps(["list", "selection"]);
+
+const selectedItems = computed(() => props.selection?.selectedItems.value);
 
 const editMode = ref(false);
 const cellWidth = ref(32);
@@ -152,17 +154,19 @@ const selectedDate = ref(null);
         @dragover.prevent
       ></GridColumn>
 
-      <!-- highlight entire row -->
-      <div
-        v-if="focusing"
-        class="row focusing"
-        :style="{
-          'grid-row-start': rowOf(focusing) + 3,
-          'grid-row-end': rowOf(focusing) + 4,
-          'grid-column-start': 1,
-          'grid-column-end': totalDays + 1,
-        }"
-      ></div>
+      <template v-if="selection">
+        <!-- highlight entire row of selection -->
+        <div
+          v-for="item in selectedItems"
+          class="row selected"
+          :style="{
+            'grid-row-start': rowOf(item) + 3,
+            'grid-row-end': rowOf(item) + 4,
+            'grid-column-start': 1,
+            'grid-column-end': totalDays + 1,
+          }"
+        ></div>
+      </template>
 
       <!-- shadow item to indicate the positions -->
       <GridRowItem
@@ -183,7 +187,7 @@ const selectedDate = ref(null);
         :title="itemTitle(item)"
         :class="{ 'event-through': dragging === item }"
         @dragging="(type) => draggingHandler(item, type)"
-        @click="focusing = item"
+        @click="selection?.select(item)"
       >
         <span>
           {{ item.content }}
@@ -303,7 +307,7 @@ strong {
     background-color: #ff9d004f;
   }
 
-  .row.focusing {
+  .row.selected {
     background: rgba(0, 0, 0, 0.1);
   }
 }

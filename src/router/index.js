@@ -21,7 +21,7 @@ const router = createRouter({
     {
       path: "/nodes/:id/gantt",
       name: "node_gantt_view",
-      component: () => import("../views/nodes/GanttView.vue"),
+      component: () => import("../views/nodes/NodeGanttView.vue"),
     },
 
     {
@@ -37,7 +37,7 @@ const router = createRouter({
         {
           path: ":id",
           name: "node",
-          component: () => import("../views/nodes/DefaultView.vue"),
+          component: () => import("../views/nodes/NodeDefaultView.vue"),
         },
       ],
     },
