@@ -78,7 +78,7 @@ const afterAppend = (node) => {
     >
       <div class="list-item-cell">
         <RouterLink :to="`/nodes/${node.id}`" class="focus-marker">
-          <img src="@/assets/arrow-right.svg" alt="focus" />
+          <!-- <img src="@/assets/arrow-right.svg" alt="focus" /> -->
         </RouterLink>
       </div>
 

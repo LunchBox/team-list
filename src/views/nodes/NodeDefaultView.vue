@@ -21,7 +21,12 @@ const node = computed(() => find(route.params.id));
       <Breadcrumbs :node="node"></Breadcrumbs>
       <Header :node="node"></Header>
 
-      <EditableNodeList :node="node" :selection="selection"></EditableNodeList>
+      <div style="padding-bottom: 80vh">
+        <EditableNodeList
+          :node="node"
+          :selection="selection"
+        ></EditableNodeList>
+      </div>
 
       <template v-if="false">
         <div>This is a testing of a vue excel editor</div>

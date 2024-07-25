@@ -67,8 +67,6 @@ useKeydownHandlers({
 
 <style scoped>
 .node-list {
-  padding-bottom: 80vh;
-
   &.activated {
     outline: 2px solid #222;
   }

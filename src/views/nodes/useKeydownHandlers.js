@@ -1,9 +1,6 @@
 import { ref } from "vue";
 import useEventListener from "@/utils/useEventListener.js";
 import {
-  // focusing,
-  // appendMode,
-  // quickEdit,
   increaseIndent,
   decreaseIndent,
   moveUp,
@@ -106,13 +103,11 @@ export default ({
           }
         },
         ArrowRight: () => {
-          // focusing.value.expand();
           items.forEach((n) => n.expand());
         },
       };
 
       const target = exec(fs[e.key]);
-      // target && (focusing.value = target);
       target && select(target);
     }
   });

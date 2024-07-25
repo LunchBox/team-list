@@ -29,10 +29,6 @@ const resetList = () => {
   nodeList.value = new CusArray();
 };
 
-// const focusing = ref(null);
-// const appendMode = ref(false);
-// const quickEdit = ref(false);
-
 // init a global selection
 const selection = useSelection();
 
@@ -234,8 +230,6 @@ const destroy = (node) => {
     return false;
 
   node.destroy();
-
-  // focusing.value = null;
 };
 
 // ---- move up/down
@@ -309,9 +303,6 @@ export {
   Node,
   rootNodes,
   maxRootSeq,
-  // focusing,
-  // appendMode,
-  // quickEdit,
   currentUser,
   selection,
   find,
