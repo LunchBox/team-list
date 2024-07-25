@@ -5,9 +5,10 @@ import { formatDate } from "@/utils/dates.js";
 const props = defineProps(["date_range"]);
 const emit = defineEmits(["submit"]);
 
+const today = formatDate(new Date());
 const formData = reactive({
-  start_date: null,
-  end_date: null,
+  start_date: today,
+  end_date: today,
 });
 
 const reloadForm = () => {
