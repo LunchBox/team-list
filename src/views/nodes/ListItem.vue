@@ -109,13 +109,13 @@ const afterAppend = (node) => {
 
     <NodeList
       v-if="node.exp"
+      v-bind="$attrs"
       :list="node.children"
       :parent="node"
       :itemDraggable="itemDraggable"
       :selection="selection"
       :activated="activated"
       :appendMode="appendMode"
-      v-bind="$attrs"
       @item-dragstart="(...args) => $emit('item-dragstart', ...args)"
       @item-mousedown="(...args) => $emit('item-mousedown', ...args)"
       @item-clicked="(...args) => $emit('item-clicked', ...args)"
