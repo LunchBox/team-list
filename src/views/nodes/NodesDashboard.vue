@@ -11,6 +11,7 @@ import {
   selection,
   saveToFile,
   loadFromFile,
+  resetList,
 } from "@/stores/nodes.js";
 
 const hideAside = ref(false);
