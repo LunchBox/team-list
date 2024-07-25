@@ -186,12 +186,16 @@ const backup = () => saveToStorage("tl/nodes_backup");
 
 watch(nodeList, () => saveToStorage(), { deep: true });
 
+const loadJSON = (jsonData) => {
+  nodeList.value = new CusArray(
+    ...JSON.parse(jsonData).map((attrs) => Object.assign(new Node(), attrs))
+  );
+};
+
 const load = () => {
-  const ds = localStorage.getItem(STORAGE_KEY);
-  if (typeof ds === "string") {
-    nodeList.value = new CusArray(
-      ...JSON.parse(ds).map((attrs) => Object.assign(new Node(), attrs))
-    );
+  const data = localStorage.getItem(STORAGE_KEY);
+  if (typeof data === "string") {
+    loadJSON(data);
   }
 };
 load();
@@ -204,6 +208,22 @@ const saveToFile = () => {
   link.download = "data.gantt.json";
   link.click();
   URL.revokeObjectURL(link.href);
+};
+
+const loadFromFile = () => {
+  const input = document.createElement("input");
+
+  input.type = "file";
+  input.addEventListener("change", async () => {
+    const [f] = input.files;
+    console.log(f);
+    const data = await f.text();
+    loadJSON(data);
+
+    input.value = null;
+  });
+
+  input.click();
 };
 
 // ---- delete
@@ -304,4 +324,5 @@ export {
   resetList,
   backup,
   saveToFile,
+  loadFromFile,
 };

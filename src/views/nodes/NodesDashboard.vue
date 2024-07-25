@@ -9,8 +9,8 @@ import {
   expandAll,
   collapseAll,
   selection,
-  backup,
   saveToFile,
+  loadFromFile,
 } from "@/stores/nodes.js";
 
 const hideAside = ref(false);
@@ -34,6 +34,7 @@ useEventListener(document, "click", () => {
     <div>
       <div class="toolbar">
         <a href="#" @click.prevent="saveToFile">Save</a> &middot;
+        <a href="#" @click.prevent="loadFromFile">Load</a> &middot;
         <a href="#" @click.prevent="expandAll">Expand</a> &middot;
         <a href="#" @click.prevent="collapseAll">Collapse</a> &middot;
         <a href="#" @click.prevent="clear">Delete All</a>
