@@ -12,7 +12,7 @@ import useEventListener from "@/utils/useEventListener.js";
 const props = defineProps([
   "node",
   "parent",
-  "draggable",
+  "itemDraggable",
   "selection",
   "activated",
   "appendMode",
@@ -71,7 +71,7 @@ const afterAppend = (node) => {
     <div
       class="list-item-row flex items-center"
       ref="itemRowRef"
-      :draggable="draggable"
+      :draggable="itemDraggable"
       @dragstart="$emit('item-dragstart', $event, node)"
       @mousedown="$emit('item-mousedown', $event, node)"
       @click.left.prevent="onNodeClicked"
@@ -111,10 +111,11 @@ const afterAppend = (node) => {
       v-if="node.exp"
       :list="node.children"
       :parent="node"
-      :itemDraggable="draggable"
+      :itemDraggable="itemDraggable"
       :selection="selection"
       :activated="activated"
       :appendMode="appendMode"
+      v-bind="$attrs"
       @item-dragstart="(...args) => $emit('item-dragstart', ...args)"
       @item-mousedown="(...args) => $emit('item-mousedown', ...args)"
       @item-clicked="(...args) => $emit('item-clicked', ...args)"

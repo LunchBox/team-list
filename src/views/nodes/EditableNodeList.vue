@@ -11,7 +11,7 @@ import useEventListener from "@/utils/useEventListener.js";
 // 必須提供一個容器用來裝選中的 item
 const props = defineProps(["node", "selection", "itemDraggable"]);
 
-const emit = defineEmits(["item-dragstart"]);
+// const emit = defineEmits(["item-dragstart"]);
 
 // 在 selected list item 下面打開 inline form
 const appendMode = ref(false);
@@ -51,14 +51,14 @@ useKeydownHandlers({
     @keydown.enter.prevent.stop="onEnterPressed"
   >
     <NodeList
+      v-bind="$attrs"
       :list="node.children"
       :parent="node"
       :selection="selection"
       :activated="activated"
       :appendMode="appendMode"
       :itemDraggable="itemDraggable"
-      @item-clicked="onItemClicked"
-      @item-dragstart="(...args) => $emit('item-dragstart', ...args)"
+      @item-mousedown="onItemClicked"
     >
       <InlineForm :parent="node"></InlineForm>
     </NodeList>

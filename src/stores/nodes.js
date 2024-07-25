@@ -84,6 +84,13 @@ class Node {
     return last(this.children)?.seq ?? -1;
   }
 
+  get maxChildEndDate() {
+    const cMax = this.children.map((c) => c.maxChildEndDate).max;
+    if (this.end_date && cMax)
+      return this.end_date > cMax ? this.end_date : cMax;
+    return this.end_date ?? cMax;
+  }
+
   // ----
   get isChildrenBlank() {
     return this.children?.length === 0;
