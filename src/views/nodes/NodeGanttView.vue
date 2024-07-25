@@ -6,8 +6,6 @@ import { find } from "@/stores/nodes.js";
 
 import useSelection from "@/utils/useSelection.js";
 
-import bus from "@/views/gantt/eventBus.js";
-
 import GanttView from "@/views/gantt/GanttView.vue";
 
 import DateRangeForm from "@/components/DateRangeForm.vue";
@@ -54,10 +52,6 @@ const dateRange = computed(() => {
     end_date,
   };
 });
-
-// const onItemMousedown = (...args) => bus.$emit("item-mousedown", args);
-// TODO: 這裡交給 bus 處理也不是很 ok
-const onItemDragstart = (...args) => bus.$emit("item-dragstart", args);
 </script>
 <template>
   <div>
@@ -71,17 +65,7 @@ const onItemDragstart = (...args) => bus.$emit("item-dragstart", args);
             :node="node"
             :selection="selection"
             :itemDraggable="true"
-            @item-dragstart="onItemDragstart"
           ></EditableNodeList>
-          <!-- <NodeList
-            :list="node.children"
-            :parent="node"
-            :itemDraggable="true"
-            @item-mousedown="onItemMousedown"
-            @item-dragstart="onItemDragstart"
-          >
-            <InlineForm :parent="node"></InlineForm>
-          </NodeList> -->
         </template>
 
         <template #before-container>

@@ -1,8 +1,6 @@
 <script setup>
 import { computed, ref, nextTick } from "vue";
 
-// import { focusing } from "@/stores/nodes.js";
-
 import { humanizeDate, formatDate } from "@/utils/dates.js";
 
 import useDates from "./useDates.js";
@@ -58,7 +56,7 @@ const { dragging, shadow, draggingHandler } = useDraggingItems(
 );
 
 //  drag & drop item
-const { onDropToDate } = useDroppable(editMode);
+const { onDropToDate } = useDroppable({ editMode, selection: props.selection });
 
 // dragging container
 const containerEl = ref(null);
