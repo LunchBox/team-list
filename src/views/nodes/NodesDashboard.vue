@@ -1,21 +1,53 @@
 <script setup>
 import { ref } from "vue";
 import { RouterView } from "vue-router";
-
+import useEventListener from "@/utils/useEventListener.js";
 import NodesAside from "./NodesAside.vue";
 
+import {
+  focusing,
+  expandAll,
+  collapseAll,
+  selection,
+  backup,
+  saveToFile,
+} from "@/stores/nodes.js";
+
 const hideAside = ref(false);
+
+const clear = () => {
+  if (!confirm("Are you sure?")) return;
+  resetList();
+};
+
+const { clearSelection } = selection;
+
+// 點在畫面上其他地方都 release focus
+useEventListener(document, "click", () => {
+  focusing.value = null;
+  clearSelection();
+});
 </script>
 
 <template>
-  <div class="flex" :class="{ separated: !hideAside }" @click.stop>
-    <aside v-if="!hideAside">
-      <NodesAside></NodesAside>
-      <div><a href="#" @click.prevent="hideAside = true">Hide</a></div>
-    </aside>
-    <main>
-      <RouterView />
-    </main>
+  <div>
+    <div>
+      <div class="toolbar">
+        <a href="#" @click.prevent="saveToFile">Save</a> &middot;
+        <a href="#" @click.prevent="expandAll">Expand</a> &middot;
+        <a href="#" @click.prevent="collapseAll">Collapse</a> &middot;
+        <a href="#" @click.prevent="clear">Delete All</a>
+      </div>
+    </div>
+    <div class="flex" :class="{ separated: !hideAside }" @click.stop>
+      <aside v-if="!hideAside">
+        <NodesAside></NodesAside>
+        <div><a href="#" @click.prevent="hideAside = true">Hide</a></div>
+      </aside>
+      <main>
+        <RouterView />
+      </main>
+    </div>
   </div>
 </template>
 
@@ -38,5 +70,10 @@ main {
   main {
     max-width: 75%;
   }
+}
+
+.toolbar {
+  font-size: small;
+  margin: 1rem 0;
 }
 </style>

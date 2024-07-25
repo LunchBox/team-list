@@ -201,7 +201,7 @@ const saveToFile = () => {
 
   const file = new Blob([dumpJSON()], { type: "application/json" });
   link.href = URL.createObjectURL(file);
-  link.download = "data.json";
+  link.download = "data.gantt.json";
   link.click();
   URL.revokeObjectURL(link.href);
 };
