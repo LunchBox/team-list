@@ -40,7 +40,7 @@ const onNodeClicked = (e) => {
   <InlineForm
     v-if="quickEdit && focusing === node"
     :node="node"
-    style="border: 1px solid #ccc"
+    style="outline: 1px solid #ccc"
     @after-submit="quickEdit = false"
   ></InlineForm>
   <!-- display mode -->
