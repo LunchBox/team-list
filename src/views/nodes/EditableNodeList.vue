@@ -9,9 +9,7 @@ import InlineForm from "./InlineForm.vue";
 import useEventListener from "@/utils/useEventListener.js";
 
 // 必須提供一個容器用來裝選中的 item
-const props = defineProps(["node", "selection", "itemDraggable"]);
-
-// const emit = defineEmits(["item-dragstart"]);
+const props = defineProps(["node", "selection"]);
 
 // 在 selected list item 下面打開 inline form
 const appendMode = ref(false);
@@ -57,7 +55,6 @@ useKeydownHandlers({
       :selection="selection"
       :activated="activated"
       :appendMode="appendMode"
-      :itemDraggable="itemDraggable"
       @item-mousedown="onItemClicked"
     >
       <InlineForm :parent="node"></InlineForm>
