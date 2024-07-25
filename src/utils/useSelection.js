@@ -72,6 +72,7 @@ export default function useSelection() {
     selectedItems,
     clearSelection,
     select,
+    toggleSelect,
     handleSelect, // handleSelect(e, item), select item base on the event
     hasSelected,
   };

@@ -14,6 +14,17 @@ export default ({ editMode, cellWidth, selection } = {}) => {
   const onItemMousedown = (e, item = null, type = null) => {
     if (!editMode.value) return;
 
+    //  @click="selection?.handleSelect($event, item)"
+    if (e.ctrlKey) {
+      selection.toggleSelect(item);
+    } else {
+      if (!selection.hasSelected(item)) {
+        selection.select(item);
+      }
+    }
+
+    if (!selection.hasSelected(item)) return;
+
     dragging.value = true;
 
     draggingType.value = type;

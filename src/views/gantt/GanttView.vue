@@ -188,7 +188,6 @@ const selectedDate = ref(null);
         :title="itemTitle(item)"
         :class="{ 'event-through': dragging && selection?.hasSelected(item) }"
         @item-mousedown="(e, type) => onItemMousedown(e, item, type)"
-        @click="selection?.handleSelect($event, item)"
       >
         <span>
           {{ item.content }}
