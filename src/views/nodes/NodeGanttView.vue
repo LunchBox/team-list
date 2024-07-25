@@ -25,12 +25,10 @@ const itemList = computed(() => {
 
 const selection = useSelection();
 
-const selectedItems = computed(() => {
-  return selection.selectedItems;
-});
-
 const theOnlyFirstItem = computed(() => {
-  return selection.selectedItems.length === 1 ? selection.first.value : null;
+  return selection.selectedItems.value.length === 1
+    ? selection.first.value
+    : null;
 });
 
 const onDateChanged = (formData) => {
