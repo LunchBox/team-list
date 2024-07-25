@@ -17,12 +17,7 @@ const emit = defineEmits(["item-dragstart"]);
 const appendMode = ref(false);
 
 const onItemClicked = (e, node) => {
-  // 感覺這兩個放在這裡不怎麼合適
-  if (e.ctrlKey) {
-    props.selection?.toggleSelect(node);
-  } else {
-    props.selection?.select(node);
-  }
+  props.selection?.handleSelect(e, node);
   appendMode.value = false;
 };
 
@@ -39,8 +34,11 @@ const onEnterPressed = () => {
 };
 
 //------------
-const n = computed(() => props.node);
-useKeydownHandlers({ scopeRef: n, selection: props.selection, activated });
+useKeydownHandlers({
+  scopeRef: props.node,
+  selection: props.selection,
+  activated,
+});
 </script>
 <template>
   <!-- use tabindex to force area focus-able, to accept keydown.enter event -->

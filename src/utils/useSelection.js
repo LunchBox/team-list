@@ -54,6 +54,16 @@ export default function useSelection() {
     return toArray().pop();
   });
 
+  const handleSelect = (e, item) => {
+    if (!item) return;
+
+    if (e.ctrlKey) {
+      toggleSelect(item);
+    } else {
+      select(item);
+    }
+  };
+
   return {
     onlyOne,
     anySelected,
@@ -62,7 +72,7 @@ export default function useSelection() {
     selectedItems,
     clearSelection,
     select,
-    toggleSelect,
+    handleSelect, // handleSelect(e, item), select item base on the event
     hasSelected,
   };
 }

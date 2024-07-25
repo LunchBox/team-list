@@ -16,7 +16,7 @@ const props = defineProps(["list", "selection"]);
 
 const selectedItems = computed(() => props.selection?.selectedItems.value);
 
-const editMode = ref(false);
+const editMode = ref(true);
 const cellWidth = ref(32);
 
 const targetDate = ref(formatDate(new Date()));
@@ -50,10 +50,11 @@ const today = new Date();
 const { startDate, totalDays, dates } = useDates(props, today);
 
 // dragging items
-const { dragging, shadow, draggingHandler } = useDraggingItems(
+const { dragging, shadows, onItemMousedown } = useDraggingItems({
   editMode,
-  cellWidth
-);
+  cellWidth,
+  selection: props.selection,
+});
 
 //  drag & drop item
 const { onDropToDate } = useDroppable({ editMode, selection: props.selection });
@@ -152,8 +153,8 @@ const selectedDate = ref(null);
         @dragover.prevent
       ></GridColumn>
 
+      <!-- highlight entire row of selection -->
       <template v-if="selection">
-        <!-- highlight entire row of selection -->
         <div
           v-for="item in selectedItems"
           class="row selected"
@@ -167,13 +168,15 @@ const selectedDate = ref(null);
       </template>
 
       <!-- shadow item to indicate the positions -->
-      <GridRowItem
-        v-if="dragging"
-        class="shadow"
-        :item="shadow"
-        :row="rowOf(dragging)"
-        :start="startDate"
-      ></GridRowItem>
+      <template v-if="dragging">
+        <GridRowItem
+          v-for="item in selectedItems"
+          class="shadow"
+          :item="shadows[item.id]"
+          :row="rowOf(item)"
+          :start="startDate"
+        ></GridRowItem>
+      </template>
 
       <!-- the draggable items -->
       <GridRowItem
@@ -183,9 +186,9 @@ const selectedDate = ref(null);
         :start="startDate"
         :id="item.id"
         :title="itemTitle(item)"
-        :class="{ 'event-through': dragging === item }"
-        @dragging="(type) => draggingHandler(item, type)"
-        @click="selection?.select(item)"
+        :class="{ 'event-through': dragging && selection?.hasSelected(item) }"
+        @item-mousedown="(e, type) => onItemMousedown(e, item, type)"
+        @click="selection?.handleSelect($event, item)"
       >
         <span>
           {{ item.content }}

@@ -1,14 +1,12 @@
 <script setup>
-import { ref, computed, nextTick } from "vue";
+import { computed } from "vue";
 
 import { daysDiff } from "@/utils/dates.js";
 
 import { dateToGridColumn } from "./utils.js";
 
-import useEventListener from "@/utils/useEventListener";
-
 const props = defineProps(["item", "row", "start"]);
-const emit = defineEmits(["dragging"]);
+const emit = defineEmits(["item-mousedown"]);
 
 const DEFAULT_TASK_DAYS = 3;
 const itemCellStyle = computed(() => {
@@ -34,21 +32,24 @@ const itemCellStyle = computed(() => {
   };
 });
 
-const onMousedown = (draggingType) => {
-  emit("dragging", draggingType);
+const onMousedown = (e, draggingType) => {
+  emit("item-mousedown", e, draggingType);
 };
 </script>
 <template>
   <div
     class="item"
     :style="itemCellStyle"
-    @mousedown.stop="onMousedown('entire')"
+    @mousedown.stop="onMousedown($event, 'entire')"
   >
-    <div class="handler start" @mousedown.stop="onMousedown('start')"></div>
+    <div
+      class="handler start"
+      @mousedown.stop="onMousedown($event, 'start')"
+    ></div>
     <span>
       <slot></slot>
     </span>
-    <div class="handler end" @mousedown.stop="onMousedown('end')"></div>
+    <div class="handler end" @mousedown.stop="onMousedown($event, 'end')"></div>
   </div>
 </template>
 
