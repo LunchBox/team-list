@@ -16,7 +16,7 @@ const props = defineProps(["list", "selection"]);
 
 const selectedItems = computed(() => props.selection?.selectedItems.value);
 
-const editMode = ref(true);
+const editMode = ref(false);
 const cellWidth = ref(32);
 
 const targetDate = ref(formatDate(new Date()));
