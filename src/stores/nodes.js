@@ -239,7 +239,8 @@ const loadFromFile = () => {
 // ---- delete node and its children
 
 const destroy = (node) => {
-  if (!confirm("Are you sure?")) return false;
+  if (!confirm(`Are you sure to delete [ ${node.content} ] and its children?`))
+    return false;
 
   node.destroy();
 
