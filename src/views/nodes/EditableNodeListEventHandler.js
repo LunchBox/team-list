@@ -38,9 +38,10 @@ export default ({
       if (delMark.value) {
         delMark.value = false;
 
-        const prev = items.first.prev;
+        const fi = items.first;
+        const nxt = fi.prev || fi.next || fi.parent;
         items.forEach(destroy);
-        select(prev);
+        nxt.inScope(scopeRef?.value) && select(nxt);
       } else {
         delMark.value = true;
       }

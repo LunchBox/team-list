@@ -48,6 +48,12 @@ const onCancelAppend = () => {
   activated.value = true;
 };
 
+const onAfterSubmit = (node) => {
+  props.selection?.select(node);
+  appendMode.value = true;
+  // console.log("-- after submit", args);
+};
+
 //------------
 editableNodeListEventHandler({
   scopeRef: computed(() => props.parent),
@@ -68,7 +74,11 @@ editableNodeListEventHandler({
       @item-mousedown="onItemClicked"
       @cancel-append="onCancelAppend"
     >
-      <InlineForm :parent="parent"></InlineForm>
+      <InlineForm
+        v-if="!appendMode"
+        :parent="parent"
+        @after-submit="onAfterSubmit"
+      ></InlineForm>
     </NodeList>
   </div>
 </template>
