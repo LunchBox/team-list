@@ -10,7 +10,7 @@ const emit = defineEmits(["item-mousedown"]);
 
 const DEFAULT_TASK_DAYS = 3;
 
-const itemCellStyle = computed(() => {
+const cellStyle = computed(() => {
   const { item, row, start } = props;
   const { start_date, end_date } = item;
 
@@ -39,14 +39,15 @@ const bgStyle = computed(() => {
   const { start_date, end_date } = item;
 
   let colStart = new Date().getDay() + 1;
-  if (start_date) {
-    colStart = dateToGridColumn(start_date, start);
+  const minDay = item.minChildStartDate;
+  if (start_date && minDay) {
+    colStart = dateToGridColumn(minDay, start);
   }
 
   let colLen = DEFAULT_TASK_DAYS - 1;
-  const ed = item.maxChildEndDate;
-  if (start_date && ed) {
-    colLen = Math.floor(daysDiff(ed, start_date));
+  const maxDay = item.maxChildEndDate;
+  if (start_date && maxDay) {
+    colLen = Math.floor(daysDiff(maxDay, minDay));
     colLen = Math.max(colLen, 0);
   }
 
@@ -67,7 +68,7 @@ const onMousedown = (e, draggingType) => {
   <div
     class="item"
     v-bind="$attrs"
-    :style="itemCellStyle"
+    :style="cellStyle"
     @mousedown.stop="onMousedown($event, 'entire')"
   >
     <div
@@ -91,14 +92,14 @@ const onMousedown = (e, draggingType) => {
   left: 0;
   right: 0;
   bottom: 0;
-  height: 4px;
-  background-color: #555;
+  height: 2px;
+  background-color: #999;
 }
 .item {
   position: relative;
   font-size: smaller;
-  background: #769585ed;
-  color: #fff;
+  background: #b9d5c7ed;
+  color: #222;
   padding: 0 0.5rem;
 
   user-select: none;
@@ -107,6 +108,7 @@ const onMousedown = (e, draggingType) => {
     display: block;
     width: 100%;
     height: 100%;
+    min-width: 200px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

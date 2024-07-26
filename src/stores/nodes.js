@@ -84,11 +84,19 @@ class Node {
     return last(this.children)?.seq ?? -1;
   }
 
+  // min & max child dates
+  nestedDates(key, type) {
+    const minmax = this.children.map((c) => c.nestedDates(key, type));
+    minmax.push(this[key]);
+    return minmax[type];
+  }
+
+  get minChildStartDate() {
+    return this.nestedDates("start_date", "min");
+  }
+
   get maxChildEndDate() {
-    const cMax = this.children.map((c) => c.maxChildEndDate).max;
-    if (this.end_date && cMax)
-      return this.end_date > cMax ? this.end_date : cMax;
-    return this.end_date ?? cMax;
+    return this.nestedDates("end_date", "max");
   }
 
   // ----

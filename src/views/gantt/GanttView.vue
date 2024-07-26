@@ -121,7 +121,7 @@ const selectedDate = ref(null);
         v-for="d in dates"
         class="cell day"
         :id="`d_${formatDate(d)}`"
-        :class="{ weekend: isWeekend(d) }"
+        :class="{ weekend: isWeekend(d), selected: selectedDate === d }"
       >
         <span>{{ d.getDate() }}</span>
       </div>
@@ -139,7 +139,6 @@ const selectedDate = ref(null);
         v-for="d in dates"
         class="droppable"
         :class="{
-          selected: selectedDate === d,
           weekend: isWeekend(d),
           sunday: d.getDay() === 0,
           saturday: d.getDay() === 6,
@@ -265,6 +264,10 @@ strong {
 
     &.day {
       grid-row-start: 2;
+    }
+
+    &.day.selected {
+      background: #ffd891;
     }
 
     &.week {
