@@ -10,7 +10,7 @@ const nodes = computed(() => {
 <template>
   <div class="breadcrumbs">
     <template v-for="t in nodes">
-      <span>/</span>
+      <span> / </span>
       <RouterLink :to="`/nodes/${t.id}`">
         {{ t.content }}
       </RouterLink>
