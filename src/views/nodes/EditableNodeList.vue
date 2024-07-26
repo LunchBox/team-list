@@ -7,7 +7,7 @@ import NodeList from "./NodeList.vue";
 import InlineForm from "./InlineForm.vue";
 
 import useEventListener from "@/utils/useEventListener.js";
-import elemInsideContainer from "@/utils/elemInsideContainer.js";
+import { elemInsideContainer } from "@/utils/elemInsideContainer.js";
 
 // 必須提供一個容器用來裝選中的 item
 const props = defineProps(["list", "parent", "selection"]);

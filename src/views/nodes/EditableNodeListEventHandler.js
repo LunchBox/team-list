@@ -1,5 +1,6 @@
 import { ref } from "vue";
 import useEventListener from "@/utils/useEventListener.js";
+import { elemInForm } from "@/utils/elemInsideContainer.js";
 import {
   increaseIndent,
   decreaseIndent,
@@ -22,8 +23,7 @@ export default ({
   const isActivated = () => activated.value;
 
   useEventListener(document, "keydown", (e) => {
-    // TODO: scale up to all form fields
-    if (e.target.tagName === "TEXTAREA") return;
+    if (elemInForm(e.target)) return;
 
     // 如果未 activate， keydown 不做任何處理
     if (!isActivated()) return;

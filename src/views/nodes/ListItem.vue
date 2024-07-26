@@ -8,6 +8,7 @@ import InlineForm from "./InlineForm.vue";
 import ExpandMarker from "./ExpandMarker.vue";
 
 import useEventListener from "@/utils/useEventListener.js";
+import { elemInForm } from "@/utils/elemInsideContainer.js";
 
 const props = defineProps([
   "node",
@@ -43,6 +44,8 @@ useEventListener(document, "keydown", (e) => {
   if (!props.activated) return;
   if (!selected.value) return;
   if (props.appendMode) return;
+
+  if (elemInForm(e.target)) return;
 
   if (e.key === "i" || e.key === "e") {
     e.preventDefault();
