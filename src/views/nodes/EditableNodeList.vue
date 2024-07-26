@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, nextTick } from "vue";
 
 import useKeydownHandlers from "./useKeydownHandlers.js";
 
@@ -7,6 +7,7 @@ import NodeList from "./NodeList.vue";
 import InlineForm from "./InlineForm.vue";
 
 import useEventListener from "@/utils/useEventListener.js";
+import elemInsideContainer from "@/utils/elemInsideContainer.js";
 
 // 必須提供一個容器用來裝選中的 item
 const props = defineProps(["list", "parent", "selection"]);
@@ -22,10 +23,29 @@ const onItemClicked = (e, node) => {
 };
 
 const activated = ref(false);
+const rootEl = ref(null);
 
 const onEnterPressed = () => {
   console.log("-- on enter pressed");
   appendMode.value = true;
+};
+
+useEventListener(window, "mousedown", (e) => {
+  activated.value = elemInsideContainer(e.target, rootEl.value);
+});
+
+useEventListener(window, "keydown", (e) => {
+  if (e.key === "Enter" && activated.value) {
+    e.preventDefault();
+    onEnterPressed();
+  }
+});
+
+const onCancelAppend = () => {
+  appendMode.value = false;
+
+  // use esc to cancel the append mode will lost focus, manually activate it again
+  activated.value = true;
 };
 
 //------------
@@ -37,14 +57,7 @@ useKeydownHandlers({
 </script>
 <template>
   <!-- use tabindex to force area focus-able, to accept keydown.enter event -->
-  <div
-    class="node-list"
-    :class="{ activated }"
-    tabindex="0"
-    @focus="activated = true"
-    @blur="activated = false"
-    @keydown.enter.prevent.stop="onEnterPressed"
-  >
+  <div class="node-list" ref="rootEl" :class="{ activated }">
     <NodeList
       v-bind="$attrs"
       :list="list"
@@ -53,7 +66,7 @@ useKeydownHandlers({
       :activated="activated"
       :appendMode="appendMode"
       @item-mousedown="onItemClicked"
-      @cancel-append="appendMode = false"
+      @cancel-append="onCancelAppend"
     >
       <InlineForm :parent="parent"></InlineForm>
     </NodeList>

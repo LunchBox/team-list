@@ -42,6 +42,7 @@ const quickEdit = ref(false);
 useEventListener(document, "keydown", (e) => {
   if (!props.activated) return;
   if (!selected.value) return;
+  if (props.appendMode) return;
 
   if (e.key === "i" || e.key === "e") {
     e.preventDefault();
