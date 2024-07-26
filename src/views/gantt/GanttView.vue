@@ -171,27 +171,38 @@ const selectedDate = ref(null);
         <GridRowItem
           v-for="item in selectedItems"
           class="shadow"
-          :item="shadows[item.id]"
+          :start_date="shadows[item.id]?.start_date"
+          :end_date="shadows[item.id]?.end_date"
           :row="rowOf(item)"
           :start="startDate"
         ></GridRowItem>
       </template>
 
       <!-- the draggable items -->
-      <GridRowItem
-        v-for="item in scheduledList"
-        :item="item"
-        :row="rowOf(item)"
-        :start="startDate"
-        :id="item.id"
-        :title="itemTitle(item)"
-        :class="{ 'event-through': dragging && selection?.hasSelected(item) }"
-        @item-mousedown="(e, type) => onItemMousedown(e, item, type)"
-      >
-        <span>
-          {{ item.content }}
-        </span>
-      </GridRowItem>
+      <template v-for="item in scheduledList">
+        <GridRowItem
+          class="event-through item-bg"
+          :start_date="item.minChildStartDate"
+          :end_date="item.maxChildEndDate"
+          :row="rowOf(item)"
+          :start="startDate"
+        >
+        </GridRowItem>
+        <GridRowItem
+          class="item"
+          :start_date="item.start_date"
+          :end_date="item.end_date"
+          :row="rowOf(item)"
+          :start="startDate"
+          :title="itemTitle(item)"
+          :class="{ 'event-through': dragging && selection?.hasSelected(item) }"
+          @item-mousedown="(e, type) => onItemMousedown(e, item, type)"
+        >
+          <span>
+            {{ item.content }}
+          </span>
+        </GridRowItem>
+      </template>
     </div>
   </div>
 </template>
@@ -274,6 +285,7 @@ strong {
       justify-content: flex-start;
       font-weight: 700;
       font-size: small;
+      min-width: 100px;
     }
   }
 
@@ -283,11 +295,11 @@ strong {
     &:before {
       content: " ";
       position: absolute;
-      width: 1px;
+      width: 2px;
       height: 100%;
       top: 0;
-      left: 50%;
-      background: #c30;
+      left: calc(50% - 1px);
+      background: darkolivegreen;
     }
   }
 
@@ -312,6 +324,26 @@ strong {
 
   .row.selected {
     background: rgba(0, 0, 0, 0.1);
+  }
+
+  .item {
+    background: #b9d5c7ed;
+    color: #222;
+  }
+
+  /* 通常看到這條線的都是 over time 的 task.. */
+  .item-bg {
+    position: relative;
+
+    &:before {
+      content: " ";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 1px;
+      background-color: #c40;
+    }
   }
 }
 </style>

@@ -12,9 +12,7 @@ export default ({ editMode, cellWidth, selection } = {}) => {
   const shadows = ref({});
 
   const onItemMousedown = (e, item = null, type = null) => {
-    if (!editMode.value) return;
-
-    //  @click="selection?.handleSelect($event, item)"
+    // 非編輯模式下也是可以選中 item 的
     if (e.ctrlKey) {
       selection.toggleSelect(item);
     } else {
@@ -22,6 +20,8 @@ export default ({ editMode, cellWidth, selection } = {}) => {
         selection.select(item);
       }
     }
+
+    if (!editMode.value) return;
 
     if (!selection.hasSelected(item)) return;
 
