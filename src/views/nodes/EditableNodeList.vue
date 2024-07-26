@@ -56,6 +56,7 @@ useKeydownHandlers({
       :activated="activated"
       :appendMode="appendMode"
       @item-mousedown="onItemClicked"
+      @cancel-append="appendMode = false"
     >
       <InlineForm :parent="node"></InlineForm>
     </NodeList>

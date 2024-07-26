@@ -8,15 +8,7 @@ import {
   collapseAll,
   saveToFile,
   loadFromFile,
-  resetList,
 } from "@/stores/nodes.js";
-
-const hideAside = ref(false);
-
-const clear = () => {
-  if (!confirm("Are you sure?")) return;
-  resetList();
-};
 </script>
 
 <template>
@@ -26,14 +18,12 @@ const clear = () => {
         <a href="#" @click.prevent="saveToFile">Save As</a> &middot;
         <a href="#" @click.prevent="loadFromFile">Load</a> &middot;
         <a href="#" @click.prevent="expandAll">Expand</a> &middot;
-        <a href="#" @click.prevent="collapseAll">Collapse</a> &middot;
-        <a href="#" @click.prevent="clear">Delete All</a>
+        <a href="#" @click.prevent="collapseAll">Collapse</a>
       </div>
     </div>
-    <div class="flex" :class="{ separated: !hideAside }">
-      <aside v-if="!hideAside">
+    <div class="flex separated">
+      <aside>
         <NodesAside></NodesAside>
-        <div><a href="#" @click.prevent="hideAside = true">Hide</a></div>
       </aside>
       <main>
         <RouterView />

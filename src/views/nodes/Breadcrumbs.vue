@@ -20,6 +20,6 @@ const nodes = computed(() => {
 
 <style scoped>
 .breadcrumbs {
-  margin-bottom: 1rem;
+  margin: 0.5rem 0;
 }
 </style>

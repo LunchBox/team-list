@@ -24,6 +24,7 @@ const emit = defineEmits([
   "item-clicked",
   "dblclick",
   "after-append",
+  "cancel-append",
 ]);
 
 const selected = computed(() => props.selection?.hasSelected(props.node));
@@ -128,6 +129,7 @@ const afterAppend = (node) => {
     :parent="node.parent"
     :seq="node.seq"
     @after-submit="afterAppend"
+    @cancel="(...args) => $emit('cancel-append', ...args)"
   ></InlineForm>
 </template>
 

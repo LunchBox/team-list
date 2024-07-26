@@ -24,7 +24,10 @@ watch(props, reloadForm, {
   immediate: true,
 });
 
-const onSubmit = () => {
+const onSubmit = (e) => {
+  if (e.altKey) return true;
+  e.preventDefault();
+
   const obj = formData.value.save();
 
   reloadForm();
@@ -60,7 +63,7 @@ const onCancel = () => {
       </span>
       <span class="list-item-marker">-</span>
 
-      <form class="full" @submit.prevent="onSubmit" @keydown.stop>
+      <form class="full" @submit.prevent="onSubmit">
         <textarea
           ref="textEl"
           rows="1"
@@ -69,7 +72,7 @@ const onCancel = () => {
           v-model="formData.content"
           @input="resizeTextarea"
           @keydown.esc="onCancel"
-          @keydown.enter.ctrl.prevent="onSubmit"
+          @keydown.enter="onSubmit"
         ></textarea>
         <input type="submit" value="Submit" />
       </form>
