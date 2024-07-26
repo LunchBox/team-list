@@ -9,7 +9,8 @@ import InlineForm from "./InlineForm.vue";
 import useEventListener from "@/utils/useEventListener.js";
 
 // 必須提供一個容器用來裝選中的 item
-const props = defineProps(["node", "selection"]);
+const props = defineProps(["list", "parent", "selection"]);
+const emit = defineEmits(["item-clicked"]);
 
 // 在 selected list item 下面打開 inline form
 const appendMode = ref(false);
@@ -17,6 +18,7 @@ const appendMode = ref(false);
 const onItemClicked = (e, node) => {
   props.selection?.handleSelect(e, node);
   appendMode.value = false;
+  emit("item-clicked", e, node);
 };
 
 const activated = ref(false);
@@ -50,15 +52,15 @@ useKeydownHandlers({
   >
     <NodeList
       v-bind="$attrs"
-      :list="node.children"
-      :parent="node"
+      :list="list"
+      :parent="parent"
       :selection="selection"
       :activated="activated"
       :appendMode="appendMode"
       @item-mousedown="onItemClicked"
       @cancel-append="appendMode = false"
     >
-      <InlineForm :parent="node"></InlineForm>
+      <InlineForm :parent="parent"></InlineForm>
     </NodeList>
   </div>
 </template>

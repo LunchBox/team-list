@@ -60,7 +60,8 @@ const dateRange = computed(() => {
       <GanttView :list="itemList" :selection="selection">
         <template #aside>
           <EditableNodeList
-            :node="node"
+            :parent="node"
+            :list="node.children"
             :selection="selection"
             :itemDraggable="true"
           ></EditableNodeList>

@@ -23,7 +23,8 @@ const node = computed(() => find(route.params.id));
 
       <div style="padding-bottom: 80vh">
         <EditableNodeList
-          :node="node"
+          :parent="node"
+          :list="node.children"
           :selection="selection"
         ></EditableNodeList>
       </div>
