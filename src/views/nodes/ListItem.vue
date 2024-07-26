@@ -22,7 +22,7 @@ const emit = defineEmits([
   "item-dragstart",
   "item-mousedown",
   "item-clicked",
-  "dblclick",
+  "item-dblclick",
   "after-append",
   "cancel-append",
 ]);
@@ -121,7 +121,9 @@ const afterAppend = (node) => {
       @item-dragstart="(...args) => $emit('item-dragstart', ...args)"
       @item-mousedown="(...args) => $emit('item-mousedown', ...args)"
       @item-clicked="(...args) => $emit('item-clicked', ...args)"
-      @dblclick="(node) => $emit('dblclick', node)"
+      @item-dblclick="(...args) => $emit('item-dblclick', ...args)"
+      @after-append="(...args) => $emit('after-append', ...args)"
+      @cancel-append="(...args) => $emit('cancel-append', ...args)"
     ></NodeList>
   </div>
   <!-- appending mode, append contents after focusing item -->
