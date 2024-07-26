@@ -23,7 +23,7 @@ const clear = () => {
   <div>
     <div>
       <div class="toolbar">
-        <a href="#" @click.prevent="saveToFile">Save</a> &middot;
+        <a href="#" @click.prevent="saveToFile">Save As</a> &middot;
         <a href="#" @click.prevent="loadFromFile">Load</a> &middot;
         <a href="#" @click.prevent="expandAll">Expand</a> &middot;
         <a href="#" @click.prevent="collapseAll">Collapse</a> &middot;
