@@ -23,11 +23,6 @@ const onItemClicked = (e, node) => {
 
 const activated = ref(false);
 
-// 點在畫面上其他地方都 release focus
-useEventListener(document, "click", () => {
-  activated.value = false;
-});
-
 const onEnterPressed = () => {
   console.log("-- on enter pressed");
   appendMode.value = true;
@@ -46,8 +41,8 @@ useKeydownHandlers({
     class="node-list"
     :class="{ activated }"
     tabindex="0"
-    @click.stop
     @focus="activated = true"
+    @blur="activated = false"
     @keydown.enter.prevent.stop="onEnterPressed"
   >
     <NodeList
