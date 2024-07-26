@@ -85,7 +85,6 @@ const selectedDate = ref(null);
         mode: <strong>{{ editMode ? "Edit" : "View" }}</strong> &middot;
         <button @click.prevent="editMode = !editMode">toggle</button>
       </div>
-      <div class="row">&nbsp;</div>
       <slot name="aside"></slot>
     </div>
 
@@ -232,8 +231,6 @@ strong {
 .aside {
   grid-column: 1 / 2;
   grid-row: 2 / 3;
-
-  padding: 2px 0;
 }
 
 .aside a {
