@@ -30,18 +30,6 @@ export default ({
 
     const items = selectedItems.value;
 
-    // 是否離開指定的 scope
-    const onRootScope = () => {
-      if (!scopeRef?.value) return false;
-
-      for (const n in items) {
-        if (n.parent && n.parent === scopeRef?.value) {
-          return true;
-        }
-      }
-      return false;
-    };
-
     // double press d to delete a node
     if (e.key === "d") {
       if (delMark.value) {
@@ -66,15 +54,15 @@ export default ({
       return f();
     };
 
-    const ft = items.first;
+    const fItem = items.first;
 
     // 按住 shift 移動
     if (e.shiftKey) {
       const fs = {
-        ArrowUp: () => moveUp(ft),
-        ArrowDown: () => moveDown(ft),
-        ArrowLeft: () => decreaseIndent(ft, scopeRef),
-        ArrowRight: () => increaseIndent(ft),
+        ArrowUp: () => moveUp(fItem),
+        ArrowDown: () => moveDown(fItem),
+        ArrowLeft: () => decreaseIndent(fItem, scopeRef),
+        ArrowRight: () => increaseIndent(fItem),
       };
 
       exec(fs[e.key]);
@@ -82,23 +70,18 @@ export default ({
       // 不按 shift 只是移動 focus
       const fs = {
         ArrowUp: () => {
-          return (
-            (ft.prev && ft.prev.exp && ft.prev.children.last) ||
-            ft.prev ||
-            (onRootScope() ? ft : ft.parent)
-          );
+          return fItem.globalPrev;
         },
         ArrowDown: () => {
-          return (ft.exp && ft.children.first) || ft.next || ft.parent?.next;
+          return fItem.globalNext;
         },
         ArrowLeft: () => {
           // there are no requirement for multiple nodes here?
           if (items.length === 1) {
-            if (items.first.exp) {
-              items.first.collapse();
+            if (fItem.exp) {
+              fItem.collapse();
             } else {
-              if (onRootScope()) return;
-              return ft.parent;
+              return fItem.parent;
             }
           }
         },
@@ -108,7 +91,7 @@ export default ({
       };
 
       const target = exec(fs[e.key]);
-      target && select(target);
+      target && target.inScope(scopeRef?.value) && select(target);
     }
   });
 };

@@ -76,8 +76,36 @@ class Node {
     return last(this.siblings.filter((t) => t.seq < this.seq));
   }
 
+  // the recursive opened last child
+  get lastExpChild() {
+    const cs = this.children;
+    if (cs.length === 0 || !this.exp) return this;
+    return cs.last?.lastExpChild;
+  }
+
+  get globalPrev() {
+    return (
+      (this.prev && this.prev.exp && this.prev.lastExpChild) ||
+      this.prev ||
+      this.parent
+    );
+  }
+
   get next() {
     return first(this.siblings.filter((t) => t.seq > this.seq));
+  }
+
+  get availableNext() {
+    return this.parent?.next || this.parent?.availableNext;
+  }
+
+  get globalNext() {
+    return (
+      (this.exp && this.children.first) ||
+      this.next ||
+      this.parent?.next ||
+      this.parent?.availableNext
+    );
   }
 
   get maxChildSeq() {
@@ -102,6 +130,12 @@ class Node {
   // ----
   get isChildrenBlank() {
     return this.children?.length === 0;
+  }
+
+  // check a node's parent parent path
+  inScope(parent) {
+    if (this.parent && this.parent === parent) return true;
+    return this.parent && this.parent.inScope(parent);
   }
 
   // ---- path, for breadcrumbs

@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, nextTick } from "vue";
 
-import useKeydownHandlers from "./useKeydownHandlers.js";
+import editableNodeListEventHandler from "./EditableNodeListEventHandler.js";
 
 import NodeList from "./NodeList.vue";
 import InlineForm from "./InlineForm.vue";
@@ -49,8 +49,8 @@ const onCancelAppend = () => {
 };
 
 //------------
-useKeydownHandlers({
-  scopeRef: props.node,
+editableNodeListEventHandler({
+  scopeRef: computed(() => props.parent),
   selection: props.selection,
   activated,
 });
