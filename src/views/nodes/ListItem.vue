@@ -58,6 +58,11 @@ const afterQuickEdit = () => {
   quickEdit.value = false;
 };
 
+const onDoubleClick = (e) => {
+  quickEdit.value = true;
+  emit("item-dblclick", e, props.node);
+};
+
 // ---- after append
 const afterAppend = (node) => {
   props.selection?.select(node);
@@ -93,16 +98,12 @@ const afterAppend = (node) => {
         <MarkedText
           class="node-content full"
           :text="node.content"
-          @dblclick="$emit('dblclick', node)"
+          @dblclick="onDoubleClick"
         ></MarkedText>
       </template>
       <template v-else>
         <ExpandMarker :node="node"></ExpandMarker>
-        <a
-          href="#"
-          class="node-content full"
-          @dblclick="$emit('dblclick', node)"
-        >
+        <a href="#" class="node-content full" @dblclick="onDoubleClick">
           {{ node.content }}
         </a>
         <span class="child-info">
