@@ -41,7 +41,8 @@ useEventListener(window, "keydown", (e) => {
   }
 });
 
-const onCancelAppend = () => {
+const onCancel = () => {
+  console.log("-- on cancel");
   appendMode.value = false;
 
   // use esc to cancel the append mode will lost focus, manually activate it again
@@ -72,12 +73,13 @@ editableNodeListEventHandler({
       :activated="activated"
       :appendMode="appendMode"
       @item-mousedown="onItemClicked"
-      @cancel-append="onCancelAppend"
+      @cancel-append="onCancel"
     >
       <InlineForm
         v-if="!appendMode"
         :parent="parent"
         @after-submit="onAfterSubmit"
+        @cancel="onCancel"
       ></InlineForm>
     </NodeList>
   </div>

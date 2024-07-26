@@ -63,6 +63,9 @@ nextTick(() => {
 });
 
 const onCancel = () => {
+  // release cursor to activate nav mode
+  textEl.value?.blur();
+
   //TODO: should check the content here
   emit("cancel");
 };
