@@ -22,6 +22,9 @@ export default ({
   const isActivated = () => activated.value;
 
   useEventListener(document, "keydown", (e) => {
+    // TODO: scale up to all form fields
+    if (e.target.tagName === "TEXTAREA") return;
+
     // 如果未 activate， keydown 不做任何處理
     if (!isActivated()) return;
 
