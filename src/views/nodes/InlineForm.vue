@@ -33,9 +33,21 @@ const onSubmit = (e) => {
   reloadForm();
 
   // have to wait for the new content to be loaded
-  nextTick(() => {
-    resizeTextarea();
-  });
+  nextTick(() => resizeTextarea());
+
+  emit("after-submit", obj);
+};
+
+const autoSave = (e) => {
+  const content = formData.value?.content;
+  if (!content || content.trim() === "") return;
+
+  const obj = formData.value.save();
+
+  reloadForm();
+
+  // have to wait for the new content to be loaded
+  nextTick(() => resizeTextarea());
 
   emit("after-submit", obj);
 };
@@ -73,6 +85,7 @@ const onCancel = () => {
           @input="resizeTextarea"
           @keydown.esc="onCancel"
           @keydown.enter="onSubmit"
+          @blur="autoSave"
         ></textarea>
         <input type="submit" value="Submit" />
       </form>
