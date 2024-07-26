@@ -24,6 +24,7 @@ const onDelete = () => {
       <span>{{ node.start_date }}</span> ~
       <span>{{ node.end_date }}</span> &middot;
       <RouterLink :to="`/nodes/${node.id}`">default</RouterLink> &middot;
+      <RouterLink :to="`/nodes/${node.id}/dual`">dual</RouterLink> &middot;
       <RouterLink :to="`/nodes/${node.id}/gantt`">gantt</RouterLink> &middot;
       <RouterLink :to="`/nodes/${node.id}/edit`">Edit</RouterLink> &middot;
 

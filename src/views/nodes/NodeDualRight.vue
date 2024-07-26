@@ -4,30 +4,21 @@ import { useRoute } from "vue-router";
 import { find } from "@/stores/nodes.js";
 import useSelection from "@/utils/useSelection.js";
 
-import Breadcrumbs from "./Breadcrumbs.vue";
-
-import Header from "./Header.vue";
-
 import EditableNodeList from "./EditableNodeList.vue";
 
 const selection = useSelection();
 
 const route = useRoute();
-const node = computed(() => find(route.params.id));
+const node = computed(() => find(route.params.sid)); // it is sid
 </script>
 <template>
   <div>
     <template v-if="node">
-      <Breadcrumbs :node="node"></Breadcrumbs>
-      <Header :node="node"></Header>
-
-      <div style="padding-bottom: 80vh">
-        <EditableNodeList
-          :parent="node"
-          :list="node.children"
-          :selection="selection"
-        ></EditableNodeList>
-      </div>
+      <EditableNodeList
+        :parent="node"
+        :list="node.children"
+        :selection="selection"
+      ></EditableNodeList>
     </template>
     <div v-else>Not Found...</div>
   </div>

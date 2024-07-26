@@ -25,6 +25,19 @@ const router = createRouter({
     },
 
     {
+      path: "/nodes/:id/dual",
+      name: "dual_nodes",
+      component: () => import("../views/nodes/NodeDualView.vue"),
+      children: [
+        {
+          path: ":sid",
+          name: "vs_nodes",
+          component: () => import("../views/nodes/NodeDualRight.vue"),
+        },
+      ],
+    },
+
+    {
       path: "/nodes",
       name: "nodes",
       component: () => import("../views/nodes/NodesDashboard.vue"),

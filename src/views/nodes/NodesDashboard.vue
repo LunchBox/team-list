@@ -13,13 +13,11 @@ import {
 
 <template>
   <div>
-    <div>
-      <div class="toolbar">
-        <a href="#" @click.prevent="saveToFile">Save As</a> &middot;
-        <a href="#" @click.prevent="loadFromFile">Load</a> &middot;
-        <a href="#" @click.prevent="expandAll">Expand</a> &middot;
-        <a href="#" @click.prevent="collapseAll">Collapse</a>
-      </div>
+    <div class="toolbar">
+      <a href="#" @click.prevent="saveToFile">Save As</a> &middot;
+      <a href="#" @click.prevent="loadFromFile">Load</a> &middot;
+      <a href="#" @click.prevent="expandAll">Expand</a> &middot;
+      <a href="#" @click.prevent="collapseAll">Collapse</a>
     </div>
     <div class="flex separated">
       <aside>
@@ -55,6 +53,6 @@ main {
 
 .toolbar {
   font-size: small;
-  margin: 1rem 0;
+  margin-bottom: 0.5rem;
 }
 </style>

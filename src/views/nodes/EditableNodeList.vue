@@ -1,6 +1,8 @@
 <script setup>
 import { ref, computed, nextTick } from "vue";
 
+import EditableListItem from "./EditableListItem.vue";
+
 import editableNodeListEventHandler from "./EditableNodeListEventHandler.js";
 
 import NodeList from "./NodeList.vue";
@@ -65,6 +67,10 @@ editableNodeListEventHandler({
 <template>
   <!-- use tabindex to force area focus-able, to accept keydown.enter event -->
   <div class="node-list" ref="rootEl" :class="{ activated }">
+    <div v-if="parent" class="a-list">
+      <EditableListItem :node="parent"></EditableListItem>
+    </div>
+
     <NodeList
       v-bind="$attrs"
       :list="list"
@@ -76,7 +82,6 @@ editableNodeListEventHandler({
       @cancel-append="onCancel"
     >
       <InlineForm
-        v-if="!appendMode"
         :parent="parent"
         @after-submit="onAfterSubmit"
         @cancel="onCancel"
