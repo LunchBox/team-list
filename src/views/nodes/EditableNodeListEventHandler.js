@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { ref, toValue } from "vue";
 import useEventListener from "@/utils/useEventListener.js";
 import { elemInForm } from "@/utils/elemInsideContainer.js";
 import {
@@ -20,18 +20,17 @@ export default ({
 
   const delMark = ref(false);
 
-  const isActivated = () => activated.value;
-
   useEventListener(document, "keydown", (e) => {
     if (elemInForm(e.target)) return;
 
     // 如果未 activate， keydown 不做任何處理
-    if (!isActivated()) return;
+    if (!toValue(activated)) return;
 
     // 如果沒有選中任何 item 也不用處理？
-    if (!anySelected.value) return;
+    if (!toValue(anySelected)) return;
 
-    const items = selectedItems.value;
+    const items = toValue(selectedItems);
+    const scope = toValue(scopeRef);
 
     // double press d to delete a node
     if (e.key === "d") {
@@ -41,7 +40,7 @@ export default ({
         const fi = items.first;
         const nxt = fi.prev || fi.next || fi.parent;
         items.forEach(destroy);
-        nxt.inScope(scopeRef?.value) && select(nxt);
+        nxt.inScope(scope) && select(nxt);
       } else {
         delMark.value = true;
       }
@@ -95,7 +94,7 @@ export default ({
       };
 
       const target = exec(fs[e.key]);
-      target && target.inScope(scopeRef?.value) && select(target);
+      target && target.inScope(scope) && select(target);
     }
   });
 };
