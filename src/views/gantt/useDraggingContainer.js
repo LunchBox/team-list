@@ -1,12 +1,13 @@
 import { ref } from "vue";
 import useEventListener from "@/utils/useEventListener.js";
 
-export default (containerEl) => {
+export default (posRef) => {
   const draggingContainer = ref(false);
 
   useEventListener(window, "mousemove", (e) => {
-    if (draggingContainer.value && containerEl.value) {
-      containerEl.value.scrollLeft -= e.movementX;
+    if (draggingContainer.value) {
+      posRef.value -= e.movementX;
+      posRef.value = Math.max(posRef.value, 0);
     }
   });
 

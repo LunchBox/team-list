@@ -1,28 +1,30 @@
 <script setup>
-import { ref, computed, nextTick, toValue } from "vue";
+import { ref, computed, nextTick, toValue, watchEffect } from "vue";
 import { daysDiff } from "@/utils/dates.js";
 import { dateToGridColumn } from "./utils";
 import useEventListener from "@/utils/useEventListener";
 
-const props = defineProps(["list", "days", "width", "start"]);
+const props = defineProps([
+  "list",
+  "days",
+  "width",
+  "scrollLeft",
+  "scrollWidth",
+  "start",
+]);
 const emit = defineEmits(["handler-move"]);
 
 const NAV_HEIGHT = 64;
 
-const containerRef = ref(null);
-
-const containerWidth = ref(0);
 const handlerLeft = ref(0);
 
-nextTick(() => {
-  const { width } = containerRef.value?.getBoundingClientRect() || {};
-  containerWidth.value = width;
+const rate = computed(() => {
+  const { width, scrollWidth } = props;
+  return width / scrollWidth;
 });
 
-const rate = computed(() => {
-  const { width } = props;
-  const cw = toValue(containerWidth);
-  return cw / width;
+watchEffect(() => {
+  handlerLeft.value = props.scrollLeft * rate.value;
 });
 
 const containerStyle = computed(() => {
@@ -54,6 +56,10 @@ const itemStyle = (item, row) => {
   };
 };
 
+const handlerStyle = computed(() => {
+  return { left: `${handlerLeft.value}px` };
+});
+
 const dragging = ref(false);
 useEventListener(window, "mousemove", (e) => {
   if (dragging.value) {
@@ -69,7 +75,7 @@ useEventListener(window, "mouseup", (e) => {
 </script>
 
 <template>
-  <div class="gantt-nav" :style="containerStyle" ref="containerRef">
+  <div class="gantt-nav" :style="containerStyle">
     <div
       v-for="(item, row) in list"
       :style="itemStyle(item, row)"
@@ -77,7 +83,7 @@ useEventListener(window, "mouseup", (e) => {
     ></div>
     <div
       class="handler"
-      :style="{ left: `${handlerLeft}px` }"
+      :style="handlerStyle"
       @mousedown.left="dragging = true"
     ></div>
   </div>
@@ -93,13 +99,13 @@ useEventListener(window, "mouseup", (e) => {
   /* gap: 1px 0; */
 
   height: var(--height);
-  background: #efefef;
+  background: rgba(0, 0, 0, 0.2);
 
-  position: relative;
+  position: sticky;
+  bottom: 0;
 
   .item {
-    background: #999;
-    border: 1px solid #efefef;
+    background: #444;
     pointer-events: none;
   }
 
@@ -110,7 +116,7 @@ useEventListener(window, "mouseup", (e) => {
     left: var(--hanlder-left);
     width: var(--handler-width);
 
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.3);
     user-select: none;
   }
 }

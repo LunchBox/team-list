@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, nextTick } from "vue";
+import { computed, ref, nextTick, watchEffect, watch } from "vue";
 
 import { humanizeDate, formatDate } from "@/utils/dates.js";
 
@@ -24,9 +24,8 @@ const scrollLeft = ref(0);
 const targetDate = ref(formatDate(new Date()));
 
 const onHandlerMove = (diff) => {
-  if (!containerEl.value) return;
-  containerEl.value.scrollLeft += diff;
-  if (containerEl.value.scrollLeft < 0) containerEl.value.scrollLeft = 0;
+  scrollLeft.value += diff;
+  scrollLeft.value = Math.max(scrollLeft.value, 0);
 };
 
 const scrollTo = () => {
@@ -69,7 +68,21 @@ const { onDropToDate } = useDroppable({ editMode, selection: props.selection });
 
 // dragging container
 const containerEl = ref(null);
-const { draggingContainer } = useDraggingContainer(containerEl);
+const containerWidth = ref(0);
+const containerScrollWidth = ref(0);
+nextTick(() => {
+  const { width } = containerEl.value?.getBoundingClientRect() || {};
+  containerWidth.value = width;
+  containerScrollWidth.value = containerEl.value?.scrollWidth;
+});
+//TODO: update width on resize
+
+const { draggingContainer } = useDraggingContainer(scrollLeft);
+
+watch(scrollLeft, () => {
+  if (!containerEl.value) return;
+  containerEl.value.scrollLeft = scrollLeft.value;
+});
 
 // others
 const itemTitle = (item) => {
@@ -105,15 +118,17 @@ const selectedDate = ref(null);
           <input type="submit" value="Goto" />
         </form>
       </div>
-      <GanttNav
-        :list="list"
-        :days="totalDays"
-        :start="startDate"
-        :width="totalDays * cellWidth"
-        :scrollLeft="scrollLeft"
-        @handler-move="onHandlerMove"
-      ></GanttNav>
     </div>
+
+    <GanttNav
+      :list="list"
+      :days="totalDays"
+      :start="startDate"
+      :width="containerWidth"
+      :scrollWidth="containerScrollWidth"
+      :scrollLeft="scrollLeft"
+      @handler-move="onHandlerMove"
+    ></GanttNav>
 
     <div
       class="gantt-container"
@@ -137,6 +152,7 @@ const selectedDate = ref(null);
         class="cell day"
         :id="`d_${formatDate(d)}`"
         :class="{ weekend: isWeekend(d), selected: selectedDate === d }"
+        @mousedown.left="selectedDate = d"
       >
         <span>{{ d.getDate() }}</span>
       </div>
@@ -170,7 +186,6 @@ const selectedDate = ref(null);
         :startDate="startDate"
         :date="d"
         :title="formatDate(d)"
-        @mousedown="selectedDate = d"
         @drop="onDropToDate(d)"
         @dragover.prevent
       ></GridColumn>
@@ -266,6 +281,13 @@ strong {
   text-overflow: ellipsis;
 }
 
+.gantt-nav {
+  grid-column: 3 / 4;
+  grid-row: 999 / 1000;
+
+  z-index: 999;
+}
+
 .before-container {
   grid-column: 3 / 4;
   grid-row: 1 / 2;
@@ -274,7 +296,7 @@ strong {
   grid-column: 3 / 4;
   grid-row: 2 / 3;
 
-  overflow-x: scroll;
+  overflow-x: hidden;
 }
 
 .gantt-container {
