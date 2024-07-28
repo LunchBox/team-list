@@ -324,8 +324,17 @@ strong {
   }
 
   .item {
-    background: #b9d5c7ed;
     color: #222;
+
+    &:before {
+      content: " ";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      border: 2px solid #444;
+    }
   }
 
   /* 通常看到這條線的都是 over time 的 task.. */
@@ -338,8 +347,7 @@ strong {
       left: 0;
       right: 0;
       bottom: 0;
-      height: 1px;
-      background-color: #c40;
+      border-bottom: 2px solid #c30;
     }
   }
 }
