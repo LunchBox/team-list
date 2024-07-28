@@ -19,14 +19,8 @@ const selectedItems = computed(() => props.selection?.selectedItems.value);
 
 const editMode = ref(false);
 const cellWidth = ref(32);
-const scrollLeft = ref(0);
 
 const targetDate = ref(formatDate(new Date()));
-
-const onHandlerMove = (diff) => {
-  scrollLeft.value += diff;
-  scrollLeft.value = Math.max(scrollLeft.value, 0);
-};
 
 const scrollTo = () => {
   nextTick(() => {
@@ -77,12 +71,8 @@ nextTick(() => {
 });
 //TODO: update width on resize
 
-const { draggingContainer } = useDraggingContainer(scrollLeft);
-
-watch(scrollLeft, () => {
-  if (!containerEl.value) return;
-  containerEl.value.scrollLeft = scrollLeft.value;
-});
+const { scrollLeft, draggingContainer, scrollContainer } =
+  useDraggingContainer(containerEl);
 
 // others
 const itemTitle = (item) => {
@@ -127,7 +117,7 @@ const selectedDate = ref(null);
       :width="containerWidth"
       :scrollWidth="containerScrollWidth"
       :scrollLeft="scrollLeft"
-      @handler-move="onHandlerMove"
+      @handler-move="scrollContainer"
     ></GanttNav>
 
     <div
