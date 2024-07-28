@@ -157,6 +157,14 @@ class Node {
     return arr;
   }
 
+  // ---- move
+  moveToAfter(node) {
+    if (this === node) return;
+
+    node.restSiblings.forEach((n) => (n.seq += 1));
+    this.seq = node.seq + 1;
+  }
+
   // ---- collapse & expend
 
   collapse() {

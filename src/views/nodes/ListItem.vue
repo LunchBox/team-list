@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, toValue } from "vue";
 
 import MarkedText from "@/components/MarkedText.vue";
 
@@ -67,6 +67,19 @@ const onDoubleClick = (e) => {
 const afterAppend = (node) => {
   props.selection?.select(node);
 };
+
+// ---- on drop to sort items
+const dragging = ref(false);
+const hover = ref(false);
+const onDrop = (...args) => {
+  let prev = props.node;
+  const items = toValue(props.selection.selectedItems);
+  for (const item of items) {
+    item.moveToAfter(prev);
+    prev = item;
+  }
+  hover.value = false;
+};
 </script>
 <template>
   <!-- editing mode -->
@@ -77,13 +90,21 @@ const afterAppend = (node) => {
     @after-submit="afterQuickEdit"
   ></InlineForm>
   <!-- display mode -->
-  <div v-else v-bind="$attrs" class="list-item" :class="{ selected }">
+  <div
+    v-else
+    v-bind="$attrs"
+    class="list-item"
+    :class="{ selected, hover }"
+    @drop="onDrop"
+    @dragover.prevent="hover = true"
+    @dragleave="hover = false"
+  >
     <div
       class="list-item-row flex items-center"
       ref="itemRowRef"
-      :draggable="itemDraggable"
+      :draggable="dragging || itemDraggable"
       @dragstart="$emit('item-dragstart', $event, node)"
-      @mousedown="$emit('item-mousedown', $event, node)"
+      @mousedown.left="$emit('item-mousedown', $event, node)"
       @click.left.prevent="onNodeClicked"
     >
       <div class="list-item-cell">
@@ -93,7 +114,9 @@ const afterAppend = (node) => {
       </div>
 
       <template v-if="node.isChildrenBlank">
-        <span class="list-item-marker">-</span>
+        <span class="list-item-marker" @mousedown.left="dragging = true">
+          -
+        </span>
 
         <MarkedText
           class="node-content full"
@@ -141,6 +164,19 @@ const afterAppend = (node) => {
 </template>
 
 <style scoped>
+.list-item {
+  position: relative;
+
+  &.hover:before {
+    content: " ";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-bottom: 2px solid #ccc;
+  }
+}
+
 .list-item-row {
   outline: none;
 }
