@@ -1,7 +1,8 @@
 <script setup>
-import { computed, ref, nextTick, watchEffect, watch } from "vue";
+import { computed, ref, nextTick } from "vue";
 
 import { humanizeDate, formatDate } from "@/utils/dates.js";
+import { dateToGridColumn } from "./utils";
 
 import useDates from "./useDates.js";
 import useDraggingItems from "./useDraggingItems.js";
@@ -17,24 +18,10 @@ const props = defineProps(["list", "selection"]);
 
 const selectedItems = computed(() => props.selection?.selectedItems.value);
 
+const selectedDate = ref(formatDate(new Date()));
+
 const editMode = ref(false);
 const cellWidth = ref(32);
-
-const targetDate = ref(formatDate(new Date()));
-
-const scrollTo = () => {
-  nextTick(() => {
-    // const el = document.querySelector(`#d_${formatDate(targetDate.value)}`);
-    // console.log(el);
-    // if (el) {
-    //   el.scrollIntoView({
-    //     behavior: "smooth",
-    //     block: "start",
-    //     inline: "nearest",
-    //   });
-    // }
-  });
-};
 
 // only show items that have start and end date
 const scheduledList = computed(() => {
@@ -74,6 +61,16 @@ nextTick(() => {
 const { scrollLeft, draggingContainer, scrollContainer } =
   useDraggingContainer(containerEl);
 
+// scroll to date
+const scrollTo = () => {
+  nextTick(() => {
+    const col = dateToGridColumn(selectedDate.value, startDate.value) - 4;
+    const dist = col * cellWidth.value;
+    console.log(dist);
+    scrollContainer(dist - scrollLeft.value);
+  });
+};
+
 // others
 const itemTitle = (item) => {
   return `${item.start_date} ~ ${item.end_date} ${item.content}`;
@@ -82,8 +79,6 @@ const itemTitle = (item) => {
 const generalStyle = computed(() => {
   return { "--cols": totalDays.value, "--cell-width": `${cellWidth.value}px` };
 });
-
-const selectedDate = ref(null);
 </script>
 <template>
   <div class="gantt-view" :style="generalStyle">
@@ -104,7 +99,7 @@ const selectedDate = ref(null);
         <slot name="before-container"></slot>
 
         <form style="margin-left: auto" @submit.prevent="scrollTo">
-          <input type="date" v-model="targetDate" />
+          <input type="date" v-model="selectedDate" @change="scrollTo" />
           <input type="submit" value="Goto" />
         </form>
       </div>
@@ -140,9 +135,11 @@ const selectedDate = ref(null);
       <div
         v-for="d in dates"
         class="cell day"
-        :id="`d_${formatDate(d)}`"
-        :class="{ weekend: isWeekend(d), selected: selectedDate === d }"
-        @mousedown.left="selectedDate = d"
+        :class="{
+          weekend: isWeekend(d),
+          selected: selectedDate === formatDate(d),
+        }"
+        @mousedown.left="selectedDate = formatDate(d)"
       >
         <span>{{ d.getDate() }}</span>
       </div>
@@ -160,7 +157,7 @@ const selectedDate = ref(null);
         class="selected-day"
         :rows="list.length"
         :startDate="startDate"
-        :date="selectedDate"
+        :date="new Date(selectedDate)"
       ></GridColumn>
 
       <!-- droppable area -->
