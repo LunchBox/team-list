@@ -110,7 +110,7 @@ useEventListener(window, "mouseup", (e) => {
     left: var(--hanlder-left);
     width: var(--handler-width);
 
-    border: 1px solid #ccc;
+    background: rgba(0, 0, 0, 0.1);
     user-select: none;
   }
 }

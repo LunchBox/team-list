@@ -118,7 +118,7 @@ const selectedDate = ref(null);
     <div
       class="gantt-container"
       ref="containerEl"
-      @mousedown="draggingContainer = true"
+      @mousedown.left="draggingContainer = true"
     >
       <!-- weeks -->
       <template v-for="(d, i) in dates">
@@ -147,6 +147,14 @@ const selectedDate = ref(null);
         :rows="list.length"
         :startDate="startDate"
         :date="today"
+      ></GridColumn>
+
+      <GridColumn
+        v-show="selectedDate"
+        class="selected-day"
+        :rows="list.length"
+        :startDate="startDate"
+        :date="selectedDate"
       ></GridColumn>
 
       <!-- droppable area -->
@@ -302,6 +310,7 @@ strong {
     }
   }
 
+  .selected-day,
   .today {
     position: relative;
 
@@ -313,6 +322,11 @@ strong {
       top: 0;
       left: calc(50% - 1px);
       background: darkolivegreen;
+    }
+  }
+  .selected-day {
+    &:before {
+      background: #ffd891;
     }
   }
 
