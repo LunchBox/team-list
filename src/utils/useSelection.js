@@ -57,7 +57,7 @@ export default function useSelection() {
   const handleSelect = (e, item) => {
     if (!item) return;
 
-    if (e.ctrlKey) {
+    if (e.ctrlKey || e.metaKey) {
       toggleSelect(item);
     } else {
       select(item);

@@ -13,7 +13,7 @@ export default ({ editMode, cellWidth, selection } = {}) => {
 
   const onItemMousedown = (e, item = null, type = null) => {
     // 非編輯模式下也是可以選中 item 的
-    if (e.ctrlKey) {
+    if (e.ctrlKey || e.metaKey) {
       selection.toggleSelect(item);
     } else {
       if (!selection.hasSelected(item)) {
