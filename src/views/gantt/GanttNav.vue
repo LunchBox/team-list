@@ -61,6 +61,17 @@ const handlerStyle = computed(() => {
 });
 
 const dragging = ref(false);
+
+const onMousedown = (e) => {
+  dragging.value = true;
+
+  const { width } = props;
+
+  const handlerWidth = width * rate.value;
+  const diff = (e.offsetX - handlerLeft.value - handlerWidth / 2) / rate.value;
+  emit("handler-move", diff);
+};
+
 useEventListener(window, "mousemove", (e) => {
   if (dragging.value) {
     handlerLeft.value += e.movementX;
@@ -75,17 +86,13 @@ useEventListener(window, "mouseup", (e) => {
 </script>
 
 <template>
-  <div class="gantt-nav" :style="containerStyle">
+  <div class="gantt-nav" :style="containerStyle" @mousedown.left="onMousedown">
     <div
       v-for="(item, row) in list"
       :style="itemStyle(item, row)"
       class="item"
     ></div>
-    <div
-      class="handler"
-      :style="handlerStyle"
-      @mousedown.left="dragging = true"
-    ></div>
+    <div class="handler" :style="handlerStyle"></div>
   </div>
 </template>
 
@@ -118,6 +125,7 @@ useEventListener(window, "mouseup", (e) => {
 
     background: rgba(0, 0, 0, 0.3);
     user-select: none;
+    pointer-events: none;
   }
 }
 </style>
