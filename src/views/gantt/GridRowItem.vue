@@ -11,7 +11,7 @@ const emit = defineEmits(["item-mousedown"]);
 const DEFAULT_TASK_DAYS = 3;
 
 const cellStyle = computed(() => {
-  const { item, row, start } = props;
+  const { row, start } = props;
   const { start_date, end_date } = props;
 
   let colStart = new Date().getDay() + 1;

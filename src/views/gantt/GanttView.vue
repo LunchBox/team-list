@@ -9,6 +9,7 @@ import useDraggingContainer from "./useDraggingContainer.js";
 
 import useDroppable from "./useDropable.js";
 
+import GanttNav from "./GanttNav.vue";
 import GridRowItem from "./GridRowItem.vue";
 import GridColumn from "./GridColumn.vue";
 
@@ -18,20 +19,27 @@ const selectedItems = computed(() => props.selection?.selectedItems.value);
 
 const editMode = ref(false);
 const cellWidth = ref(32);
+const scrollLeft = ref(0);
 
 const targetDate = ref(formatDate(new Date()));
 
+const onHandlerMove = (diff) => {
+  if (!containerEl.value) return;
+  containerEl.value.scrollLeft += diff;
+  if (containerEl.value.scrollLeft < 0) containerEl.value.scrollLeft = 0;
+};
+
 const scrollTo = () => {
   nextTick(() => {
-    const el = document.querySelector(`#d_${formatDate(targetDate.value)}`);
-    console.log(el);
-    if (el) {
-      el.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-        inline: "nearest",
-      });
-    }
+    // const el = document.querySelector(`#d_${formatDate(targetDate.value)}`);
+    // console.log(el);
+    // if (el) {
+    //   el.scrollIntoView({
+    //     behavior: "smooth",
+    //     block: "start",
+    //     inline: "nearest",
+    //   });
+    // }
   });
 };
 
@@ -97,6 +105,14 @@ const selectedDate = ref(null);
           <input type="submit" value="Goto" />
         </form>
       </div>
+      <GanttNav
+        :list="list"
+        :days="totalDays"
+        :start="startDate"
+        :width="totalDays * cellWidth"
+        :scrollLeft="scrollLeft"
+        @handler-move="onHandlerMove"
+      ></GanttNav>
     </div>
 
     <div

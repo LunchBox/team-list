@@ -82,6 +82,7 @@ editableNodeListEventHandler({
       @cancel-append="onCancel"
     >
       <InlineForm
+        v-if="!appendMode"
         :parent="parent"
         @after-submit="onAfterSubmit"
         @cancel="onCancel"
