@@ -2,6 +2,7 @@ import { ref, watch, computed } from "vue";
 import randomId from "@/utils/random_id.js";
 import useSelection from "@/utils/useSelection.js";
 import CusArray from "@/utils/cus_array";
+import { formatDate } from "@/utils/dates";
 
 const REPLACER = (key, value) => {
   return key.startsWith("_") || key.startsWith("$") ? undefined : value;
@@ -145,6 +146,26 @@ class Node {
 
   set isDone(val) {
     this.done_at = val && new Date();
+  }
+
+  // should be processing
+  get isProcessing() {
+    if (!this.isTask || !this.start_date || !this.end_date) return false;
+    const today = formatDate(new Date());
+    return !this.done_at && today > this.start_date && today < this.end_date;
+  }
+
+  // it is done but over the end_date
+  get isLate() {
+    if (!this.isTask || !this.end_date) return false;
+    return this.done_at && this.done_at > this.end_date;
+  }
+
+  // it is not done
+  get isOverdue() {
+    if (!this.isTask || !this.end_date) return false;
+
+    return !this.done_at && formatDate(new Date()) > this.end_date;
   }
 
   // check a node's parent parent path

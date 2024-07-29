@@ -5,14 +5,7 @@ import { daysDiff } from "@/utils/dates.js";
 
 import { dateToGridColumn } from "./utils.js";
 
-const props = defineProps([
-  "item",
-  "start_date",
-  "end_date",
-  "row",
-  "start",
-  "fixed",
-]);
+const props = defineProps(["start_date", "end_date", "row", "start", "fixed"]);
 const emit = defineEmits(["item-mousedown"]);
 
 const DEFAULT_TASK_DAYS = 3;

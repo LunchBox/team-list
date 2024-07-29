@@ -255,6 +255,10 @@ const generalStyle = computed(() => {
             regular: regularLayout,
             tiny: tinyLayout,
             fixed: item.noDateDrag,
+            done: item.isDone,
+            info: item.isProcessing,
+            late: item.isLate,
+            overdue: item.isOverdue,
           }"
           @item-mousedown="(e, type) => onItemMousedown(e, item, type)"
         >
@@ -439,6 +443,42 @@ strong {
     &.fixed:before {
       background: #ccc;
       z-index: -1;
+    }
+
+    /* over start_date and not done */
+    &.info {
+      &:before {
+        background: #ecbd64;
+        border-color: #ecbd64;
+      }
+    }
+
+    /* not done and over end_date */
+    &.overdue {
+      &:before {
+        background: #e56c70;
+        border-color: #e56c70;
+      }
+    }
+
+    &.done {
+      &:before {
+        background: #c2c76f;
+        border-color: #c2c76f;
+      }
+    }
+
+    /* done but over end_date */
+    &.late {
+      &:before {
+        background: #e59368;
+        border-color: #e59368;
+      }
+    }
+
+    span {
+      position: relative;
+      z-index: 999;
     }
   }
 
