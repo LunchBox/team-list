@@ -67,6 +67,10 @@ const onDoubleClick = (e) => {
 
       <ExpandMarker :node="node"></ExpandMarker>
 
+      <span v-if="node.isTask" class="list-item-cell">
+        <input type="checkbox" />
+      </span>
+
       <template v-if="node.isChildrenBlank">
         <MarkedText
           class="node-content full"
