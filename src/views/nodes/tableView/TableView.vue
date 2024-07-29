@@ -2,15 +2,12 @@
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 import { find } from "@/stores/nodes.js";
-import useSelection from "@/utils/useSelection.js";
 
 import Breadcrumbs from "../Breadcrumbs.vue";
 
 import Header from "../Header.vue";
 
-import ListItem from "./ListItem.vue";
-
-const selection = useSelection();
+import TableRow from "./TableRow.vue";
 
 const route = useRoute();
 const node = computed(() => find(route.params.id));
@@ -26,11 +23,20 @@ const itemList = computed(() => {
       <Header :node="node"></Header>
 
       <div class="a-list">
-        <template v-for="node in itemList">
-          <ListItem :node="node"></ListItem>
-          <span>{{ node.start_date }}</span>
-          <span>{{ node.end_date }}</span>
-        </template>
+        <table class="a-table" border="1">
+          <thead>
+            <tr>
+              <th></th>
+              <th></th>
+              <th>Content</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <TableRow v-for="c in node.children" :node="c"></TableRow>
+          </tbody>
+        </table>
       </div>
     </template>
     <div v-else>Not Found...</div>
@@ -41,5 +47,15 @@ const itemList = computed(() => {
 .a-list {
   display: grid;
   grid-template-columns: 1fr 10rem 10rem;
+}
+
+.a-table {
+  border-collapse: collapse;
+
+  th {
+    font-weight: bold;
+    text-align: left;
+    padding: 0 4px;
+  }
 }
 </style>

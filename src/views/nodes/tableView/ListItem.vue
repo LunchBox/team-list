@@ -9,23 +9,9 @@ import ExpandMarker from "../ExpandMarker.vue";
 import useEventListener from "@/utils/useEventListener.js";
 import { elemInForm } from "@/utils/elemInsideContainer.js";
 
-const props = defineProps([
-  "node",
-  "parent",
-  "itemDraggable",
-  "selection",
-  "activated",
-  "appendMode",
-]);
+const props = defineProps(["node", "indent"]);
 
-const emit = defineEmits([
-  "item-dragstart",
-  "item-mousedown",
-  "item-clicked",
-  "item-dblclick",
-  "after-append",
-  "cancel-append",
-]);
+const emit = defineEmits(["item-clicked", "item-dblclick"]);
 
 const selected = computed(() => props.selection?.hasSelected(props.node));
 
@@ -61,24 +47,6 @@ const onDoubleClick = (e) => {
   quickEdit.value = true;
   emit("item-dblclick", e, props.node);
 };
-
-// ---- after append
-const afterAppend = (node) => {
-  props.selection?.select(node);
-};
-
-// ---- on drop to sort items
-const dragging = ref(false);
-const hover = ref(false);
-const onDrop = (...args) => {
-  let prev = props.node;
-  const items = toValue(props.selection.selectedItems);
-  for (const item of items) {
-    item.moveToAfter(prev);
-    prev = item;
-  }
-  hover.value = false;
-};
 </script>
 <template>
   <!-- editing mode -->
@@ -89,32 +57,17 @@ const onDrop = (...args) => {
     @after-submit="afterQuickEdit"
   ></InlineForm>
   <!-- display mode -->
-  <div
-    v-else
-    v-bind="$attrs"
-    class="list-item"
-    :class="{ selected, hover }"
-    @drop="onDrop"
-    @dragover.prevent="hover = true"
-    @dragleave="hover = false"
-  >
+  <div v-else v-bind="$attrs" class="list-item" :class="{ selected }">
     <div
       class="list-item-row flex items-center"
       ref="itemRowRef"
-      :draggable="dragging || itemDraggable"
-      @dragstart="$emit('item-dragstart', $event, node)"
-      @mousedown.left="$emit('item-mousedown', $event, node)"
       @click.left.prevent="onNodeClicked"
     >
-      <div class="list-item-cell">
-        <RouterLink :to="`/nodes/${node.id}`" class="focus-marker"></RouterLink>
-      </div>
+      <span class="list-item-cell" v-for="i in indent"></span>
+
+      <ExpandMarker :node="node"></ExpandMarker>
 
       <template v-if="node.isChildrenBlank">
-        <span class="list-item-marker" @mousedown.left="dragging = true">
-          -
-        </span>
-
         <MarkedText
           class="node-content full"
           :text="node.content"
@@ -122,7 +75,6 @@ const onDrop = (...args) => {
         ></MarkedText>
       </template>
       <template v-else>
-        <ExpandMarker :node="node"></ExpandMarker>
         <a href="#" class="node-content full" @dblclick="onDoubleClick">
           {{ node.content }}
         </a>

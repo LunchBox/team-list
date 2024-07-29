@@ -120,13 +120,13 @@ const isDraggable = computed(() => {
         </RouterLink>
       </div>
 
+      <ExpandMarker :node="node"></ExpandMarker>
+
+      <span v-if="node.isTask" class="list-item-cell">
+        <input type="checkbox" />
+      </span>
+
       <template v-if="node.isChildrenBlank">
-        <span class="list-item-marker"> - </span>
-
-        <span v-if="node.isTask" class="list-item-cell">
-          <input type="checkbox" />
-        </span>
-
         <MarkedText
           class="node-content full"
           :text="node.content"
@@ -134,12 +134,6 @@ const isDraggable = computed(() => {
         ></MarkedText>
       </template>
       <template v-else>
-        <ExpandMarker :node="node"></ExpandMarker>
-
-        <span v-if="node.isTask" class="list-item-cell">
-          <input type="checkbox" />
-        </span>
-
         <a href="#" class="node-content full" @dblclick="onDoubleClick">
           {{ node.content }}
         </a>
@@ -148,6 +142,7 @@ const isDraggable = computed(() => {
           ({{ node.children.length }} : {{ node.allChildrenLen }})
         </span>
       </template>
+
       <span class="seq-info">{{ node.seq }}</span>
     </div>
 
