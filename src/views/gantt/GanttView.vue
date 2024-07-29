@@ -65,6 +65,11 @@ nextTick(updateSize);
 watch(dates, () => nextTick(updateSize));
 
 // scroll to date
+const goTo = (date) => {
+  selectedDate.value = formatDate(date);
+  scrollToDate(selectedDate.value);
+};
+
 const scrollToDate = (date) => {
   const col = dateToGridColumn(date, startDate.value) - 4;
   const dist = col * cellWidth.value;
@@ -123,8 +128,9 @@ const generalStyle = computed(() => {
         <slot name="before-container"></slot>
 
         <div style="margin-left: auto" class="flex">
-          <button @click="zoomIn">Zoom In</button>
-          <button @click="zoomOut">Zoom Out</button>
+          <button @click="goTo(today)">Today</button>
+          <button @click="zoomIn">-</button>
+          <button @click="zoomOut">+</button>
           <form @submit.prevent="scrollTo">
             <input type="date" v-model="selectedDate" @change="scrollTo" />
             <input type="submit" value="Goto" />
