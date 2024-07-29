@@ -418,8 +418,9 @@ strong {
     }
 
     &.tiny:before {
-      height: 8px;
-      top: calc(50% - 4px);
+      height: 6px;
+      top: calc(50% - 3px);
+      background: #444;
     }
   }
 
@@ -437,8 +438,8 @@ strong {
     }
 
     &.tiny:before {
-      height: 8px;
-      top: calc(50% - 4px);
+      height: 6px;
+      top: calc(50% - 3px);
     }
   }
 }
