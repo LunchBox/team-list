@@ -18,7 +18,6 @@ const containerStyle = computed(() => {
 });
 
 const itemStyle = (item, row) => {
-  console.log("here");
   const { start } = props;
   const { start_date, end_date } = item;
 

@@ -27,7 +27,7 @@ export default (containerEl) => {
     // should not over container
     scrollLeft.value = Math.min(
       scrollLeft.value,
-      containerWidth.value - handlerWidth.value
+      containerScrollWidth.value - containerWidth.value
     );
   };
 
