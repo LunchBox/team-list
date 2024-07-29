@@ -77,6 +77,24 @@ const scrollTo = () => {
 
 nextTick(() => scrollToDate(today));
 
+// zoom in & out
+
+const zoomOut = () => {
+  cellWidth.value += 4;
+
+  updateSize();
+};
+
+const zoomIn = () => {
+  cellWidth.value -= 4;
+  cellWidth.value = Math.max(cellWidth.value, 8);
+
+  updateSize();
+};
+
+const tinyLayout = computed(() => cellWidth.value < 24);
+const regularLayout = computed(() => cellWidth.value >= 24);
+
 // others
 const itemTitle = (item) => {
   return `${item.start_date} ~ ${item.end_date} ${item.content}`;
@@ -104,28 +122,16 @@ const generalStyle = computed(() => {
       <div class="flex">
         <slot name="before-container"></slot>
 
-        <form style="margin-left: auto" @submit.prevent="scrollTo">
-          <input type="date" v-model="selectedDate" @change="scrollTo" />
-          <input type="submit" value="Goto" />
-        </form>
+        <div style="margin-left: auto" class="flex">
+          <button @click="zoomIn">Zoom In</button>
+          <button @click="zoomOut">Zoom Out</button>
+          <form @submit.prevent="scrollTo">
+            <input type="date" v-model="selectedDate" @change="scrollTo" />
+            <input type="submit" value="Goto" />
+          </form>
+        </div>
       </div>
     </div>
-
-    <GanttNav
-      :width="containerWidth"
-      :scrollWidth="containerScrollWidth"
-      :scrollLeft="scrollLeft"
-      @handler-move="scrollContainer"
-    >
-      <GanttThumbnail
-        :list="list"
-        :days="totalDays"
-        :start="startDate"
-        :width="containerWidth"
-        :scrollWidth="containerScrollWidth"
-      >
-      </GanttThumbnail>
-    </GanttNav>
 
     <div
       class="gantt-container"
@@ -153,7 +159,7 @@ const generalStyle = computed(() => {
         }"
         @mousedown.left="selectedDate = formatDate(d)"
       >
-        <span>{{ d.getDate() }}</span>
+        <span v-show="regularLayout">{{ d.getDate() }}</span>
       </div>
 
       <!-- today marker -->
@@ -223,6 +229,10 @@ const generalStyle = computed(() => {
           :end_date="item.maxChildEndDate"
           :row="rowOf(item)"
           :start="startDate"
+          :class="{
+            regular: regularLayout,
+            tiny: tinyLayout,
+          }"
         >
         </GridRowItem>
         <GridRowItem
@@ -232,15 +242,35 @@ const generalStyle = computed(() => {
           :row="rowOf(item)"
           :start="startDate"
           :title="itemTitle(item)"
-          :class="{ 'event-through': dragging && selection?.hasSelected(item) }"
+          :class="{
+            'event-through': dragging && selection?.hasSelected(item),
+            regular: regularLayout,
+            tiny: tinyLayout,
+          }"
           @item-mousedown="(e, type) => onItemMousedown(e, item, type)"
         >
-          <span>
+          <span v-show="regularLayout">
             {{ item.content }}
           </span>
         </GridRowItem>
       </template>
     </div>
+
+    <GanttNav
+      :width="containerWidth"
+      :scrollWidth="containerScrollWidth"
+      :scrollLeft="scrollLeft"
+      @handler-move="scrollContainer"
+    >
+      <GanttThumbnail
+        :list="list"
+        :days="totalDays"
+        :start="startDate"
+        :width="containerWidth"
+        :scrollWidth="containerScrollWidth"
+      >
+      </GanttThumbnail>
+    </GanttNav>
   </div>
 </template>
 
@@ -250,11 +280,11 @@ strong {
 }
 .gantt-view {
   --line-height: 1.6rem;
-  --cell-width: 32;
+  --cell-width: 32px;
   --cols: 20;
 
   display: grid;
-  grid-template-columns: minmax(300px, 1fr) 2fr;
+  grid-template-columns: 300px 2fr;
   grid-template-rows: auto auto;
 
   align-items: stretch;
@@ -281,18 +311,18 @@ strong {
 }
 
 .gantt-nav {
-  grid-column: 3 / 4;
+  grid-column: 2 / 3;
   grid-row: 999 / 1000;
 
   z-index: 999;
 }
 
 .before-container {
-  grid-column: 3 / 4;
+  grid-column: 2 / 3;
   grid-row: 1 / 2;
 }
 .gantt-container {
-  grid-column: 3 / 4;
+  grid-column: 2 / 3;
   grid-row: 2 / 3;
 
   overflow-x: hidden;
@@ -386,6 +416,11 @@ strong {
       right: 0;
       border: 1px solid #444;
     }
+
+    &.tiny:before {
+      height: 8px;
+      top: calc(50% - 4px);
+    }
   }
 
   /* 通常看到這條線的都是 over time 的 task.. */
@@ -399,6 +434,11 @@ strong {
       right: 0;
       bottom: 0;
       border-bottom: 1px solid #c30;
+    }
+
+    &.tiny:before {
+      height: 8px;
+      top: calc(50% - 4px);
     }
   }
 }

@@ -12,11 +12,11 @@ export default (containerEl) => {
   // inner scrollable width
   const containerScrollWidth = ref(0);
 
-  const handlerWidth = computed(() => {
-    return (
-      (containerWidth.value * containerWidth.value) / containerScrollWidth.value
-    );
-  });
+  // const handlerWidth = computed(() => {
+  //   return (
+  //     (containerWidth.value * containerWidth.value) / containerScrollWidth.value
+  //   );
+  // });
 
   const scrollContainer = (diff) => {
     scrollLeft.value += diff;
@@ -41,6 +41,9 @@ export default (containerEl) => {
     const { width } = containerEl.value?.getBoundingClientRect() || {};
     containerWidth.value = width;
     containerScrollWidth.value = containerEl.value?.scrollWidth;
+
+    // adjust the handler position
+    scrollContainer(0);
   };
 
   useEventListener(window, "mousemove", (e) => {
