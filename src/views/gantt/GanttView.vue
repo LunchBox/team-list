@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, nextTick } from "vue";
+import { computed, ref, nextTick, watch } from "vue";
 
 import { humanizeDate, formatDate } from "@/utils/dates.js";
 import { dateToGridColumn } from "./utils";
@@ -10,9 +10,11 @@ import useDraggingContainer from "./useDraggingContainer.js";
 
 import useDroppable from "./useDropable.js";
 
-import GanttNav from "./GanttNav.vue";
 import GridRowItem from "./GridRowItem.vue";
 import GridColumn from "./GridColumn.vue";
+
+import GanttNav from "./GanttNav.vue";
+import GanttThumbnail from "./GanttThumbnail.vue";
 
 const props = defineProps(["list", "selection"]);
 
@@ -49,24 +51,24 @@ const { onDropToDate } = useDroppable({ editMode, selection: props.selection });
 
 // dragging container
 const containerEl = ref(null);
-const containerWidth = ref(0);
-const containerScrollWidth = ref(0);
-nextTick(() => {
-  const { width } = containerEl.value?.getBoundingClientRect() || {};
-  containerWidth.value = width;
-  containerScrollWidth.value = containerEl.value?.scrollWidth;
-});
-//TODO: update width on resize
 
-const { scrollLeft, draggingContainer, scrollContainer } =
-  useDraggingContainer(containerEl);
+const {
+  containerWidth,
+  containerScrollWidth,
+  scrollLeft,
+  draggingContainer,
+  scrollContainer,
+  updateSize,
+} = useDraggingContainer(containerEl);
+
+nextTick(updateSize);
+watch(dates, () => nextTick(updateSize));
 
 // scroll to date
 const scrollTo = () => {
   nextTick(() => {
     const col = dateToGridColumn(selectedDate.value, startDate.value) - 4;
     const dist = col * cellWidth.value;
-    console.log(dist);
     scrollContainer(dist - scrollLeft.value);
   });
 };
@@ -106,14 +108,20 @@ const generalStyle = computed(() => {
     </div>
 
     <GanttNav
-      :list="list"
-      :days="totalDays"
-      :start="startDate"
       :width="containerWidth"
       :scrollWidth="containerScrollWidth"
       :scrollLeft="scrollLeft"
       @handler-move="scrollContainer"
-    ></GanttNav>
+    >
+      <GanttThumbnail
+        :list="list"
+        :days="totalDays"
+        :start="startDate"
+        :width="containerWidth"
+        :scrollWidth="containerScrollWidth"
+      >
+      </GanttThumbnail>
+    </GanttNav>
 
     <div
       class="gantt-container"
@@ -372,7 +380,7 @@ strong {
       bottom: 0;
       left: 0;
       right: 0;
-      border: 2px solid #444;
+      border: 1px solid #444;
     }
   }
 
@@ -386,7 +394,7 @@ strong {
       left: 0;
       right: 0;
       bottom: 0;
-      border-bottom: 2px solid #c30;
+      border-bottom: 1px solid #c30;
     }
   }
 }
