@@ -69,24 +69,25 @@ const afterAppend = (node) => {
 };
 
 // ---- on drop to sort items
-const dragging = ref(false);
-const hover = ref(false);
-const onDrop = (...args) => {
-  let prev = props.node;
-  const items = toValue(props.selection.selectedItems);
-  for (const item of items) {
-    item.moveToAfter(prev);
-    prev = item;
-  }
-  hover.value = false;
-};
+// const dragging = ref(false);
+// const hover = ref(false);
+// const onDrop = (...args) => {
+//   let prev = props.node;
+//   const items = toValue(props.selection.selectedItems);
+//   for (const item of items) {
+//     item.moveToAfter(prev);
+//     prev = item;
+//   }
+//   hover.value = false;
+// };
 
 // only allow task to be drag
 const draggableContentTypes = ["Task"];
 
 const isDraggable = computed(() => {
   if (!draggableContentTypes.includes(props.node?.contentType)) return false;
-  return toValue(dragging) || toValue(props.itemDraggable);
+  return toValue(props.itemDraggable);
+  // return toValue(dragging) || toValue(props.itemDraggable);
 });
 </script>
 <template>
@@ -102,10 +103,8 @@ const isDraggable = computed(() => {
     v-else
     v-bind="$attrs"
     class="list-item"
-    :class="{ selected, hover }"
-    @drop="onDrop"
-    @dragover.prevent="hover = true"
-    @dragleave="hover = false"
+    :class="{ selected }"
+    @dragover.prevent
   >
     <div
       class="list-item-row flex items-center"
@@ -122,9 +121,7 @@ const isDraggable = computed(() => {
       </div>
 
       <template v-if="node.isChildrenBlank">
-        <span class="list-item-marker" @mousedown.left="dragging = true">
-          -
-        </span>
+        <span class="list-item-marker"> - </span>
 
         <span v-if="node.isTask" class="list-item-cell">
           <input type="checkbox" />
