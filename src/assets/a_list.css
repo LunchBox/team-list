@@ -41,10 +41,12 @@
   }
 
   .list-item-cell {
-    display: inline-block;
     width: var(--cell-width);
     height: var(--line-height);
     position: relative;
+
+    display: inline-grid;
+    place-content: center;
   }
 
   .list-item-cell .focus-marker {

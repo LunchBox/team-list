@@ -118,6 +118,10 @@ const onDrop = (...args) => {
           -
         </span>
 
+        <span v-if="node.isTask" class="list-item-cell">
+          <input type="checkbox" />
+        </span>
+
         <MarkedText
           class="node-content full"
           :text="node.content"
@@ -126,9 +130,15 @@ const onDrop = (...args) => {
       </template>
       <template v-else>
         <ExpandMarker :node="node"></ExpandMarker>
+
+        <span v-if="node.isTask" class="list-item-cell">
+          <input type="checkbox" />
+        </span>
+
         <a href="#" class="node-content full" @dblclick="onDoubleClick">
           {{ node.content }}
         </a>
+
         <span class="child-info">
           ({{ node.children.length }} : {{ node.allChildrenLen }})
         </span>

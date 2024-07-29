@@ -35,6 +35,7 @@ const selection = useSelection();
 // ---- Model
 class Node {
   content = null;
+  contentType = null;
   parentId = null;
   exp = false;
   seq = 0;
@@ -131,6 +132,10 @@ class Node {
   // ----
   get isChildrenBlank() {
     return this.children?.length === 0;
+  }
+
+  get isTask() {
+    return this.contentType === "Task";
   }
 
   // check a node's parent parent path
