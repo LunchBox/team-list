@@ -63,6 +63,8 @@ useEventListener(document, "mouseup", (e) => {
   position: sticky;
   bottom: 0;
 
+  user-select: none;
+
   .handler {
     position: absolute;
     top: 0;
@@ -71,7 +73,6 @@ useEventListener(document, "mouseup", (e) => {
     width: var(--handler-width);
 
     background: rgba(0, 0, 0, 0.3);
-    user-select: none;
     pointer-events: none;
   }
 }
