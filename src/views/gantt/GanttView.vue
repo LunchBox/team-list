@@ -319,6 +319,10 @@ strong {
   text-overflow: ellipsis;
 }
 
+:deep(.aside .list-item .node-content br) {
+  display: none;
+}
+
 .gantt-nav {
   grid-column: 2 / 3;
   grid-row: 999 / 1000;

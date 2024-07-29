@@ -63,7 +63,7 @@ const dateRange = computed(() => {
             :parent="node"
             :list="node.children"
             :selection="selection"
-            :itemDraggable="true"
+            :item-draggable="true"
           ></EditableNodeList>
         </template>
 

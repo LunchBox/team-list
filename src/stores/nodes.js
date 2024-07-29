@@ -153,11 +153,13 @@ class Node {
     return arr;
   }
 
-  getExpanedChildren(arr = []) {
+  getExpanedChildren(arr = [], contentType = "any") {
     this.children.forEach((c) => {
+      if (c.contentType !== contentType && contentType !== "any") return;
+
       arr.push(c);
       if (c.exp) {
-        c.getExpanedChildren(arr);
+        c.getExpanedChildren(arr, contentType);
       }
     });
     return arr;

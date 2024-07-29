@@ -80,6 +80,14 @@ const onDrop = (...args) => {
   }
   hover.value = false;
 };
+
+// only allow task to be drag
+const draggableContentTypes = ["Task"];
+
+const isDraggable = computed(() => {
+  if (!draggableContentTypes.includes(props.node?.contentType)) return false;
+  return toValue(dragging) || toValue(props.itemDraggable);
+});
 </script>
 <template>
   <!-- editing mode -->
@@ -102,7 +110,7 @@ const onDrop = (...args) => {
     <div
       class="list-item-row flex items-center"
       ref="itemRowRef"
-      :draggable="dragging || itemDraggable"
+      :draggable="isDraggable"
       @dragstart="$emit('item-dragstart', $event, node)"
       @mousedown.left="$emit('item-mousedown', $event, node)"
       @click.left.prevent="onNodeClicked"
