@@ -427,8 +427,8 @@ strong {
     &:before {
       content: " ";
       position: absolute;
-      top: 0;
-      bottom: 0;
+      top: 2px;
+      bottom: 2px;
       left: 0;
       right: 0;
       border: 1px solid #444;
@@ -453,14 +453,6 @@ strong {
       }
     }
 
-    /* not done and over end_date */
-    &.overdue {
-      &:before {
-        background: #e56c70;
-        border-color: #e56c70;
-      }
-    }
-
     &.done {
       &:before {
         background: #c2c76f;
@@ -473,6 +465,14 @@ strong {
       &:before {
         background: #e59368;
         border-color: #e59368;
+      }
+    }
+
+    /* not done and over end_date */
+    &.overdue {
+      &:before {
+        background: #e56c70;
+        border-color: #e56c70;
       }
     }
 
@@ -491,8 +491,9 @@ strong {
       position: absolute;
       left: 0;
       right: 0;
-      bottom: 0;
-      border-bottom: 1px solid #c30;
+      top: 2px;
+      bottom: 2px;
+      border-bottom: 1px solid #e56c70;
     }
 
     &.tiny:before {
