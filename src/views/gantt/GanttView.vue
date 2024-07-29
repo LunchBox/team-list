@@ -65,13 +65,17 @@ nextTick(updateSize);
 watch(dates, () => nextTick(updateSize));
 
 // scroll to date
-const scrollTo = () => {
-  nextTick(() => {
-    const col = dateToGridColumn(selectedDate.value, startDate.value) - 4;
-    const dist = col * cellWidth.value;
-    scrollContainer(dist - scrollLeft.value);
-  });
+const scrollToDate = (date) => {
+  const col = dateToGridColumn(date, startDate.value) - 4;
+  const dist = col * cellWidth.value;
+  scrollContainer(dist - scrollLeft.value);
 };
+
+const scrollTo = () => {
+  nextTick(() => scrollToDate(selectedDate.value));
+};
+
+nextTick(() => scrollToDate(today));
 
 // others
 const itemTitle = (item) => {
