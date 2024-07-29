@@ -173,6 +173,7 @@ const isDraggable = computed(() => {
     v-if="selected && appendMode"
     :parent="node.parent"
     :seq="node.seq"
+    :autofocus="true"
     @after-submit="afterAppend"
     @cancel="(...args) => $emit('cancel-append', ...args)"
   ></InlineForm>

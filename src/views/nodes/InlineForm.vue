@@ -4,7 +4,7 @@ import { nextTick, ref, watch } from "vue";
 import { Node, maxRootSeq } from "@/stores/nodes.js";
 import resize from "@/utils/resizeable.js";
 
-const props = defineProps(["node", "parent", "seq"]);
+const props = defineProps(["node", "parent", "seq", "autofocus"]);
 const emit = defineEmits(["after-submit", "cancel"]);
 
 const formData = ref(null);
@@ -59,7 +59,9 @@ const resizeTextarea = () => {
 
 nextTick(() => {
   resizeTextarea();
-  textEl.value && textEl.value.focus();
+  if (props.autofocus) {
+    textEl.value && textEl.value.focus();
+  }
 });
 
 const onCancel = () => {
