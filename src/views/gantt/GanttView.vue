@@ -256,7 +256,7 @@ const generalStyle = computed(() => {
             tiny: tinyLayout,
             fixed: item.noDateDrag,
             done: item.isDone,
-            info: item.isProcessing,
+            processing: item.isProcessing,
             late: item.isLate,
             overdue: item.isOverdue,
           }"
@@ -420,7 +420,6 @@ strong {
   .row.selected {
     background: rgba(0, 0, 0, 0.1);
   }
-
   .item {
     color: #222;
 
@@ -440,13 +439,17 @@ strong {
       background: #444;
     }
 
-    &.fixed:before {
-      background: #ccc;
-      z-index: -1;
+    &.fixed {
+      color: #fff;
+
+      &:before {
+        background: #3e3e3e;
+        border-color: #3e3e3e;
+      }
     }
 
     /* over start_date and not done */
-    &.info {
+    &.processing {
       &:before {
         background: #ecbd64;
         border-color: #ecbd64;
