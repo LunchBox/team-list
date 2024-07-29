@@ -26,6 +26,7 @@ const onDelete = () => {
       <RouterLink :to="`/nodes/${node.id}`">default</RouterLink> &middot;
       <RouterLink :to="`/nodes/${node.id}/dual`">dual</RouterLink> &middot;
       <RouterLink :to="`/nodes/${node.id}/gantt`">gantt</RouterLink> &middot;
+      <RouterLink :to="`/nodes/${node.id}/table`">table</RouterLink> &middot;
       <RouterLink :to="`/nodes/${node.id}/edit`">Edit</RouterLink> &middot;
 
       <a href="#" @click.prevent="onDelete" style="color: #999">Delete</a>

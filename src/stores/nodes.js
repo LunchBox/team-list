@@ -164,6 +164,12 @@ class Node {
 
     node.restSiblings.forEach((n) => (n.seq += 1));
     this.seq = node.seq + 1;
+
+    this.parent?.reSeq();
+  }
+
+  reSeq() {
+    this.children.forEach((n, i) => (n.seq = i));
   }
 
   // ---- collapse & expend

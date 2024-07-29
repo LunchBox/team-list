@@ -25,6 +25,12 @@ const router = createRouter({
     },
 
     {
+      path: "/nodes/:id/table",
+      name: "node_table_view",
+      component: () => import("../views/nodes/tableView/TableView.vue"),
+    },
+
+    {
       path: "/nodes/:id/dual",
       name: "dual_nodes",
       component: () => import("../views/nodes/NodeDualView.vue"),
