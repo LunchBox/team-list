@@ -47,6 +47,10 @@ const onCancel = backToShow;
       <span>End Date</span>
       <input type="date" v-model="formData.end_date" />
     </label>
+    <label class="flex">
+      <input type="checkbox" v-model="formData.noDateDrag" />
+      <span>Not allow drag & drop to adjust the start & end date</span>
+    </label>
     <input type="submit" value="Submit" />
     <input type="button" value="reset" @click.prevent="reloadForm" />
     <input type="button" value="cancel" @click.prevent="onCancel" />
@@ -60,6 +64,12 @@ label {
 }
 label > span {
   display: block;
+}
+
+label.flex {
+  display: flex;
+  align-items: center;
+  gap: 0 0.5rem;
 }
 
 input[type="text"] {

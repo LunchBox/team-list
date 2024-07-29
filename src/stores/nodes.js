@@ -42,6 +42,7 @@ class Node {
   // task attributes
   start_date = null;
   end_date = null;
+  noDateDrag = false; // just not allow to use drag & drop to adjust start & end date
 
   // ---- filters
 

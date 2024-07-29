@@ -241,17 +241,20 @@ const generalStyle = computed(() => {
           }"
         >
         </GridRowItem>
+
         <GridRowItem
           class="item"
           :start_date="item.start_date"
           :end_date="item.end_date"
           :row="rowOf(item)"
           :start="startDate"
+          :fixed="item.noDateDrag"
           :title="itemTitle(item)"
           :class="{
             'event-through': dragging && selection?.hasSelected(item),
             regular: regularLayout,
             tiny: tinyLayout,
+            fixed: item.noDateDrag,
           }"
           @item-mousedown="(e, type) => onItemMousedown(e, item, type)"
         >
@@ -427,6 +430,11 @@ strong {
       height: 6px;
       top: calc(50% - 3px);
       background: #444;
+    }
+
+    &.fixed:before {
+      background: #ccc;
+      z-index: -1;
     }
   }
 

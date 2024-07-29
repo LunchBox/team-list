@@ -5,7 +5,14 @@ import { daysDiff } from "@/utils/dates.js";
 
 import { dateToGridColumn } from "./utils.js";
 
-const props = defineProps(["item", "start_date", "end_date", "row", "start"]);
+const props = defineProps([
+  "item",
+  "start_date",
+  "end_date",
+  "row",
+  "start",
+  "fixed",
+]);
 const emit = defineEmits(["item-mousedown"]);
 
 const DEFAULT_TASK_DAYS = 3;
@@ -34,6 +41,7 @@ const cellStyle = computed(() => {
 });
 
 const onMousedown = (e, draggingType) => {
+  if (props.fixed) return;
   emit("item-mousedown", e, draggingType);
 };
 </script>
@@ -41,6 +49,7 @@ const onMousedown = (e, draggingType) => {
   <div
     class="grid-item"
     v-bind="$attrs"
+    :class="{ fixed }"
     :style="cellStyle"
     @mousedown.stop="onMousedown($event, 'entire')"
   >
@@ -89,6 +98,12 @@ const onMousedown = (e, draggingType) => {
 
   .handler.end {
     right: 0;
+  }
+
+  &.fixed {
+    .handler {
+      display: none;
+    }
   }
 
   .event-through {
