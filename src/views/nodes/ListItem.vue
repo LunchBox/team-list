@@ -6,6 +6,7 @@ import MarkedText from "@/components/MarkedText.vue";
 import NodeList from "./NodeList.vue";
 import InlineForm from "./InlineForm.vue";
 import ExpandMarker from "./ExpandMarker.vue";
+import CheckBox from "./CheckBox.vue";
 
 import useEventListener from "@/utils/useEventListener.js";
 import { elemInForm } from "@/utils/elemInsideContainer.js";
@@ -122,9 +123,11 @@ const isDraggable = computed(() => {
 
       <ExpandMarker :node="node"></ExpandMarker>
 
-      <span v-if="node.isTask" class="list-item-cell">
-        <input type="checkbox" />
-      </span>
+      <CheckBox
+        v-if="node.isTask"
+        class="list-item-cell"
+        :node="node"
+      ></CheckBox>
 
       <template v-if="node.isChildrenBlank">
         <MarkedText

@@ -1,10 +1,11 @@
 <script setup>
-import { ref, computed, toValue } from "vue";
+import { ref, computed } from "vue";
 
 import MarkedText from "@/components/MarkedText.vue";
 
 import InlineForm from "../InlineForm.vue";
 import ExpandMarker from "../ExpandMarker.vue";
+import CheckBox from "../CheckBox.vue";
 
 import useEventListener from "@/utils/useEventListener.js";
 import { elemInForm } from "@/utils/elemInsideContainer.js";
@@ -67,9 +68,11 @@ const onDoubleClick = (e) => {
 
       <ExpandMarker :node="node"></ExpandMarker>
 
-      <span v-if="node.isTask" class="list-item-cell">
-        <input type="checkbox" />
-      </span>
+      <CheckBox
+        v-if="node.isTask"
+        class="list-item-cell"
+        :node="node"
+      ></CheckBox>
 
       <template v-if="node.isChildrenBlank">
         <MarkedText

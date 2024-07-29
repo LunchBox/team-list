@@ -44,6 +44,7 @@ class Node {
   start_date = null;
   end_date = null;
   noDateDrag = false; // just not allow to use drag & drop to adjust start & end date
+  done_at = null;
 
   // ---- filters
 
@@ -136,6 +137,14 @@ class Node {
 
   get isTask() {
     return this.contentType === "Task";
+  }
+
+  get isDone() {
+    return this.isTask && this.done_at;
+  }
+
+  set isDone(val) {
+    this.done_at = val && new Date();
   }
 
   // check a node's parent parent path
