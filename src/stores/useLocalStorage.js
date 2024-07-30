@@ -19,6 +19,10 @@ export default (storageKey, modelClass) => {
     return store.value.find((t) => t.id === id);
   };
 
+  const where = (func) => {
+    return store.value.filter(func);
+  };
+
   const all = () => {
     return store.value;
   };
@@ -61,7 +65,7 @@ export default (storageKey, modelClass) => {
     }
   };
 
-  const classMethods = { find, all };
+  const classMethods = { find, where, all };
   const instanceMethods = [save];
   const regMethodsToModel = () => {
     Object.assign(modelClass, classMethods);
