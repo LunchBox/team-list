@@ -1,9 +1,7 @@
-import ActiveRecord from "./active_record";
+import useLocalStorage from "./useLocalStorage";
 
-export default class Project extends ActiveRecord {
-  static STORAGE_KEY = "tl/projects";
-
+export default class Project {
   name = null;
 }
 
-console.log(Project);
+useLocalStorage("tl/projects", Project);

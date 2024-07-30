@@ -1,11 +1,14 @@
-import ActiveRecord from "./active_record";
+import useLocalStorage from "./useLocalStorage";
 
-export default class Task extends ActiveRecord {
-  static STORAGE_KEY = "tl/tasks";
-
+export default class Task {
   name = null;
-  start_date = null;
-  end_date = null;
+
+  est_start_date = null;
+  est_end_date = null;
+
+  done_at = null;
+  start_at = null;
+  end_at = null;
 }
 
-console.log(Task);
+useLocalStorage("tl/tasks", Task);
