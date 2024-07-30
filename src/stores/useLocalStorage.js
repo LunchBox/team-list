@@ -51,6 +51,11 @@ export default (storageKey, modelClass) => {
 
   watch(store, () => saveToStorage(), { deep: true });
 
+  // clear All Data
+  const clearAllExisitngData = () => {
+    store.value = new CusArray();
+  };
+
   // create & update
   const save = (obj) => {
     if (!obj instanceof modelClass) {
@@ -72,10 +77,14 @@ export default (storageKey, modelClass) => {
     }
   };
 
-  // const classMethods = { find, where, all, remove, save };
-  // const regMethodsToModel = () => {
-  //   Object.assign(modelClass, classMethods);
-  // };
-  // regMethodsToModel();
-  Object.assign(modelClass, { find, where, all, remove, save });
+  // register methods into Model
+  Object.assign(modelClass, {
+    find,
+    where,
+    all,
+    remove,
+    save,
+    loadJSON,
+    clearAllExisitngData,
+  });
 };

@@ -412,6 +412,7 @@ const decreaseIndent = (node, scopeRef = null) => {
 
 export {
   Node,
+  nodeList,
   rootNodes,
   maxRootSeq,
   currentUser,

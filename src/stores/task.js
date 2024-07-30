@@ -1,7 +1,5 @@
 import useLocalStorage from "./useLocalStorage";
 
-import CusArray from "@/utils/cus_array";
-
 const bySeq = (a, b) => a.seq - b.seq;
 
 const first = (arr) => arr[0];
@@ -10,7 +8,6 @@ const last = (arr) => arr[arr.length - 1];
 export default class Task {
   name = null;
   desc = null;
-  projectId = null;
   parentId = null;
   seq = 0;
 

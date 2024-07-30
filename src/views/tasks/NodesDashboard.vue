@@ -3,6 +3,36 @@ import { RouterView } from "vue-router";
 import NodesAside from "./NodesAside.vue";
 
 import Task from "@/stores/task.js";
+
+import { nodeList } from "@/stores/nodes.js";
+console.log(nodeList.value);
+
+const migrate = () => {
+  Task.clearAllExisitngData();
+  const ds = nodeList.value.map((n) => {
+    const {
+      id,
+      parentId,
+      content: name,
+      seq,
+      start_date,
+      end_date,
+      noDateDrag,
+      done_date: done_at,
+    } = n;
+    return {
+      id,
+      parentId,
+      name,
+      seq,
+      start_date,
+      end_date,
+      noDateDrag,
+      done_at,
+    };
+  });
+  Task.loadJSON(JSON.stringify(ds));
+};
 </script>
 
 <template>
@@ -12,6 +42,8 @@ import Task from "@/stores/task.js";
       <a href="#" @click.prevent="loadFromFile">Load</a> &middot; -->
       <a href="#" @click.prevent="() => Task.expandAll()">Expand</a> &middot;
       <a href="#" @click.prevent="() => Task.collapseAll()">Collapse</a>
+      &middot;
+      <a href="#" @click.prevent="migrate">migrate</a>
     </div>
     <div class="flex separated">
       <aside>
