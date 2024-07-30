@@ -219,7 +219,21 @@ export default class Task {
     // cascading children destroy first
     this.children.forEach((c) => c.destroy());
 
-    this.remove(this.id);
+    Task.remove(this.id);
+  }
+
+  // create & update
+  save() {
+    // adjust seq on new item created
+    if (!this.id) {
+      // adjust rest siblings by seq
+      this.siblings
+        .filter((t) => t.seq >= this.seq)
+        .forEach((t, i) => {
+          t.seq = this.seq + i + 1;
+        });
+    }
+    return Task.save(this);
   }
 
   // -- static

@@ -72,16 +72,10 @@ export default (storageKey, modelClass) => {
     }
   };
 
-  const classMethods = { find, where, all };
-  const instanceMethods = [save, remove];
-  const regMethodsToModel = () => {
-    Object.assign(modelClass, classMethods);
-
-    instanceMethods.forEach((f) => {
-      modelClass.prototype[f.name] = function () {
-        f(this);
-      };
-    });
-  };
-  regMethodsToModel();
+  // const classMethods = { find, where, all, remove, save };
+  // const regMethodsToModel = () => {
+  //   Object.assign(modelClass, classMethods);
+  // };
+  // regMethodsToModel();
+  Object.assign(modelClass, { find, where, all, remove, save });
 };

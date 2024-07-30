@@ -19,7 +19,6 @@ const emit = defineEmits(["item-clicked"]);
 const appendMode = ref(false);
 
 const selection = inject("selection");
-console.log(selection);
 const { handleSelect, select } = selection;
 
 const onItemClicked = (e, item) => {
@@ -56,6 +55,7 @@ const onCancel = () => {
 };
 
 const onAfterSubmit = (item) => {
+  console.log("after-submit", item);
   select(item);
   appendMode.value = true;
   // console.log("-- after submit", args);
