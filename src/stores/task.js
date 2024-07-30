@@ -1,6 +1,7 @@
 import useLocalStorage from "./useLocalStorage";
 
 import Project from "./project.js";
+import CusArray from "@/utils/cus_array";
 
 const bySeq = (a, b) => a.seq - b.seq;
 
@@ -22,7 +23,7 @@ export default class Task {
   done_at = null;
 
   get project() {
-    return Project.find((proj) => proj.id === this.projectId);
+    return Project.find(this.projectId);
   }
 
   static filterByProject(projectId) {
@@ -30,7 +31,7 @@ export default class Task {
   }
 
   get parent() {
-    return Task.find((t) => t.id === this.parentId);
+    return Task.find(this.parentId);
   }
 
   get children() {
@@ -49,9 +50,16 @@ export default class Task {
 
   // with same parent
   get siblings() {
-    return (this.parent ? this.parent.children : this.project.tasks.value).sort(
-      bySeq
-    );
+    if (this.parent) {
+      return this.parent.children.sort(bySeq);
+    } else if (this.project) {
+      return this.project.tasks.sort(bySeq);
+    } else {
+      return new CusArray();
+    }
+    // return (this.parent ? this.parent.children : this.project.tasks.value).sort(
+    //   bySeq
+    // );
   }
 
   get restSiblings() {
@@ -211,6 +219,13 @@ export default class Task {
     this.children.forEach((t) => t.expand());
   }
 
+  destroy() {
+    // cascading children destroy first
+    this.children.forEach((c) => c.destroy());
+
+    this.remove(this.id);
+  }
+
   // -- static
 
   // ---- collapse & expend
@@ -250,6 +265,7 @@ export default class Task {
   // ---- increase / decrease indent
   static increaseIndent(item) {
     const parent = item.parent;
+    console.log(item, item.prev);
 
     // 如果有前一個 node 就用前一個 node 做 parent
     // 沒有就新增一個

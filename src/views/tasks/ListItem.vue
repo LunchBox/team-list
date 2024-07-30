@@ -147,7 +147,19 @@ const isDraggable = computed(() => {
       <span class="seq-info">{{ item.seq }}</span>
     </div>
 
-    <ItemList
+    <div class="a-list" v-if="item.exp">
+      <ListItem
+        v-for="child in item.children"
+        v-bind="$attrs"
+        :item="child"
+        :parent="item"
+        :itemDraggable="itemDraggable"
+        :activated="activated"
+        :appendMode="appendMode"
+      ></ListItem>
+    </div>
+
+    <!-- <ItemList
       v-if="item.exp"
       v-bind="$attrs"
       :list="item.children"
@@ -161,7 +173,7 @@ const isDraggable = computed(() => {
       @item-dblclick="(...args) => $emit('item-dblclick', ...args)"
       @after-append="(...args) => $emit('after-append', ...args)"
       @cancel-append="(...args) => $emit('cancel-append', ...args)"
-    ></ItemList>
+    ></ItemList> -->
   </div>
   <!-- appending mode, append contents after focusing item -->
   <InlineForm

@@ -34,8 +34,8 @@ export default ({
 
         const fi = items.first;
         const nxt = fi.prev || fi.next || fi.parent;
-        items.forEach(destroy);
-        nxt.inScope(scope) && select(nxt);
+        items.forEach((item) => item.destroy());
+        nxt && nxt.inScope(scope) && select(nxt);
       } else {
         delMark.value = true;
       }

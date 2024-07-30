@@ -27,6 +27,13 @@ export default (storageKey, modelClass) => {
     return store.value;
   };
 
+  const remove = (id) => {
+    const idx = store.value.findIndex((t) => t.id === id);
+    if (idx > -1) {
+      store.value.splice(idx, 1);
+    }
+  };
+
   // -- save & load store
   const loadJSON = (jsonData) => {
     store.value = new CusArray(
@@ -66,7 +73,7 @@ export default (storageKey, modelClass) => {
   };
 
   const classMethods = { find, where, all };
-  const instanceMethods = [save];
+  const instanceMethods = [save, remove];
   const regMethodsToModel = () => {
     Object.assign(modelClass, classMethods);
 
