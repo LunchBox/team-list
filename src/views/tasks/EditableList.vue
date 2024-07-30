@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, inject } from "vue";
 
 import useEventListener from "@/utils/useEventListener.js";
 import { elemInsideContainer } from "@/utils/elemInsideContainer.js";
@@ -12,15 +12,19 @@ import ItemList from "./ItemList.vue";
 import InlineForm from "./InlineForm.vue";
 
 // 必須提供一個容器用來裝選中的 item
-const props = defineProps(["list", "parent", "selection"]);
+const props = defineProps(["list", "parent"]);
 const emit = defineEmits(["item-clicked"]);
+
+const selection = inject("selection");
+const { select, handleSelect } = selection;
 
 // 在 selected list item 下面打開 inline form
 const appendMode = ref(false);
 
 const onItemClicked = (e, item) => {
   console.log("-- here??");
-  props.selection?.handleSelect(e, item);
+  handleSelect(e, item);
+
   appendMode.value = false;
   emit("item-clicked", e, item);
 };
@@ -53,7 +57,7 @@ const onCancel = () => {
 };
 
 const onAfterSubmit = (item) => {
-  props.selection?.select(item);
+  select(item);
   appendMode.value = true;
   // console.log("-- after submit", args);
 };
@@ -61,7 +65,7 @@ const onAfterSubmit = (item) => {
 //------------
 editableListEventHandler({
   scopeRef: computed(() => props.parent),
-  selection: props.selection,
+  selection,
   activated,
 });
 </script>
@@ -76,7 +80,6 @@ editableListEventHandler({
       v-bind="$attrs"
       :list="list"
       :parent="parent"
-      :selection="selection"
       :activated="activated"
       :appendMode="appendMode"
       @item-mousedown="onItemClicked"

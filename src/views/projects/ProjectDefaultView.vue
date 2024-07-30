@@ -14,6 +14,7 @@ provide("project", project);
 const tasks = computed(() => project.value.tasks);
 
 const selection = useSelection();
+provide("selection", selection);
 </script>
 <template>
   <div>
@@ -24,7 +25,7 @@ const selection = useSelection();
 
     <h3>Tasks</h3>
 
-    <EditableList :list="tasks" :selection="selection"></EditableList>
+    <EditableList :list="tasks"></EditableList>
 
     <h3>Status Update</h3>
   </div>
