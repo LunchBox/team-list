@@ -1,42 +1,41 @@
 <script setup>
-import { computed, toValue } from "vue";
+import { computed, toValue, provide } from "vue";
 import { useRoute } from "vue-router";
-import { find } from "@/stores/nodes.js";
+
 import useSelection from "@/utils/useSelection.js";
+
+import Task from "@/stores/task.js";
 
 import Breadcrumbs from "./Breadcrumbs.vue";
 
 import Header from "./Header.vue";
 
-import EditableNodeList from "./EditableNodeList.vue";
+import EditableList from "./EditableList.vue";
 
 const selection = useSelection();
 
 const route = useRoute();
-const node = computed(() => find(route.params.id));
+const item = computed(() => Task.find(route.params.id));
 
 const convertTo = (contentType = null) => {
   const items = toValue(selection.selectedItems);
   items.forEach((n) => (n.contentType = contentType));
 };
+
+provide("project", () => item.value.project);
 </script>
 <template>
   <div>
-    <template v-if="node">
-      <Breadcrumbs :node="node"></Breadcrumbs>
-      <Header :node="node">
-        Convert to:
-        <a href="#" @click.prevent="convertTo('Task')"> Task </a> |
-        <a href="#" @click.prevent="convertTo()"> Text </a>
-        &middot;
-      </Header>
+    <template v-if="item">
+      <Breadcrumbs :item="item"></Breadcrumbs>
+      <Header :item="item"></Header>
 
       <div style="padding-bottom: 80vh">
-        <EditableNodeList
-          :parent="node"
-          :list="node.children"
+        <EditableList
+          :parent="item"
+          :list="item.children"
           :selection="selection"
-        ></EditableNodeList>
+        ></EditableList>
       </div>
     </template>
     <div v-else>Not Found...</div>

@@ -5,7 +5,7 @@ import MarkedText from "@/components/MarkedText.vue";
 
 import InlineForm from "./InlineForm.vue";
 
-const props = defineProps(["node"]);
+const props = defineProps(["item"]);
 
 defineOptions({
   inheritAttrs: false,
@@ -26,7 +26,7 @@ const onDoubleClick = (e) => {
   <!-- editing mode -->
   <InlineForm
     v-if="quickEdit"
-    :node="node"
+    :item="item"
     style="outline: 1px solid #ccc"
     @after-submit="afterQuickEdit"
   ></InlineForm>
@@ -36,17 +36,17 @@ const onDoubleClick = (e) => {
     <div class="list-item-row flex items-center">
       <span class="list-item-marker">-</span>
       <MarkedText
-        class="node-content full"
-        :text="node.content"
+        class="item-content full"
+        :text="item.name"
         @dblclick="onDoubleClick"
       ></MarkedText>
 
-      <template v-if="!node.isChildrenBlank">
+      <template v-if="!item.isChildrenBlank">
         <span class="child-info">
-          ({{ node.children.length }} : {{ node.allChildrenLen }})
+          ({{ item.children.length }} : {{ item.allChildrenLen }})
         </span>
       </template>
-      <span class="seq-info">{{ node.seq }}</span>
+      <span class="seq-info">{{ item.seq }}</span>
     </div>
   </div>
 </template>

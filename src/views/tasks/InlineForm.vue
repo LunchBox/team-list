@@ -1,7 +1,6 @@
 <script setup>
 import { nextTick, ref, watch, inject } from "vue";
 
-// import { Node, maxRootSeq } from "@/stores/nodes.js";
 import Task from "@/stores/task.js";
 import resize from "@/utils/resizeable.js";
 
@@ -15,7 +14,7 @@ const formData = ref(null);
 const reloadForm = () => {
   formData.value = Object.assign(new Task(), {
     ...props.item,
-    projectId: project.value?.id,
+    projectId: project?.value?.id,
   });
 
   formData.value.seq =

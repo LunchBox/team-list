@@ -1,33 +1,33 @@
 <script setup>
 import { useRouter } from "vue-router";
-import { destroy } from "@/stores/nodes.js";
+// import { destroy } from "@/stores/nodes.js";
 
-defineProps(["node"]);
+defineProps(["item"]);
 
 const router = useRouter();
 
 const onDelete = () => {
   const node = props.node;
   const parent = node.parent;
-  destroy(node);
+  destroy(item);
 
   if (parent) {
-    router.push({ path: `/nodes/${parent.id}` });
+    router.push({ path: `/tasks/${parent.id}` });
   }
 };
 </script>
 <template>
   <div>
-    <h2>{{ node.content }}</h2>
+    <h2>{{ item.name }}</h2>
 
     <div class="toolbar">
-      <span>{{ node.start_date }}</span> ~
-      <span>{{ node.end_date }}</span> &middot;
-      <RouterLink :to="`/nodes/${node.id}`">default</RouterLink> &middot;
-      <RouterLink :to="`/nodes/${node.id}/dual`">dual</RouterLink> &middot;
-      <RouterLink :to="`/nodes/${node.id}/gantt`">gantt</RouterLink> &middot;
-      <RouterLink :to="`/nodes/${node.id}/table`">table</RouterLink> &middot;
-      <RouterLink :to="`/nodes/${node.id}/edit`">Edit</RouterLink> &middot;
+      <span>{{ item.start_date }}</span> ~
+      <span>{{ item.end_date }}</span> &middot;
+      <RouterLink :to="`/tasks/${item.id}`">default</RouterLink> &middot;
+      <!-- <RouterLink :to="`/tasks/${item.id}/dual`">dual</RouterLink> &middot;
+      <RouterLink :to="`/tasks/${item.id}/gantt`">gantt</RouterLink> &middot;
+      <RouterLink :to="`/tasks/${item.id}/table`">table</RouterLink> &middot; -->
+      <RouterLink :to="`/tasks/${item.id}/edit`">Edit</RouterLink> &middot;
       <slot></slot>
 
       <a href="#" @click.prevent="onDelete" style="color: #999">Delete</a>

@@ -19,6 +19,7 @@ const emit = defineEmits(["item-clicked"]);
 const appendMode = ref(false);
 
 const onItemClicked = (e, item) => {
+  console.log("-- here??");
   props.selection?.handleSelect(e, item);
   appendMode.value = false;
   emit("item-clicked", e, item);

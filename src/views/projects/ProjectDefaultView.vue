@@ -2,6 +2,7 @@
 import { computed, toValue, provide } from "vue";
 import { useRoute } from "vue-router";
 
+import useSelection from "@/utils/useSelection.js";
 import Project from "@/stores/project.js";
 import EditableList from "../tasks/EditableList.vue";
 
@@ -11,6 +12,8 @@ const project = computed(() => Project.find(route.params.id));
 provide("project", project);
 
 const tasks = computed(() => project.value.tasks);
+
+const selection = useSelection();
 </script>
 <template>
   <div>
@@ -21,7 +24,7 @@ const tasks = computed(() => project.value.tasks);
 
     <h3>Tasks</h3>
 
-    <EditableList :list="tasks"></EditableList>
+    <EditableList :list="tasks" :selection="selection"></EditableList>
 
     <h3>Status Update</h3>
   </div>

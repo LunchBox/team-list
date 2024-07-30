@@ -59,6 +59,7 @@ const afterQuickEdit = () => {
 };
 
 const onDoubleClick = (e) => {
+  console.log("-- dblclick");
   quickEdit.value = true;
   emit("item-dblclick", e, props.item);
 };

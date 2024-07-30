@@ -9,6 +9,7 @@ const last = (arr) => arr[arr.length - 1];
 
 export default class Task {
   name = null;
+  desc = null;
   projectId = null;
   parentId = null;
   seq = 0;

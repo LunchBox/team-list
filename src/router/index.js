@@ -64,7 +64,7 @@ const router = createRouter({
     {
       path: "/tasks",
       name: "tasks",
-      component: () => import("../views/tasks/NodesDashboard.vue"),
+      component: () => import("../views/tasks/TasksDashboard.vue"),
       children: [
         {
           path: ":id/edit",
