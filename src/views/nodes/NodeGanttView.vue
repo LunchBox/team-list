@@ -20,7 +20,7 @@ const node = computed(() => {
 });
 
 const itemList = computed(() => {
-  return node.value.getExpanedChildren();
+  return node.value.expandedChildren;
 });
 
 const selection = useSelection();

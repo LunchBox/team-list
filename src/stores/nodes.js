@@ -183,16 +183,24 @@ class Node {
     return arr;
   }
 
-  getExpanedChildren(arr = [], contentType = "any") {
+  getExpanedChildren(contentType = "any", arr = []) {
     this.children.forEach((c) => {
       if (c.contentType !== contentType && contentType !== "any") return;
 
       arr.push(c);
       if (c.exp) {
-        c.getExpanedChildren(arr, contentType);
+        c.getExpanedChildren(contentType, arr);
       }
     });
     return arr;
+  }
+
+  get expandedChildren() {
+    return this.getExpanedChildren();
+  }
+
+  get expandedChildTasks() {
+    return this.getExpanedChildren("Task");
   }
 
   // ---- move

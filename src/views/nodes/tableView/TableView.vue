@@ -11,10 +11,6 @@ import TableRow from "./TableRow.vue";
 
 const route = useRoute();
 const node = computed(() => find(route.params.id));
-
-const itemList = computed(() => {
-  return node.value.getExpanedChildren();
-});
 </script>
 <template>
   <div>
