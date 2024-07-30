@@ -4,8 +4,8 @@ import NodesAside from "./NodesAside.vue";
 
 import Task from "@/stores/task.js";
 
-import { nodeList } from "@/stores/nodes.js";
-console.log(nodeList.value);
+// import { nodeList } from "@/stores/nodes.js";
+// console.log(nodeList.value);
 
 // const migrate = () => {
 //   Task.clearAllExisitngData();

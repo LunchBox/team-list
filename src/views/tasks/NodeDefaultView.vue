@@ -1,6 +1,7 @@
 <script setup>
 import { computed, toValue, provide } from "vue";
 import { useRoute } from "vue-router";
+import MarkedText from "@/components/MarkedText.vue";
 import Task from "@/stores/task.js";
 import useSelection from "@/utils/useSelection.js";
 
@@ -22,6 +23,10 @@ const item = computed(() => Task.find(route.params.id));
       <Breadcrumbs :item="item"></Breadcrumbs>
       <Header :item="item"> </Header>
 
+      <div class="item-content">
+        <MarkedText :text="item.content"></MarkedText>
+      </div>
+
       <div style="padding-bottom: 80vh">
         <EditableList :parent="item" :list="item.children"></EditableList>
       </div>
@@ -30,4 +35,10 @@ const item = computed(() => Task.find(route.params.id));
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.item-content {
+  padding: 1rem;
+  background: #efefef;
+  margin-bottom: 1rem;
+}
+</style>
