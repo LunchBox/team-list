@@ -8,7 +8,7 @@ import EditableList from "./EditableList.vue";
 
 import Task from "@/stores/task.js";
 
-const list = computed(() => Task.topTasks);
+const list = computed(() => Task.topItems);
 
 const router = useRouter();
 const onItemClick = (e, item) => {
