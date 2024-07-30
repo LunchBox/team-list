@@ -1,4 +1,5 @@
 import useLocalStorage from "./useLocalStorage";
+import { formatDate } from "@/utils/dates";
 
 const bySeq = (a, b) => a.seq - b.seq;
 
@@ -123,12 +124,8 @@ export default class Task {
     return this.children?.length === 0;
   }
 
-  get isTask() {
-    return this.contentType === "Task";
-  }
-
   get isDone() {
-    return this.isTask && this.done_at;
+    return this.done_at;
   }
 
   set isDone(val) {
@@ -137,20 +134,20 @@ export default class Task {
 
   // should be processing
   get isProcessing() {
-    if (!this.isTask || !this.start_date || !this.end_date) return false;
+    if (!this.start_date || !this.end_date) return false;
     const today = formatDate(new Date());
     return !this.done_at && today > this.start_date && today < this.end_date;
   }
 
   // it is done but over the end_date
   get isLate() {
-    if (!this.isTask || !this.end_date) return false;
+    if (!this.end_date) return false;
     return this.done_at && this.done_at > this.end_date;
   }
 
   // it is not done
   get isOverdue() {
-    if (!this.isTask || !this.end_date) return false;
+    if (!this.end_date) return false;
 
     return !this.done_at && formatDate(new Date()) > this.end_date;
   }
