@@ -80,7 +80,7 @@ const onCancel = () => {
       </span>
       <span class="list-item-marker">-</span>
 
-      <form class="full" @submit.prevent="onSubmit">
+      <form class="full" @submit.prevent="onSubmit" @keydown.enter.stop>
         <textarea
           ref="textEl"
           rows="1"
@@ -89,7 +89,7 @@ const onCancel = () => {
           v-model="formData.content"
           @input="resizeTextarea"
           @keydown.esc="onCancel"
-          @keydown.enter="onSubmit"
+          @keydown.enter.ctrl="onSubmit"
           @blur="autoSave"
         ></textarea>
         <input type="submit" value="Submit" />
