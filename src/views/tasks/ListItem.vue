@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, toValue } from "vue";
+import { ref, computed, toValue, inject } from "vue";
 
 import MarkedText from "@/components/MarkedText.vue";
 
@@ -15,7 +15,6 @@ const props = defineProps([
   "item",
   "parent",
   "itemDraggable",
-  "selection",
   "activated",
   "appendMode",
 ]);
@@ -29,7 +28,10 @@ const emit = defineEmits([
   "cancel-append",
 ]);
 
-const selected = computed(() => props.selection?.hasSelected(props.item));
+const selection = inject("selection");
+const { hasSelected, select } = selection;
+
+const selected = computed(() => hasSelected(props.item));
 
 defineOptions({
   inheritAttrs: false,
@@ -66,7 +68,7 @@ const onDoubleClick = (e) => {
 
 // ---- after append
 const afterAppend = (item) => {
-  props.selection?.select(item);
+  select(item);
 };
 
 // ---- on drop to sort items
@@ -151,7 +153,6 @@ const isDraggable = computed(() => {
         v-for="child in item.children"
         :item="child"
         :itemDraggable="itemDraggable"
-        :selection="selection"
         :activated="activated"
         :appendMode="appendMode"
         @item-dragstart="(...args) => $emit('item-dragstart', ...args)"

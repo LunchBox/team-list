@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from "vue";
+import { computed, provide } from "vue";
 import { useRouter } from "vue-router";
 
 import useSelection from "@/utils/useSelection.js";
@@ -14,15 +14,13 @@ const router = useRouter();
 const onItemClick = (e, item) => {
   router.push({ name: "task", params: { id: item.id } });
 };
+
 const selection = useSelection();
+provide("selection", selection);
 </script>
 <template>
   <div>
-    <EditableList
-      :list="list"
-      :selection="selection"
-      @item-clicked="onItemClick"
-    ></EditableList>
+    <EditableList :list="list" @item-clicked="onItemClick"></EditableList>
   </div>
 </template>
 
