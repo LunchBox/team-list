@@ -4,9 +4,7 @@ import useSelection from "@/utils/useSelection.js";
 import CusArray from "@/utils/cus_array";
 import { formatDate } from "@/utils/dates";
 
-const REPLACER = (key, value) => {
-  return key.startsWith("_") || key.startsWith("$") ? undefined : value;
-};
+import { REPLACER } from "./utils";
 
 const bySeq = (a, b) => a.seq - b.seq;
 
