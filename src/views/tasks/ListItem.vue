@@ -11,13 +11,7 @@ import CheckBox from "./CheckBox.vue";
 import useEventListener from "@/utils/useEventListener.js";
 import { elemInForm } from "@/utils/elemInsideContainer.js";
 
-const props = defineProps([
-  "item",
-  "parent",
-  "itemDraggable",
-  "activated",
-  "appendMode",
-]);
+const props = defineProps(["item", "parent", "itemDraggable"]);
 
 const emit = defineEmits([
   "item-dragstart",
@@ -28,14 +22,18 @@ const emit = defineEmits([
   "cancel-append",
 ]);
 
+defineOptions({
+  inheritAttrs: false,
+});
+
 const selection = inject("selection");
 const { hasSelected, select } = selection;
 
 const selected = computed(() => hasSelected(props.item));
 
-defineOptions({
-  inheritAttrs: false,
-});
+const appendMode = inject("appendMode");
+
+const activated = inject("activated");
 
 const onItemClicked = (e) => {
   emit("item-clicked", e, props.item);
@@ -44,9 +42,9 @@ const onItemClicked = (e) => {
 // ---- quick edit
 const quickEdit = ref(false);
 useEventListener(document, "keydown", (e) => {
-  if (!props.activated) return;
-  if (!selected.value) return;
-  if (props.appendMode) return;
+  if (!toValue(activated)) return;
+  if (!toValue(selected)) return;
+  if (toValue(appendMode)) return;
 
   if (elemInForm(e.target)) return;
 
@@ -153,8 +151,6 @@ const isDraggable = computed(() => {
         v-for="child in item.children"
         :item="child"
         :itemDraggable="itemDraggable"
-        :activated="activated"
-        :appendMode="appendMode"
         @item-dragstart="(...args) => $emit('item-dragstart', ...args)"
         @item-mousedown="(...args) => $emit('item-mousedown', ...args)"
         @item-clicked="(...args) => $emit('item-clicked', ...args)"

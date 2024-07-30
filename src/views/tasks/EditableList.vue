@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, inject } from "vue";
+import { ref, computed, inject, provide } from "vue";
 
 import EditableListItem from "./EditableListItem.vue";
 
@@ -17,6 +17,10 @@ const emit = defineEmits(["item-clicked"]);
 
 // 在 selected list item 下面打開 inline form
 const appendMode = ref(false);
+provide("appendMode", appendMode);
+
+const activated = ref(false);
+provide("activated", activated);
 
 const selection = inject("selection");
 const { handleSelect, select } = selection;
@@ -27,7 +31,6 @@ const onItemClicked = (e, item) => {
   emit("item-clicked", e, item);
 };
 
-const activated = ref(false);
 const rootEl = ref(null);
 
 const onEnterPressed = () => {
@@ -82,8 +85,6 @@ editableListEventHandler({
         v-for="child in list"
         :item="child"
         :parent="parent"
-        :activated="activated"
-        :appendMode="appendMode"
         @item-mousedown="onItemClicked"
         @cancel-append="onCancel"
       ></ListItem>
