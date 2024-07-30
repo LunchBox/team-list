@@ -6,6 +6,7 @@ const last = (arr) => arr[arr.length - 1];
 export default class {
   parentId = null;
   seq = 0;
+  exp = false;
 
   static get topItems() {
     return this.where((obj) => !obj.parentId).sort(bySeq);
@@ -103,5 +104,36 @@ export default class {
   // reset children's sequence
   reSeq() {
     this.children.forEach((n, i) => (n.seq = i));
+  }
+
+  // ---- move
+  moveToAfter(item) {
+    if (this === item) return;
+
+    item.restSiblings.forEach((n) => (n.seq += 1));
+    this.seq = item.seq + 1;
+
+    this.parent?.reSeq();
+  }
+
+  // ---- collapse & expend
+
+  collapse() {
+    this.exp = false;
+    this.children.forEach((t) => t.collapse());
+  }
+
+  expand() {
+    this.exp = true;
+    this.children.forEach((t) => t.expand());
+  }
+
+  // ---- collapse & expend
+  static collapseAll() {
+    this.all().forEach((t) => t.collapse());
+  }
+
+  static expandAll() {
+    this.all().forEach((t) => t.expand());
   }
 }

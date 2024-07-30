@@ -8,8 +8,7 @@ export default class Task extends NestSortable {
   desc = null;
   // parentId = null;
   // seq = 0;
-
-  exp = false;
+  // exp = false;
 
   start_date = null;
   end_date = null;
@@ -69,48 +68,6 @@ export default class Task extends NestSortable {
     return this.parent && this.parent.inScope(parent);
   }
 
-  getExpanedChildren(contentType = "any", arr = []) {
-    this.children.forEach((c) => {
-      if (c.contentType !== contentType && contentType !== "any") return;
-
-      arr.push(c);
-      if (c.exp) {
-        c.getExpanedChildren(contentType, arr);
-      }
-    });
-    return arr;
-  }
-
-  get expandedChildren() {
-    return this.getExpanedChildren();
-  }
-
-  get expandedChildTasks() {
-    return this.getExpanedChildren("Task");
-  }
-
-  // ---- move
-  moveToAfter(item) {
-    if (this === item) return;
-
-    item.restSiblings.forEach((n) => (n.seq += 1));
-    this.seq = item.seq + 1;
-
-    this.parent?.reSeq();
-  }
-
-  // ---- collapse & expend
-
-  collapse() {
-    this.exp = false;
-    this.children.forEach((t) => t.collapse());
-  }
-
-  expand() {
-    this.exp = true;
-    this.children.forEach((t) => t.expand());
-  }
-
   destroy() {
     // cascading children destroy first
     this.children.forEach((c) => c.destroy());
@@ -130,15 +87,6 @@ export default class Task extends NestSortable {
         });
     }
     return Task.save(this);
-  }
-
-  // ---- collapse & expend
-  static collapseAll() {
-    this.all().forEach((t) => t.collapse());
-  }
-
-  static expandAll() {
-    this.all().forEach((t) => t.expand());
   }
 }
 
