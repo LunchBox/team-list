@@ -1,21 +1,19 @@
 <script setup>
-import { ref, computed, toValue } from "vue";
+import { ref, computed, toValue, inject } from "vue";
 
 import MarkedText from "@/components/MarkedText.vue";
+import useEventListener from "@/utils/useEventListener.js";
+import { elemInForm } from "@/utils/elemInsideContainer.js";
 
-import NodeList from "./NodeList.vue";
+import ItemList from "./ItemList.vue";
 import InlineForm from "./InlineForm.vue";
 import ExpandMarker from "./ExpandMarker.vue";
 import CheckBox from "./CheckBox.vue";
-
-import useEventListener from "@/utils/useEventListener.js";
-import { elemInForm } from "@/utils/elemInsideContainer.js";
 
 const props = defineProps([
   "item",
   "parent",
   "itemDraggable",
-  "selection",
   "activated",
   "appendMode",
 ]);
@@ -29,7 +27,11 @@ const emit = defineEmits([
   "cancel-append",
 ]);
 
-const selected = computed(() => props.selection?.hasSelected(props.item));
+const selection = inject("selection");
+
+const { hasSelected, select } = selection;
+
+const selected = computed(() => hasSelected(props.item));
 
 defineOptions({
   inheritAttrs: false,
@@ -60,13 +62,14 @@ const afterQuickEdit = () => {
 };
 
 const onDoubleClick = (e) => {
+  console.log("-- dblclick");
   quickEdit.value = true;
   emit("item-dblclick", e, props.item);
 };
 
 // ---- after append
 const afterAppend = (item) => {
-  props.selection?.select(item);
+  select(item);
 };
 
 // ---- on drop to sort items
@@ -117,7 +120,6 @@ const isDraggable = computed(() => {
     >
       <div class="list-item-cell">
         <RouterLink :to="`/tasks/${item.id}`" class="focus-marker">
-          <!-- <img src="@/assets/arrow-right.svg" alt="focus" /> -->
         </RouterLink>
       </div>
 
@@ -145,13 +147,24 @@ const isDraggable = computed(() => {
       <span class="seq-info">{{ item.seq }}</span>
     </div>
 
-    <NodeList
+    <div class="a-list" v-if="item.exp">
+      <ListItem
+        v-for="child in item.children"
+        v-bind="$attrs"
+        :item="child"
+        :parent="item"
+        :itemDraggable="itemDraggable"
+        :activated="activated"
+        :appendMode="appendMode"
+      ></ListItem>
+    </div>
+
+    <!-- <ItemList
       v-if="item.exp"
       v-bind="$attrs"
       :list="item.children"
       :parent="item"
       :itemDraggable="itemDraggable"
-      :selection="selection"
       :activated="activated"
       :appendMode="appendMode"
       @item-dragstart="(...args) => $emit('item-dragstart', ...args)"
@@ -160,7 +173,7 @@ const isDraggable = computed(() => {
       @item-dblclick="(...args) => $emit('item-dblclick', ...args)"
       @after-append="(...args) => $emit('after-append', ...args)"
       @cancel-append="(...args) => $emit('cancel-append', ...args)"
-    ></NodeList>
+    ></ItemList> -->
   </div>
   <!-- appending mode, append contents after focusing item -->
   <InlineForm

@@ -64,7 +64,7 @@ const router = createRouter({
     {
       path: "/tasks",
       name: "tasks",
-      component: () => import("../views/tasks/TasksDashboard.vue"),
+      component: () => import("../views/tasks/NodesDashboard.vue"),
       children: [
         {
           path: ":id/edit",
@@ -74,25 +74,7 @@ const router = createRouter({
         {
           path: ":id",
           name: "task",
-          component: () => import("../views/tasks/DefaultView.vue"),
-        },
-      ],
-    },
-
-    {
-      path: "/projects",
-      name: "projects",
-      component: () => import("../views/projects/Dashboard.vue"),
-      children: [
-        {
-          path: ":id/edit",
-          name: "edit_project",
-          component: () => import("../views/projects/EditView.vue"),
-        },
-        {
-          path: ":id",
-          name: "project",
-          component: () => import("../views/projects/ProjectDefaultView.vue"),
+          component: () => import("../views/tasks/NodeDefaultView.vue"),
         },
       ],
     },

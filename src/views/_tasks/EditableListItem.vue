@@ -36,7 +36,7 @@ const onDoubleClick = (e) => {
     <div class="list-item-row flex items-center">
       <span class="list-item-marker">-</span>
       <MarkedText
-        class="item-name full"
+        class="item-content full"
         :text="item.name"
         @dblclick="onDoubleClick"
       ></MarkedText>

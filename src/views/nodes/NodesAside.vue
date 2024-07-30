@@ -6,12 +6,6 @@ import useSelection from "@/utils/useSelection.js";
 
 import EditableNodeList from "./EditableNodeList.vue";
 
-import Project from "@/stores/project.js";
-import Task from "@/stores/task.js";
-
-console.log(Project);
-console.log(Task);
-
 const router = useRouter();
 const onItemClick = (e, node) => {
   router.push({ name: "node", params: { id: node.id } });

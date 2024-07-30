@@ -1,19 +1,18 @@
 <script setup>
 import { computed } from "vue";
 import { useRoute } from "vue-router";
+import { find } from "@/stores/nodes.js";
 
-import Task from "@/stores/task.js";
-
-import CompleteForm from "./CompleteForm.vue";
+import NodeForm from "./NodeForm.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
 
 const route = useRoute();
-const item = computed(() => Task.find(route.params.id));
+const node = computed(() => find(route.params.id));
 </script>
 <template>
-  <template v-if="item">
-    <Breadcrumbs :item="item"></Breadcrumbs>
-    <CompleteForm :item="item"></CompleteForm>
+  <template v-if="node">
+    <Breadcrumbs :node="node"></Breadcrumbs>
+    <NodeForm :node="node"></NodeForm>
   </template>
   <div v-else>Not Found...</div>
 </template>

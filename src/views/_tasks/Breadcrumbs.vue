@@ -12,7 +12,7 @@ const items = computed(() => {
     <template v-for="t in items">
       <span> / </span>
       <RouterLink :to="`/tasks/${t.id}`">
-        {{ t.name }}
+        {{ t.content }}
       </RouterLink>
     </template>
   </div>

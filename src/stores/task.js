@@ -1,6 +1,5 @@
 import useLocalStorage from "./useLocalStorage";
 
-import Project from "./project.js";
 import CusArray from "@/utils/cus_array";
 
 const bySeq = (a, b) => a.seq - b.seq;
@@ -22,12 +21,12 @@ export default class Task {
   noDateDrag = false; // just not allow to use drag & drop to adjust start & end date
   done_at = null;
 
-  get project() {
-    return Project.find(this.projectId);
+  static get topTasks() {
+    return Task.where((obj) => !obj.parentId).sort(bySeq);
   }
 
-  static filterByProject(projectId) {
-    return Task.where((obj) => obj.projectId === projectId).sort(bySeq);
+  static get maxTopSeq() {
+    return last(this.topTasks)?.seq ?? -1;
   }
 
   get parent() {
@@ -50,16 +49,13 @@ export default class Task {
 
   // with same parent
   get siblings() {
-    if (this.parent) {
-      return this.parent.children.sort(bySeq);
-    } else if (this.project) {
-      return this.project.tasks.sort(bySeq);
-    } else {
-      return new CusArray();
-    }
-    // return (this.parent ? this.parent.children : this.project.tasks.value).sort(
-    //   bySeq
-    // );
+    // if (this.parent) {
+    //   return this.parent.children.sort(bySeq);
+    // } else {
+    //   return new CusArray();
+    // }
+
+    return (this.parent ? this.parent.children : Task.topTasks).sort(bySeq);
   }
 
   get restSiblings() {

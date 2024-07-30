@@ -1,20 +1,28 @@
 <script setup>
-import { nextTick, ref, watch } from "vue";
+import { nextTick, ref, watch, inject } from "vue";
 
 import Task from "@/stores/task.js";
-
 import resize from "@/utils/resizeable.js";
 
 const props = defineProps(["item", "parent", "seq", "autofocus"]);
 const emit = defineEmits(["after-submit", "cancel"]);
 
+const project = inject("project");
+
 const formData = ref(null);
 
 const reloadForm = () => {
-  formData.value = Object.assign(new Task(), { ...props.item });
+  formData.value = Object.assign(new Task(), {
+    ...props.item,
+    projectId: project?.value?.id,
+  });
+
   formData.value.seq =
     (props.item?.id && props.item?.seq) ??
-    (props.seq ?? props.parent?.maxChildSeq ?? Task.maxTopSeq.value ?? -1) + 1;
+    (props.seq ??
+      props.parent?.maxChildSeq ??
+      props.item?.parent?.maxRootSeq.value ??
+      -1) + 1;
 
   if (props.parent) {
     formData.value.parentId = props.parent?.id;

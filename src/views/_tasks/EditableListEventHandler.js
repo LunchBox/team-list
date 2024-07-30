@@ -1,13 +1,8 @@
 import { ref, toValue } from "vue";
 import useEventListener from "@/utils/useEventListener.js";
 import { elemInForm } from "@/utils/elemInsideContainer.js";
-import {
-  increaseIndent,
-  decreaseIndent,
-  moveUp,
-  moveDown,
-  destroy,
-} from "@/stores/nodes.js";
+
+import Task from "@/stores/task.js";
 
 export default ({
   scopeRef = null,
@@ -39,8 +34,8 @@ export default ({
 
         const fi = items.first;
         const nxt = fi.prev || fi.next || fi.parent;
-        items.forEach(destroy);
-        nxt.inScope(scope) && select(nxt);
+        items.forEach((item) => item.destroy());
+        nxt && nxt.inScope(scope) && select(nxt);
       } else {
         delMark.value = true;
       }
@@ -62,10 +57,10 @@ export default ({
     // 按住 shift 移動
     if (e.shiftKey) {
       const fs = {
-        ArrowUp: () => moveUp(fItem),
-        ArrowDown: () => moveDown(fItem),
-        ArrowLeft: () => decreaseIndent(fItem, scopeRef),
-        ArrowRight: () => increaseIndent(fItem),
+        ArrowUp: () => Task.moveUp(fItem),
+        ArrowDown: () => Task.moveDown(fItem),
+        ArrowLeft: () => Task.decreaseIndent(fItem, scopeRef),
+        ArrowRight: () => Task.increaseIndent(fItem),
       };
 
       exec(fs[e.key]);

@@ -1,7 +1,5 @@
 <script setup>
 import { useRouter } from "vue-router";
-
-import Task from "@/stores/task.js";
 // import { destroy } from "@/stores/nodes.js";
 
 defineProps(["item"]);
@@ -9,9 +7,9 @@ defineProps(["item"]);
 const router = useRouter();
 
 const onDelete = () => {
-  const item = props.item;
+  const node = props.node;
   const parent = node.parent;
-  Task.destroy(item);
+  destroy(item);
 
   if (parent) {
     router.push({ path: `/tasks/${parent.id}` });
@@ -26,9 +24,9 @@ const onDelete = () => {
       <span>{{ item.start_date }}</span> ~
       <span>{{ item.end_date }}</span> &middot;
       <RouterLink :to="`/tasks/${item.id}`">default</RouterLink> &middot;
-      <!-- <RouterLink :to="`/nodes/${node.id}/dual`">dual</RouterLink> &middot;
-      <RouterLink :to="`/nodes/${node.id}/gantt`">gantt</RouterLink> &middot;
-      <RouterLink :to="`/nodes/${node.id}/table`">table</RouterLink> &middot; -->
+      <!-- <RouterLink :to="`/tasks/${item.id}/dual`">dual</RouterLink> &middot;
+      <RouterLink :to="`/tasks/${item.id}/gantt`">gantt</RouterLink> &middot;
+      <RouterLink :to="`/tasks/${item.id}/table`">table</RouterLink> &middot; -->
       <RouterLink :to="`/tasks/${item.id}/edit`">Edit</RouterLink> &middot;
       <slot></slot>
 
