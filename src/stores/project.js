@@ -8,6 +8,10 @@ export default class Project {
   get tasks() {
     return Task.filterByProject(this.id);
   }
+
+  get maxChildSeq() {
+    return last(this.tasks)?.seq ?? -1;
+  }
 }
 
 useLocalStorage("tl/projects", Project);
