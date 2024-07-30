@@ -92,6 +92,20 @@ export default class {
     return this.children?.length === 0;
   }
 
+  getExpanedChildren(arr = []) {
+    this.children.forEach((c) => {
+      arr.push(c);
+      if (c.exp) {
+        c.getExpanedChildren(arr);
+      }
+    });
+    return arr;
+  }
+
+  get expandedChildren() {
+    return this.getExpanedChildren();
+  }
+
   // ---- path, for breadcrumbs
   getPath(arr = []) {
     arr.unshift(this);
