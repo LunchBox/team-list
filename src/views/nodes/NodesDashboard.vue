@@ -14,7 +14,6 @@ import {
 <template>
   <div>
     <div class="toolbar">
-      <RouterLink to="/nodes">Home</RouterLink> &middot;
       <a href="#" @click.prevent="saveToFile">Save As</a> &middot;
       <a href="#" @click.prevent="loadFromFile">Load</a> &middot;
       <a href="#" @click.prevent="expandAll">Expand</a> &middot;

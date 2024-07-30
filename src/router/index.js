@@ -65,6 +65,18 @@ const router = createRouter({
       path: "/projects",
       name: "projects",
       component: () => import("../views/projects/Dashboard.vue"),
+      children: [
+        {
+          path: ":id/edit",
+          name: "edit_project",
+          component: () => import("../views/projects/EditView.vue"),
+        },
+        {
+          path: ":id",
+          name: "project",
+          component: () => import("../views/projects/ProjectDefaultView.vue"),
+        },
+      ],
     },
   ],
 });

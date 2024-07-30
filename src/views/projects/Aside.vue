@@ -1,21 +1,28 @@
 <script setup>
-import { useRouter } from "vue-router";
-import { rootNodes } from "@/stores/nodes.js";
-
-import useSelection from "@/utils/useSelection.js";
+import { computed } from "vue";
 
 import Project from "@/stores/project.js";
-import Task from "@/stores/task.js";
 
-const router = useRouter();
-const onItemClick = (e, node) => {
-  router.push({ name: "node", params: { id: node.id } });
-};
+import InlineForm from "./InlineForm.vue";
 
-const selection = useSelection();
+const items = computed(() => Project.all());
 </script>
 <template>
-  <div>Project List</div>
+  <aside>
+    Project List
+    <div class="a-list">
+      <div class="list-item" v-for="item in items">
+        <div class="list-item-row">
+          <span class="list-item-cell">-</span>
+
+          <RouterLink :to="`/projects/${item.id}`">
+            {{ item.name }}
+          </RouterLink>
+        </div>
+      </div>
+      <InlineForm></InlineForm>
+    </div>
+  </aside>
 </template>
 
 <style scoped></style>
