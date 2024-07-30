@@ -3,7 +3,7 @@ import { ref, computed, toValue } from "vue";
 
 import MarkedText from "@/components/MarkedText.vue";
 
-import NodeList from "./NodeList.vue";
+// import NodeList from "./NodeList.vue";
 import InlineForm from "./InlineForm.vue";
 import ExpandMarker from "./ExpandMarker.vue";
 import CheckBox from "./CheckBox.vue";
@@ -145,22 +145,24 @@ const isDraggable = computed(() => {
       <span class="seq-info">{{ item.seq }}</span>
     </div>
 
-    <NodeList
-      v-if="item.exp"
-      v-bind="$attrs"
-      :list="item.children"
-      :parent="item"
-      :itemDraggable="itemDraggable"
-      :selection="selection"
-      :activated="activated"
-      :appendMode="appendMode"
-      @item-dragstart="(...args) => $emit('item-dragstart', ...args)"
-      @item-mousedown="(...args) => $emit('item-mousedown', ...args)"
-      @item-clicked="(...args) => $emit('item-clicked', ...args)"
-      @item-dblclick="(...args) => $emit('item-dblclick', ...args)"
-      @after-append="(...args) => $emit('after-append', ...args)"
-      @cancel-append="(...args) => $emit('cancel-append', ...args)"
-    ></NodeList>
+    <div class="a-list">
+      <ListItem
+        v-bind="$attrs"
+        v-for="child in item.children"
+        :item="child"
+        :itemDraggable="itemDraggable"
+        :selection="selection"
+        :activated="activated"
+        :appendMode="appendMode"
+        @item-dragstart="(...args) => $emit('item-dragstart', ...args)"
+        @item-mousedown="(...args) => $emit('item-mousedown', ...args)"
+        @item-clicked="(...args) => $emit('item-clicked', ...args)"
+        @item-dblclick="(...args) => $emit('item-dblclick', ...args)"
+        @after-append="(...args) => $emit('after-append', ...args)"
+        @cancel-append="(...args) => $emit('cancel-append', ...args)"
+      ></ListItem>
+      <slot></slot>
+    </div>
   </div>
   <!-- appending mode, append contents after focusing item -->
   <InlineForm
