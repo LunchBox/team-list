@@ -2,14 +2,15 @@
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 
-import { Node } from "@/stores/nodes.js";
+// import { Node } from "@/stores/nodes.js";
+import Task from "@/stores/task.js";
 
-const props = defineProps(["node", "parent"]);
+const props = defineProps(["item", "parent"]);
 
 const formData = ref(null);
 
 const reloadForm = () => {
-  formData.value = Object.assign(new Node(), { ...props.node });
+  formData.value = Object.assign(new Task(), { ...props.item });
 
   if (props.parent) {
     formData.value.parentId = props.parent?.id;
@@ -22,7 +23,7 @@ watch(props, reloadForm, {
 
 const router = useRouter();
 const backToShow = () => {
-  router.push({ name: "node", id: props.node.id });
+  router.push({ name: "task", id: props.item.id });
 };
 
 const onSubmit = () => {
@@ -35,6 +36,10 @@ const onCancel = backToShow;
 </script>
 <template>
   <form @submit.prevent="onSubmit" @keydown.stop>
+    <label>
+      <span>Name</span>
+      <input type="text" v-model="formData.name" />
+    </label>
     <label>
       <span>Content</span>
       <textarea v-model="formData.content"></textarea>
@@ -51,7 +56,7 @@ const onCancel = backToShow;
       <input type="checkbox" v-model="formData.noDateDrag" />
       <span>Not allow drag & drop to adjust the start & end date</span>
     </label>
-    <input type="submit" value="Submit" />
+    <input type="submit" value="Update" />
     <input type="button" value="reset" @click.prevent="reloadForm" />
     <input type="button" value="cancel" @click.prevent="onCancel" />
   </form>
