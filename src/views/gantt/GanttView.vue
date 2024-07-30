@@ -263,7 +263,7 @@ const generalStyle = computed(() => {
           @item-mousedown="(e, type) => onItemMousedown(e, item, type)"
         >
           <span v-show="regularLayout">
-            {{ item.content }}
+            {{ item.toString() }}
           </span>
         </GridRowItem>
       </template>

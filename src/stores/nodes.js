@@ -45,6 +45,10 @@ class Node {
   noDateDrag = false; // just not allow to use drag & drop to adjust start & end date
   done_at = null;
 
+  toString() {
+    return this.content;
+  }
+
   // ---- filters
 
   get parent() {

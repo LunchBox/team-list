@@ -1,8 +1,8 @@
 <script setup>
-import { computed } from "vue";
+import { computed, provide } from "vue";
 import { useRoute } from "vue-router";
 
-import { find } from "@/stores/nodes.js";
+import Task from "@/stores/task.js";
 
 import useSelection from "@/utils/useSelection.js";
 
@@ -12,18 +12,17 @@ import DateRangeForm from "@/components/DateRangeForm.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
 
 import Header from "./Header.vue";
-import EditableNodeList from "./EditableNodeList.vue";
+import EditableList from "./EditableList.vue";
 
 const route = useRoute();
-const node = computed(() => {
-  return find(route.params.id);
-});
+const item = computed(() => Task.find(route.params.id));
 
 const itemList = computed(() => {
-  return node.value.expandedChildren;
+  return item.value.expandedChildren;
 });
 
 const selection = useSelection();
+provide("selection", selection);
 
 const theOnlyFirstItem = computed(() => {
   return selection.selectedItems.value.length === 1
@@ -53,18 +52,18 @@ const dateRange = computed(() => {
 </script>
 <template>
   <div>
-    <div v-if="node">
-      <Breadcrumbs :node="node"></Breadcrumbs>
-      <Header :node="node"></Header>
+    <div v-if="item">
+      <Breadcrumbs :item="item"></Breadcrumbs>
+      <Header :item="item"></Header>
 
       <GanttView :list="itemList" :selection="selection">
         <template #aside>
-          <EditableNodeList
-            :parent="node"
-            :list="node.children"
+          <EditableList
+            :parent="item"
+            :list="item.children"
             :selection="selection"
             :item-draggable="true"
-          ></EditableNodeList>
+          ></EditableList>
         </template>
 
         <template #before-container>

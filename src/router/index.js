@@ -62,6 +62,12 @@ const router = createRouter({
     },
 
     {
+      path: "/tasks/:id/gantt",
+      name: "tasks_gantt_view",
+      component: () => import("../views/tasks/TaskGanttView.vue"),
+    },
+
+    {
       path: "/tasks",
       name: "tasks",
       component: () => import("../views/tasks/NodesDashboard.vue"),

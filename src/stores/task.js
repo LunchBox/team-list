@@ -21,6 +21,10 @@ export default class Task {
   noDateDrag = false; // just not allow to use drag & drop to adjust start & end date
   done_at = null;
 
+  toString() {
+    return this.name;
+  }
+
   static get topTasks() {
     return Task.where((obj) => !obj.parentId).sort(bySeq);
   }

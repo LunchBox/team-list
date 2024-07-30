@@ -86,7 +86,6 @@ const afterAppend = (item) => {
 const draggableContentTypes = ["Task"];
 
 const isDraggable = computed(() => {
-  if (!draggableContentTypes.includes(props.item?.contentType)) return false;
   return toValue(props.itemDraggable);
   // return toValue(dragging) || toValue(props.itemDraggable);
 });
@@ -145,7 +144,7 @@ const isDraggable = computed(() => {
       <span class="seq-info">{{ item.seq }}</span>
     </div>
 
-    <div class="a-list">
+    <div class="a-list" v-if="item.exp">
       <ListItem
         v-bind="$attrs"
         v-for="child in item.children"
