@@ -3,8 +3,8 @@ import { ref, computed } from "vue";
 
 import MarkedText from "@/components/MarkedText.vue";
 
+import ExpandMarker from "@/views/nested_view/ExpandMarker.vue";
 import InlineForm from "../InlineForm.vue";
-import ExpandMarker from "../ExpandMarker.vue";
 import CheckBox from "../CheckBox.vue";
 
 import useEventListener from "@/utils/useEventListener.js";
