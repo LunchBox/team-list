@@ -46,6 +46,18 @@ export default class {
     this.children.forEach((t) => t.expandAll());
   }
 
+  // check a node's parent parent path
+  inScope(parent) {
+    if (this.parent && this.parent === parent) return true;
+    return this.parent && this.parent.inScope(parent);
+  }
+
+  destroy() {
+    // cascading children destroy first
+    this.children.forEach((c) => c.destroy());
+    this.constructor.remove(this.id);
+  }
+
   // ---- collapse & expend
   static collapseAll() {
     // this.all().forEach((t) => t.collapse());

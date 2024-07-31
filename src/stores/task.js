@@ -65,19 +65,6 @@ export default class Task extends NestSortable {
 
     return !this.done_at && formatDate(new Date()) > this.end_date;
   }
-
-  // check a node's parent parent path
-  inScope(parent) {
-    if (this.parent && this.parent === parent) return true;
-    return this.parent && this.parent.inScope(parent);
-  }
-
-  destroy() {
-    // cascading children destroy first
-    this.children.forEach((c) => c.destroy());
-
-    Task.remove(this.id);
-  }
 }
 
 useLocalStorage("tl/tasks", Task);
