@@ -122,22 +122,13 @@ const isDraggable = computed(() => {
 
       <CheckBox class="list-item-cell" :item="item"></CheckBox>
 
-      <template v-if="item.isChildrenBlank">
-        <MarkedText
-          class="item-content full"
-          :text="item.name"
-          @dblclick="onDoubleClick"
-        ></MarkedText>
-      </template>
-      <template v-else>
-        <a href="#" class="item-content full" @dblclick="onDoubleClick">
-          {{ item.name }}
-        </a>
+      <a href="#" class="item-content full" @dblclick="onDoubleClick">
+        {{ item.name }}
+      </a>
 
-        <span class="child-info">
-          ({{ item.children.length }} : {{ item.allChildrenLen }})
-        </span>
-      </template>
+      <span class="child-info">
+        ({{ item.children.length }} : {{ item.allChildrenLen }})
+      </span>
 
       <span class="seq-info">{{ item.seq }}</span>
     </div>
