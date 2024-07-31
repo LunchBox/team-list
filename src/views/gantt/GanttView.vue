@@ -317,13 +317,13 @@ strong {
 .aside a {
   white-space: nowrap;
 }
-:deep(.aside .list-item .node-content) {
+:deep(.aside .list-item .item-content) {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-:deep(.aside .list-item .node-content br) {
+:deep(.aside .list-item .item-content br) {
   display: none;
 }
 
