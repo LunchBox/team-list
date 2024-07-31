@@ -25,7 +25,7 @@ const increaseIndent = (item) => {
   const middle =
     item.prev ??
     Object.assign(new item.constructor(), {
-      content: "N/A",
+      name: "N/A",
       parentId: parent?.id,
     }).save();
 
