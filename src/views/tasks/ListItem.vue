@@ -82,9 +82,6 @@ const afterAppend = (item) => {
 //   hover.value = false;
 // };
 
-// only allow task to be drag
-const draggableContentTypes = ["Task"];
-
 const isDraggable = computed(() => {
   return toValue(props.itemDraggable);
   // return toValue(dragging) || toValue(props.itemDraggable);
@@ -95,6 +92,7 @@ const isDraggable = computed(() => {
   <InlineForm
     v-if="quickEdit && selected"
     :item="item"
+    :autofocus="true"
     style="outline: 1px solid #ccc"
     @after-submit="afterQuickEdit"
   ></InlineForm>

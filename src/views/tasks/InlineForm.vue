@@ -40,8 +40,9 @@ const onSubmit = (e) => {
 };
 
 const autoSave = (e) => {
-  const content = formData.value?.content;
-  if (!content || content.trim() === "") return;
+  // TODO: validation should be somewhere else
+  const name = formData.value?.name;
+  if (!name || name.trim() === "") return;
 
   const obj = formData.value.save();
 
