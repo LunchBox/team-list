@@ -24,6 +24,10 @@ export default class extends Nest {
     return super.children.sort(bySeq);
   }
 
+  get siblings() {
+    return super.siblings.sort(bySeq);
+  }
+
   get lastChild() {
     return this.children[this.children.length - 1];
   }
@@ -70,8 +74,13 @@ export default class extends Nest {
     );
   }
 
+  get maxSiblingSeq() {
+    return maxListAttr(this.siblings, "seq");
+  }
+
   get maxChildSeq() {
-    return maxListAttr(this.children, "seq");
+    return this.children.first?.maxSiblingSeq ?? -1;
+    // return maxListAttr(this.children, "seq");
     // return this.children.last?.seq ?? -1;
   }
 

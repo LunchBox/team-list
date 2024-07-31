@@ -25,7 +25,7 @@ export default class {
   }
 
   get siblings() {
-    return this.parent ? this.parent.children : this.constructor.topItems;
+    return this.constructor.where((obj) => obj.parentId === this.parentId);
   }
 
   // ---- path, for breadcrumbs

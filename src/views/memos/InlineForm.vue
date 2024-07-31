@@ -18,6 +18,10 @@ const reloadForm = () => {
 
   memo.taskId = commentable.value?.id;
 
+  if (props.parent) {
+    memo.parentId = props.parent?.id;
+  }
+
   memo.seq =
     (props.item?.id && props.item?.seq) ??
     (props.seq ??
@@ -25,16 +29,14 @@ const reloadForm = () => {
       commentable.value?.maxMemoSeq ??
       -1) + 1;
 
-  if (props.parent) {
-    memo.parentId = props.parent?.id;
-  }
-
   formData.value = memo;
 };
 
-watch(() => props, reloadForm, {
+watch(props, reloadForm, {
   immediate: true,
 });
+
+watch(commentable, reloadForm);
 
 const onSubmit = (e) => {
   if (e.altKey) return true;
@@ -107,6 +109,8 @@ const onCancel = () => {
         ></textarea>
         <input type="submit" value="Submit" />
       </form>
+
+      <span class="seq-info">{{ formData.seq }}</span>
     </div>
   </div>
 </template>
@@ -144,5 +148,11 @@ input[type="submit"] {
   border: none;
   border-radius: 2px;
   display: none;
+}
+
+.seq-info {
+  font-size: smaller;
+  color: #ccc;
+  padding: 0 0.5rem;
 }
 </style>
