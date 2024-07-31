@@ -10,18 +10,18 @@ import CheckBox from "../CheckBox.vue";
 import useEventListener from "@/utils/useEventListener.js";
 import { elemInForm } from "@/utils/elemInsideContainer.js";
 
-const props = defineProps(["node", "indent"]);
+const props = defineProps(["item", "indent"]);
 
 const emit = defineEmits(["item-clicked", "item-dblclick"]);
 
-const selected = computed(() => props.selection?.hasSelected(props.node));
+const selected = computed(() => props.selection?.hasSelected(props.item));
 
 defineOptions({
   inheritAttrs: false,
 });
 
-const onNodeClicked = (e) => {
-  emit("item-clicked", e, props.node);
+const onItemClicked = (e) => {
+  emit("item-clicked", e, props.item);
 };
 
 // ---- quick edit
@@ -46,14 +46,14 @@ const afterQuickEdit = () => {
 
 const onDoubleClick = (e) => {
   quickEdit.value = true;
-  emit("item-dblclick", e, props.node);
+  emit("item-dblclick", e, props.item);
 };
 </script>
 <template>
   <!-- editing mode -->
   <InlineForm
     v-if="quickEdit && selected"
-    :node="node"
+    :item="item"
     style="outline: 1px solid #ccc"
     @after-submit="afterQuickEdit"
   ></InlineForm>
@@ -62,34 +62,30 @@ const onDoubleClick = (e) => {
     <div
       class="list-item-row flex items-center"
       ref="itemRowRef"
-      @click.left.prevent="onNodeClicked"
+      @click.left.prevent="onItemClicked"
     >
       <span class="list-item-cell" v-for="i in indent"></span>
 
-      <ExpandMarker :node="node"></ExpandMarker>
+      <ExpandMarker :item="item"></ExpandMarker>
 
-      <CheckBox
-        v-if="node.isTask"
-        class="list-item-cell"
-        :node="node"
-      ></CheckBox>
+      <CheckBox class="list-item-cell" :item="item"></CheckBox>
 
-      <template v-if="node.isChildrenBlank">
+      <template v-if="item.isChildrenBlank">
         <MarkedText
-          class="node-content full"
-          :text="node.content"
+          class="item-content full"
+          :text="item.name"
           @dblclick="onDoubleClick"
         ></MarkedText>
       </template>
       <template v-else>
-        <a href="#" class="node-content full" @dblclick="onDoubleClick">
-          {{ node.content }}
+        <a href="#" class="item-content full" @dblclick="onDoubleClick">
+          {{ item }}
         </a>
         <span class="child-info">
-          ({{ node.children.length }} : {{ node.allChildrenLen }})
+          ({{ item.children.length }} : {{ item.allChildrenLen }})
         </span>
       </template>
-      <span class="seq-info">{{ node.seq }}</span>
+      <span class="seq-info">{{ item.seq }}</span>
     </div>
   </div>
 </template>

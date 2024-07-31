@@ -28,7 +28,7 @@ const onDelete = () => {
       <RouterLink :to="`/tasks/${item.id}`">default</RouterLink> &middot;
       <!-- <RouterLink :to="`/nodes/${node.id}/dual`">dual</RouterLink> &middot; -->
       <RouterLink :to="`/tasks/${item.id}/gantt`">gantt</RouterLink> &middot;
-      <!-- <RouterLink :to="`/nodes/${node.id}/table`">table</RouterLink> &middot; -->
+      <RouterLink :to="`/tasks/${item.id}/table`">table</RouterLink> &middot;
       <RouterLink :to="`/tasks/${item.id}/edit`">Edit</RouterLink> &middot;
       <slot></slot>
 

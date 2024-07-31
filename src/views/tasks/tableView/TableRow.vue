@@ -4,39 +4,34 @@ import ListItem from "./ListItem.vue";
 
 import TableRow from "./TableRow.vue";
 
-const props = defineProps(["node", "indent"]);
+const props = defineProps(["item", "indent"]);
 
 const indent = computed(() => {
   return props.indent ?? 0;
 });
 </script>
 <template>
-  <tr>
-    <td>{{ indent }}</td>
-    <td>
-      <RouterLink :to="`/nodes/${node.id}/table`" class="focus-marker">
-        Details
-      </RouterLink>
-    </td>
-    <td><ListItem :node="node" :indent="indent"></ListItem></td>
-    <td>
-      <span>{{ node.start_date }}</span>
-    </td>
-    <td>
-      <span>{{ node.end_date }}</span>
-    </td>
-  </tr>
+  <div class="center">{{ indent }}</div>
+  <div>
+    <RouterLink :to="`/tasks/${item.id}/table`" class="focus-marker">
+      Details
+    </RouterLink>
+  </div>
+  <div>
+    <ListItem :item="item" :indent="indent"></ListItem>
+  </div>
+  <div>
+    <span>{{ item.start_date }}</span>
+  </div>
+  <div>
+    <span>{{ item.end_date }}</span>
+  </div>
   <TableRow
-    v-if="node.exp"
-    v-for="c in node.children"
-    :node="c"
+    v-if="item.exp"
+    v-for="c in item.children"
+    :item="c"
     :indent="indent + 1"
   ></TableRow>
 </template>
 
-<style scoped>
-th,
-td {
-  padding: 0 4px;
-}
-</style>
+<style scoped></style>

@@ -1,0 +1,25 @@
+.a-table {
+  display: grid;
+  grid-template-columns: 2rem 4rem auto 8rem 8rem;
+  gap: 1px;
+
+  & > * {
+    padding: 0 4px;
+    position: relative;
+    border: 1px solid #ccc;
+  }
+
+  .th {
+    font-weight: bold;
+    text-align: left;
+    padding: 0 4px;
+  }
+
+  .list-item {
+    margin: 0;
+  }
+
+  .center {
+    text-align: center;
+  }
+}

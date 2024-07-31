@@ -1,5 +1,6 @@
 @import "./base.css";
 @import "./a_list.css";
+@import "./a_table.css";
 
 #app {
   margin: 0 auto;
