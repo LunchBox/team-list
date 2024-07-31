@@ -34,7 +34,7 @@ const increaseIndent = (item) => {
   item.seq = middle.maxChildSeq + 1;
 
   // 展開方便查看
-  item.parent?.expand();
+  middle.expand?.();
 };
 
 const decreaseIndent = (item, scopeRef = null) => {
@@ -61,7 +61,7 @@ const decreaseIndent = (item, scopeRef = null) => {
     item.seq = parent.seq + 1;
 
     // 展開方便查看
-    item.expand();
+    item.expand?.();
   }
 };
 

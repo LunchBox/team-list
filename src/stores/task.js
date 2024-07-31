@@ -1,7 +1,13 @@
 import useLocalStorage from "./shared/useLocalStorage";
+import { maxListAttr } from "@/stores/utils";
+
 import { formatDate } from "@/utils/dates";
 
 import NestSortable from "./shared/nest_sortable";
+
+import Memo from "./memo";
+
+const bySeq = (a, b) => a.seq - b.seq;
 
 export default class Task extends NestSortable {
   name = null;
@@ -21,6 +27,14 @@ export default class Task extends NestSortable {
 
   toString() {
     return this.name;
+  }
+
+  get memos() {
+    return Memo.where((m) => !m.parentId && m.taskId === this.id).sort(bySeq);
+  }
+
+  get maxMemoSeq() {
+    return maxListAttr(this.memos, "seq");
   }
 
   // min & max child dates

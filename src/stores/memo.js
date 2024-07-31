@@ -15,4 +15,4 @@ export default class Memo extends NestSortable {
   }
 }
 
-useLocalStorage("tl/memos", Task);
+useLocalStorage("tl/memos", Memo);

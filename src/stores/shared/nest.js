@@ -36,6 +36,14 @@ export default class {
   }
 
   // ---- collapse & expend
+  collapse() {
+    this.exp = false;
+  }
+
+  expand() {
+    this.exp = true;
+  }
+
   collapseAll() {
     this.exp = false;
     this.children.forEach((t) => t.collapseAll());
@@ -48,6 +56,7 @@ export default class {
 
   // check a node's parent parent path
   inScope(parent) {
+    if (!this.parent) return true;
     if (this.parent && this.parent === parent) return true;
     return this.parent && this.parent.inScope(parent);
   }

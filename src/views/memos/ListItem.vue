@@ -3,15 +3,13 @@ import { ref, computed, toValue, inject } from "vue";
 
 import MarkedText from "@/components/MarkedText.vue";
 
-// import NodeList from "./NodeList.vue";
 import InlineForm from "./InlineForm.vue";
 import ExpandMarker from "../nested_view/ExpandMarker.vue";
-import CheckBox from "./CheckBox.vue";
 
 import useEventListener from "@/utils/useEventListener.js";
 import { elemInForm } from "@/utils/elemInsideContainer.js";
 
-const props = defineProps(["item", "parent", "itemDraggable"]);
+const props = defineProps(["item", "parent", "task", "itemDraggable"]);
 
 const emit = defineEmits([
   "item-dragstart",
@@ -119,8 +117,6 @@ const isDraggable = computed(() => {
       </div>
 
       <ExpandMarker :item="item"></ExpandMarker>
-
-      <CheckBox class="list-item-cell" :item="item"></CheckBox>
 
       <template v-if="item.isChildrenBlank">
         <MarkedText

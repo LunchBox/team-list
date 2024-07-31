@@ -1,3 +1,5 @@
+import { maxListAttr } from "@/stores/utils";
+
 import Nest from "./nest";
 
 const bySeq = (a, b) => a.seq - b.seq;
@@ -14,7 +16,8 @@ export default class extends Nest {
   }
 
   static get maxTopSeq() {
-    return this.topItems.last?.seq ?? -1;
+    // return this.topItems.last?.seq ?? -1;
+    return maxListAttr(this.topItems, "seq");
   }
 
   get children() {
@@ -68,7 +71,8 @@ export default class extends Nest {
   }
 
   get maxChildSeq() {
-    return this.children.last?.seq ?? -1;
+    return maxListAttr(this.children, "seq");
+    // return this.children.last?.seq ?? -1;
   }
 
   // 把所有展開的 children 放入同一個 array 中，用來做 table 或者 gantt view

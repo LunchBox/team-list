@@ -1,9 +1,8 @@
 <script setup>
 import { ref, computed, inject, provide } from "vue";
 
-import EditableListItem from "./EditableListItem.vue";
-
 import editableListEventHandler from "@/views/nested_view/EditableListEventHandler.js";
+import useSelection from "@/utils/useSelection.js";
 
 import ListItem from "./ListItem.vue";
 import InlineForm from "./InlineForm.vue";
@@ -22,7 +21,10 @@ provide("appendMode", appendMode);
 const activated = ref(false);
 provide("activated", activated);
 
-const selection = inject("selection");
+// use own selection
+// const selection = inject("selection");
+const selection = useSelection();
+provide("selection", selection);
 const { handleSelect, select } = selection;
 
 const onItemClicked = (e, item) => {
@@ -75,10 +77,6 @@ editableListEventHandler({
 <template>
   <!-- use tabindex to force area focus-able, to accept keydown.enter event -->
   <div class="editable-list" ref="rootEl" :class="{ activated }">
-    <div v-if="parent" class="a-list">
-      <EditableListItem :item="parent"></EditableListItem>
-    </div>
-
     <div class="a-list">
       <ListItem
         v-bind="$attrs"
@@ -88,6 +86,7 @@ editableListEventHandler({
         @item-mousedown="onItemClicked"
         @cancel-append="onCancel"
       ></ListItem>
+
       <InlineForm
         v-if="!appendMode"
         :parent="parent"

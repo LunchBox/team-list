@@ -11,11 +11,15 @@ import Header from "./Header.vue";
 
 import EditableList from "./EditableList.vue";
 
+import EditableMemoList from "../memos/EditableList.vue";
+
 const selection = useSelection();
 provide("selection", selection);
 
 const route = useRoute();
 const item = computed(() => Task.find(route.params.id));
+
+provide("commentable", item);
 </script>
 <template>
   <div>
@@ -27,15 +31,24 @@ const item = computed(() => Task.find(route.params.id));
         <MarkedText :text="item.content"></MarkedText>
       </div>
 
-      <div style="padding-bottom: 80vh">
+      <section>
+        <h3>Task List</h3>
         <EditableList :parent="item" :list="item.children"></EditableList>
-      </div>
+      </section>
+
+      <section style="padding-bottom: 80vh">
+        <h3>Memo List</h3>
+        <EditableMemoList :list="item.memos"></EditableMemoList>
+      </section>
     </template>
     <div v-else>Not Found...</div>
   </div>
 </template>
 
 <style scoped>
+section {
+  margin: 2rem 0;
+}
 .item-content {
   padding: 1rem;
   background: #efefef;
