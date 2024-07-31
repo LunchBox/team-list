@@ -1,5 +1,5 @@
 import { ref, watch } from "vue";
-import { REPLACER } from "./utils";
+import { REPLACER } from "../utils";
 import CusArray from "@/utils/cus_array";
 
 import randomId from "@/utils/random_id.js";

@@ -7,8 +7,7 @@ import {
   decreaseIndent,
   moveUp,
   moveDown,
-} from "@/stores/move_items";
-import Task from "@/stores/task.js";
+} from "@/stores/shared/move_items";
 
 export default ({
   scopeRef = null,

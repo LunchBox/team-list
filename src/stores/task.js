@@ -1,7 +1,7 @@
-import useLocalStorage from "./useLocalStorage";
+import useLocalStorage from "./shared/useLocalStorage";
 import { formatDate } from "@/utils/dates";
 
-import NestSortable from "./nest_sortable.js";
+import NestSortable from "./shared/nest_sortable";
 
 export default class Task extends NestSortable {
   name = null;
