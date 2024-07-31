@@ -34,6 +34,7 @@ const reloadForm = () => {
 
 watch(props, reloadForm, {
   immediate: true,
+  deep: true,
 });
 
 watch(commentable, reloadForm);

@@ -3,7 +3,6 @@ export const REPLACER = (key, value) => {
 };
 
 export const maxListAttr = (list, attr) => {
-  const arr = list.map((item) => item[attr]).filter((x) => x);
-  // if (arr.length === 0) return -1;
+  const arr = list.map((item) => item[attr]);
   return arr.sort((a, b) => a - b).last ?? -1;
 };

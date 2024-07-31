@@ -22,6 +22,7 @@ const reloadForm = () => {
 
 watch(props, reloadForm, {
   immediate: true,
+  deep: true,
 });
 
 const onSubmit = (e) => {

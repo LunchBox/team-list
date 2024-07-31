@@ -11,18 +11,22 @@ const emit = defineEmits(["after-submit", "cancel"]);
 const formData = ref(null);
 
 const reloadForm = () => {
-  formData.value = Object.assign(new Task(), { ...props.item });
-  formData.value.seq =
-    (props.item?.id && props.item?.seq) ??
-    (props.seq ?? props.parent?.maxChildSeq ?? Task.maxTopSeq.value ?? -1) + 1;
+  const task = Object.assign(new Task(), { ...props.item });
 
   if (props.parent) {
-    formData.value.parentId = props.parent?.id;
+    task.parentId = props.parent?.id;
   }
+
+  task.seq =
+    (props.item?.id && props.item?.seq) ??
+    (props.seq ?? props.parent?.maxChildSeq ?? task.maxSiblingSeq ?? -1) + 1;
+
+  formData.value = task;
 };
 
 watch(props, reloadForm, {
   immediate: true,
+  deep: true,
 });
 
 const onSubmit = (e) => {
@@ -96,6 +100,8 @@ const onCancel = () => {
         ></textarea>
         <input type="submit" value="Submit" />
       </form>
+
+      <span class="seq-info">{{ formData.seq }}</span>
     </div>
   </div>
 </template>
@@ -133,5 +139,11 @@ input[type="submit"] {
   border: none;
   border-radius: 2px;
   display: none;
+}
+
+.seq-info {
+  font-size: smaller;
+  color: #ccc;
+  padding: 0 0.5rem;
 }
 </style>

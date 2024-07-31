@@ -18,6 +18,7 @@ const reloadForm = () => {
 
 watch(props, reloadForm, {
   immediate: true,
+  deep: true,
 });
 
 const router = useRouter();
