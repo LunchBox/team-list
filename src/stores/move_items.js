@@ -65,4 +65,14 @@ const decreaseIndent = (item, scopeRef = null) => {
   }
 };
 
-export { moveUp, moveDown, increaseIndent, decreaseIndent };
+// ---- move
+const moveToAfter = (fromItem, toItem) => {
+  if (fromItem === toItem) return;
+
+  toItem.restSiblings.forEach((n) => (n.seq += 1));
+  fromItem.seq = toItem.seq + 1;
+
+  fromItem.parent?.reSeq();
+};
+
+export { moveUp, moveDown, increaseIndent, decreaseIndent, moveToAfter };

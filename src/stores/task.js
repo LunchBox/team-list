@@ -15,6 +15,10 @@ export default class Task extends NestSortable {
   noDateDrag = false; // just not allow to use drag & drop to adjust start & end date
   done_at = null;
 
+  constructor() {
+    super();
+  }
+
   toString() {
     return this.name;
   }
@@ -73,20 +77,6 @@ export default class Task extends NestSortable {
     this.children.forEach((c) => c.destroy());
 
     Task.remove(this.id);
-  }
-
-  // create & update
-  save() {
-    // adjust seq on new item created
-    if (!this.id) {
-      // adjust rest siblings by seq
-      this.siblings
-        .filter((t) => t.seq >= this.seq)
-        .forEach((t, i) => {
-          t.seq = this.seq + i + 1;
-        });
-    }
-    return Task.save(this);
   }
 }
 

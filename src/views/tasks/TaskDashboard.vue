@@ -38,10 +38,8 @@ import Task from "@/stores/task.js";
 <template>
   <div>
     <div class="toolbar">
-      <!-- <a href="#" @click.prevent="saveToFile">Save As</a> &middot;
-      <a href="#" @click.prevent="loadFromFile">Load</a> &middot; -->
-      <a href="#" @click.prevent="() => Task.expandAll()">Expand</a> &middot;
-      <a href="#" @click.prevent="() => Task.collapseAll()">Collapse</a>
+      <!-- <a href="#" @click.prevent="saveToFile">Save As</a> &middot; -->
+      <!-- <a href="#" @click.prevent="loadFromFile">Load</a> &middot; -->
     </div>
     <div class="flex separated">
       <aside>

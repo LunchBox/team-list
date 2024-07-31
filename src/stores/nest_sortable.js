@@ -1,77 +1,61 @@
+import Nest from "./nest";
+
 const bySeq = (a, b) => a.seq - b.seq;
 
-const first = (arr) => arr[0];
-const last = (arr) => arr[arr.length - 1];
-
-export default class {
-  parentId = null;
+export default class extends Nest {
   seq = 0;
-  exp = false;
+
+  constructor() {
+    super();
+  }
 
   static get topItems() {
-    return this.where((obj) => !obj.parentId).sort(bySeq);
+    return super.topItems.sort(bySeq);
   }
 
   static get maxTopSeq() {
-    return last(this.topItems)?.seq ?? -1;
-  }
-
-  get parent() {
-    return this.constructor.find(this.parentId);
+    return this.topItems.last?.seq ?? -1;
   }
 
   get children() {
-    return this.constructor
-      .where((obj) => obj.parentId === this.id)
-      .sort(bySeq);
+    return super.children.sort(bySeq);
   }
 
   get lastChild() {
     return this.children[this.children.length - 1];
   }
 
-  get allChildrenLen() {
-    return this.children
-      .map((t) => t.allChildrenLen)
-      .reduce((sum, c) => sum + c, this.children.length ?? 0);
-  }
-
   // with same parent
-  get siblings() {
-    return (
-      this.parent ? this.parent.children : this.constructor.topItems
-    ).sort(bySeq);
-  }
-
   get restSiblings() {
     return this.siblings.filter((t) => t.seq > this.seq);
   }
 
   get prev() {
-    return last(this.siblings.filter((t) => t.seq < this.seq));
+    return this.siblings.filter((t) => t.seq < this.seq).last;
   }
 
+  // 全局前一個 item， 如果前一個 item 是展開的，則指向展開的 child item 的最後一個 item
   // the recursive opened last child
-  get lastExpChild() {
+  get __lastExpChild() {
     const cs = this.children;
     if (cs.length === 0 || !this.exp) return this;
-    return cs.last?.lastExpChild;
+    return cs.last?.__lastExpChild;
   }
 
   get globalPrev() {
     return (
-      (this.prev && this.prev.exp && this.prev.lastExpChild) ||
+      (this.prev && this.prev.exp && this.prev.__lastExpChild) ||
       this.prev ||
       this.parent
     );
   }
 
   get next() {
-    return first(this.siblings.filter((t) => t.seq > this.seq));
+    return this.siblings.filter((t) => t.seq > this.seq).first;
   }
 
-  get availableNext() {
-    return this.parent?.next || this.parent?.availableNext;
+  get __availableNext() {
+    return this.parent?.next || this.parent?.__availableNext;
   }
 
   get globalNext() {
@@ -79,25 +63,19 @@ export default class {
       (this.exp && this.children.first) ||
       this.next ||
       this.parent?.next ||
-      this.parent?.availableNext
+      this.parent?.__availableNext
     );
   }
 
   get maxChildSeq() {
-    return last(this.children)?.seq ?? -1;
+    return this.children.last?.seq ?? -1;
   }
 
-  // ----
-  get isChildrenBlank() {
-    return this.children?.length === 0;
-  }
-
+  // 把所有展開的 children 放入同一個 array 中，用來做 table 或者 gantt view
   getExpanedChildren(arr = []) {
     this.children.forEach((c) => {
       arr.push(c);
-      if (c.exp) {
-        c.getExpanedChildren(arr);
-      }
+      c.exp && c.getExpanedChildren(arr);
     });
     return arr;
   }
@@ -106,48 +84,22 @@ export default class {
     return this.getExpanedChildren();
   }
 
-  // ---- path, for breadcrumbs
-  getPath(arr = []) {
-    arr.unshift(this);
-    if (this.parent) {
-      this.parent.getPath(arr);
-    }
-    return arr;
-  }
-
   // reset children's sequence
   reSeq() {
     this.children.forEach((n, i) => (n.seq = i));
   }
 
-  // ---- move
-  moveToAfter(item) {
-    if (this === item) return;
-
-    item.restSiblings.forEach((n) => (n.seq += 1));
-    this.seq = item.seq + 1;
-
-    this.parent?.reSeq();
-  }
-
-  // ---- collapse & expend
-
-  collapse() {
-    this.exp = false;
-    this.children.forEach((t) => t.collapse());
-  }
-
-  expand() {
-    this.exp = true;
-    this.children.forEach((t) => t.expand());
-  }
-
-  // ---- collapse & expend
-  static collapseAll() {
-    this.all().forEach((t) => t.collapse());
-  }
-
-  static expandAll() {
-    this.all().forEach((t) => t.expand());
+  // create & update
+  save() {
+    // adjust seq on new item created
+    if (!this.id) {
+      // adjust rest siblings by seq
+      this.siblings
+        .filter((t) => t.seq >= this.seq)
+        .forEach((t, i) => {
+          t.seq = this.seq + i + 1;
+        });
+    }
+    return this.constructor.save(this);
   }
 }
