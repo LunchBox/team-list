@@ -126,7 +126,7 @@ const isDraggable = computed(() => {
         {{ item.name }}
       </a>
 
-      <span class="child-info">
+      <span v-if="!item.isChildrenBlank" class="child-info">
         ({{ item.children.length }} : {{ item.allChildrenLen }})
       </span>
 
