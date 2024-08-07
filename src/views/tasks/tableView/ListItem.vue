@@ -70,21 +70,15 @@ const onDoubleClick = (e) => {
 
       <CheckBox class="list-item-cell" :item="item"></CheckBox>
 
-      <template v-if="item.isChildrenBlank">
-        <MarkedText
-          class="item-content full"
-          :text="item.name"
-          @dblclick="onDoubleClick"
-        ></MarkedText>
-      </template>
-      <template v-else>
-        <a href="#" class="item-content full" @dblclick="onDoubleClick">
+      <span class="item-content full">
+        <a href="#" @dblclick="onDoubleClick">
           {{ item }}
         </a>
-        <span class="child-info">
-          ({{ item.children.length }} : {{ item.allChildrenLen }})
-        </span>
-      </template>
+      </span>
+
+      <span class="child-info">
+        ({{ item.children.length }} : {{ item.allChildrenLen }})
+      </span>
       <span class="seq-info">{{ item.seq }}</span>
     </div>
   </div>

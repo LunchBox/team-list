@@ -18,14 +18,16 @@ const indent = computed(() => {
     </RouterLink>
   </div>
   <div>
+    <span class="nowrap">{{ item.start_date }}</span>
+  </div>
+  <div>
+    <span class="nowrap">{{ item.end_date }}</span>
+  </div>
+
+  <div>
     <ListItem :item="item" :indent="indent"></ListItem>
   </div>
-  <div>
-    <span>{{ item.start_date }}</span>
-  </div>
-  <div>
-    <span>{{ item.end_date }}</span>
-  </div>
+
   <TableRow
     v-if="item.exp"
     v-for="c in item.children"

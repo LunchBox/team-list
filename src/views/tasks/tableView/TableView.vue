@@ -23,9 +23,9 @@ const item = computed(() => Task.find(route.params.id));
         <div class="a-table">
           <div class="th"></div>
           <div class="th"></div>
-          <div class="th">Content</div>
           <div class="th">Start Date</div>
           <div class="th">End Date</div>
+          <div class="th">Content</div>
 
           <TableRow v-for="c in item.children" :item="c"></TableRow>
         </div>
