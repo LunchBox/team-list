@@ -3,6 +3,7 @@ import Dashboard from "@/views/Dashboard.vue";
 
 import tasks from "./tasks.js";
 import nodes from "./nodes.js";
+import auth from "./auth.js";
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -23,6 +24,7 @@ const router = createRouter({
 
     ...nodes,
     ...tasks,
+    ...auth,
   ],
 });
 
