@@ -4,14 +4,16 @@ import { useRouter } from "vue-router";
 import Task from "@/stores/task.js";
 // import { destroy } from "@/stores/nodes.js";
 
-defineProps(["item"]);
+const props = defineProps(["item"]);
 
 const router = useRouter();
 
 const onDelete = () => {
   const item = props.item;
-  const parent = node.parent;
-  Task.destroy(item);
+  const parent = item.parent;
+  if (!confirm(`Are you sure to delete [${item.toString()}]?`)) return;
+
+  item.destroy();
 
   if (parent) {
     router.push({ path: `/tasks/${parent.id}` });
