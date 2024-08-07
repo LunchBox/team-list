@@ -13,7 +13,6 @@ import { elemInsideContainer } from "@/utils/elemInsideContainer.js";
 
 // 必須提供一個容器用來裝選中的 item
 const props = defineProps(["list", "parent"]);
-const emit = defineEmits(["item-clicked"]);
 
 // 在 selected list item 下面打開 inline form
 const appendMode = ref(false);
@@ -25,10 +24,9 @@ provide("activated", activated);
 const selection = inject("selection");
 const { handleSelect, select } = selection;
 
-const onItemClicked = (e, item) => {
+const onItemMousedown = (e, item) => {
   handleSelect(e, item);
   appendMode.value = false;
-  emit("item-clicked", e, item);
 };
 
 const rootEl = ref(null);
@@ -85,7 +83,7 @@ editableListEventHandler({
         v-for="child in list"
         :item="child"
         :parent="parent"
-        @item-mousedown="onItemClicked"
+        @item-mousedown="onItemMousedown"
         @cancel-append="onCancel"
       ></ListItem>
       <InlineForm

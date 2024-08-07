@@ -110,7 +110,6 @@ const isDraggable = computed(() => {
       :draggable="isDraggable"
       @dragstart="$emit('item-dragstart', $event, item)"
       @mousedown.left="$emit('item-mousedown', $event, item)"
-      @click.left.prevent="onItemClicked"
     >
       <div class="list-item-cell">
         <RouterLink :to="`/tasks/${item.id}`" class="focus-marker">
@@ -122,9 +121,15 @@ const isDraggable = computed(() => {
 
       <CheckBox class="list-item-cell" :item="item"></CheckBox>
 
-      <a href="#" class="item-content full" @dblclick="onDoubleClick">
-        {{ item.name }}
-      </a>
+      <span class="item-content full">
+        <a
+          href="#"
+          @dblclick="onDoubleClick"
+          @click.left.prevent="$emit('item-clicked', $event, item)"
+        >
+          {{ item.name }}
+        </a>
+      </span>
 
       <span v-if="!item.isChildrenBlank" class="child-info">
         ({{ item.children.length }} : {{ item.allChildrenLen }})

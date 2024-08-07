@@ -11,7 +11,7 @@ import GanttView from "@/views/gantt/GanttView.vue";
 import DateRangeForm from "@/components/DateRangeForm.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
 
-import Header from "./Header.vue";
+import TaskGanttHeader from "./TaskGanttHeader.vue";
 import EditableList from "./EditableList.vue";
 
 const route = useRoute();
@@ -54,7 +54,7 @@ const dateRange = computed(() => {
   <div>
     <div v-if="item">
       <Breadcrumbs :item="item"></Breadcrumbs>
-      <Header :item="item"></Header>
+      <TaskGanttHeader :item="item"></TaskGanttHeader>
 
       <GanttView :list="itemList" :selection="selection">
         <template #aside>
