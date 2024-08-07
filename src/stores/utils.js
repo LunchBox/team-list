@@ -1,5 +1,5 @@
 export const REPLACER = (key, value) => {
-  return key.startsWith("_") || key.startsWith("$") ? undefined : value;
+  return key.startsWith("__") || key.startsWith("$") ? undefined : value;
 };
 
 export const maxListAttr = (list, attr) => {
