@@ -26,6 +26,27 @@ export async function fetchTasks() {
   }
 }
 
+export async function fetchTask(taskId) {
+  try {
+    const response = await fetch(`${BASE_URL}/tasks/${taskId}`, {
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+
+    const task = await response.json();
+    console.log("Task fetched:", task);
+    return task;
+  } catch (error) {
+    console.error("Failed to fetch tasks:", error);
+    throw error;
+  }
+}
+
 export async function createTask(taskData) {
   try {
     console.log("-- create Task");
