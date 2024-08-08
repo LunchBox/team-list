@@ -1,6 +1,8 @@
 <script setup>
 import { nextTick, ref, watch } from "vue";
 
+import { createTask } from "@/api/tasks";
+
 import Task from "@/stores/task.js";
 
 import resize from "@/utils/resizeable.js";
@@ -34,6 +36,7 @@ const onSubmit = (e) => {
   e.preventDefault();
 
   const obj = formData.value.save();
+  createTask(formData.value).then((obj) => console.log(obj));
 
   reloadForm();
 

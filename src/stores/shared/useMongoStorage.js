@@ -6,12 +6,29 @@ import randomId from "@/utils/random_id.js";
 
 import { createTask, updatedTask } from "@/api/tasks";
 
-export default (storageKey, modelClass) => {
-  // const store = ref(new CusArray());
+const PRIMARY_KEY = "_id";
 
-  const dumpJSON = () => {
-    return JSON.stringify(store.value, REPLACER);
+export default (storageKey, modelClass) => {
+  const store = ref(new CusArray());
+
+  // use dynamic this, do not use arrow func
+  const merge = function (obj) {
+    if (obj instanceof Array) {
+      return obj.forEach(merge);
+    }
+
+    if (obj instanceof this) {
+      const idx = store.value.findIndex(
+        (item) => item[PRIMARY_KEY] === obj[PRIMARY_KEY]
+      );
+
+      if (idx > -1) store.value.splice(idx, 1, obj);
+    }
   };
+
+  // const dumpJSON = () => {
+  //   return JSON.stringify(store.value, REPLACER);
+  // };
 
   const saveToStorage = () => {
     // localStorage.setItem(storageKey, dumpJSON());
@@ -52,12 +69,12 @@ export default (storageKey, modelClass) => {
   // };
   // load();
 
-  // clear All Data
-  const clearAllExisitngData = () => {
-    store.value = new CusArray();
-  };
+  // // clear All Data
+  // const clearAllExisitngData = () => {
+  //   store.value = new CusArray();
+  // };
 
-  const isNewRecord = (obj) => !obj._id;
+  const isNewRecord = (obj) => !obj[PRIMARY_KEY];
 
   // create & update
   const save = (obj) => {
