@@ -1,7 +1,7 @@
 <script setup>
 import { nextTick, ref, watch } from "vue";
 
-import { createTask, fetchTasks, fetchTask } from "@/api/tasks";
+// import { createTask, fetchTasks, fetchTask } from "@/api/tasks";
 
 import Task from "@/stores/task.js";
 
@@ -26,12 +26,12 @@ const reloadForm = () => {
   formData.value = task;
 };
 
-fetchTasks().then((tasks) => {
-  console.log("-- fetch tasks", tasks);
-  tasks.forEach((task) => {
-    fetchTask(task._id);
-  });
-});
+// fetchTasks().then((tasks) => {
+//   console.log("-- fetch tasks", tasks);
+//   tasks.forEach((task) => {
+//     fetchTask(task._id);
+//   });
+// });
 
 watch(props, reloadForm, {
   immediate: true,
@@ -43,7 +43,7 @@ const onSubmit = (e) => {
   e.preventDefault();
 
   const obj = formData.value.save();
-  createTask(formData.value).then((obj) => console.log(obj));
+  // createTask(formData.value).then((obj) => console.log(obj));
 
   reloadForm();
 

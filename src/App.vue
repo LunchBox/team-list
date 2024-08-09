@@ -1,11 +1,12 @@
 <script setup>
-import { ref } from "vue";
+// import { ref } from "vue";
 import { RouterLink, RouterView } from "vue-router";
 
-import { fetchUserInfo } from "@/api/auth";
+// import { fetchUserInfo } from "@/api/auth";
 
-const user = ref(null);
-fetchUserInfo().then((userInfo) => (user.value = userInfo));
+// const user = ref(null);
+
+// fetchUserInfo().then((userInfo) => (user.value = userInfo));
 </script>
 
 <template>
