@@ -18,7 +18,7 @@ export default ({
 
   const { select, selectedItems, anySelected } = selection;
 
-  const delMark = ref(false);
+  // const delMark = ref(false);
 
   useEventListener(document, "keydown", (e) => {
     if (elemInForm(e.target)) return;
@@ -32,26 +32,27 @@ export default ({
     const items = toValue(selectedItems);
     const scope = toValue(scopeRef);
 
-    // double press d to delete a node
-    if (e.key === "d") {
-      if (delMark.value) {
-        delMark.value = false;
+    // Too dangerous, remove this func
+    // // double press d to delete a node
+    // if (e.key === "d") {
+    //   if (delMark.value) {
+    //     delMark.value = false;
 
-        const fi = items.first;
-        const nxt = fi.prev || fi.next || fi.parent;
+    //     const fi = items.first;
+    //     const nxt = fi.prev || fi.next || fi.parent;
 
-        const msg = items.map((i) => i.toString()).join("; ");
-        if (!confirm(`Are you sure to delete [ ${msg} ] and its children?`))
-          return false;
+    //     const msg = items.map((i) => i.toString()).join("; ");
+    //     if (!confirm(`Are you sure to delete [ ${msg} ] and its children?`))
+    //       return false;
 
-        items.forEach((item) => item.destroy());
-        nxt.inScope(scope) && select(nxt);
-      } else {
-        delMark.value = true;
-      }
-    } else {
-      delMark.value = false;
-    }
+    //     items.forEach((item) => item.destroy());
+    //     nxt.inScope(scope) && select(nxt);
+    //   } else {
+    //     delMark.value = true;
+    //   }
+    // } else {
+    //   delMark.value = false;
+    // }
 
     // arrow to move cursor, shift arrow to move nodes
     const exec = (f) => {
