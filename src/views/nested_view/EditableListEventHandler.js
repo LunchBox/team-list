@@ -16,7 +16,14 @@ export default ({
 } = {}) => {
   if (!selection) return;
 
-  const { select, selectedItems, anySelected } = selection;
+  const {
+    select,
+    selectedItems,
+    anySelected,
+    add: appendSelect,
+    toggleSelect,
+    hasSelected,
+  } = selection;
 
   // const delMark = ref(false);
 
@@ -66,7 +73,7 @@ export default ({
     const fItem = items.first;
 
     // 按住 shift 移動
-    if (e.shiftKey) {
+    if (e.altKey) {
       const fs = {
         ArrowUp: () => moveUp(fItem),
         ArrowDown: () => moveDown(fItem),
@@ -75,15 +82,29 @@ export default ({
       };
 
       exec(fs[e.key]);
+    } else if (e.shiftKey) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const fs = {
+        ArrowUp: () => items.last?.globalPrev,
+        ArrowDown: () => items.last?.globalNext,
+      };
+
+      const target = exec(fs[e.key]);
+
+      if (!(target && target.inScope(scope))) return;
+
+      if (items.length > 1 && hasSelected(target)) {
+        toggleSelect(items.last);
+      } else {
+        appendSelect(target);
+      }
     } else {
       // 不按 shift 只是移動 focus
       const fs = {
-        ArrowUp: () => {
-          return fItem.globalPrev;
-        },
-        ArrowDown: () => {
-          return fItem.globalNext;
-        },
+        ArrowUp: () => fItem.globalPrev,
+        ArrowDown: () => fItem.globalNext,
         ArrowLeft: () => {
           // there are no requirement for multiple nodes here?
           if (items.length === 1) {
@@ -94,9 +115,7 @@ export default ({
             }
           }
         },
-        ArrowRight: () => {
-          items.forEach((n) => n.expand());
-        },
+        ArrowRight: () => items.forEach((n) => n.expand()),
       };
 
       const target = exec(fs[e.key]);
