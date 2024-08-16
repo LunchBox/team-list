@@ -1,5 +1,5 @@
 <script setup>
-import { computed, provide } from "vue";
+import { computed, provide, toValue } from "vue";
 import { useRoute } from "vue-router";
 
 import Task from "@/stores/task.js";
@@ -24,10 +24,12 @@ const itemList = computed(() => {
 const selection = useSelection();
 provide("selection", selection);
 
+const { selectedItems } = selection;
+
 const theOnlyFirstItem = computed(() => {
-  return selection.selectedItems.value.length === 1
-    ? selection.first.value
-    : null;
+  const items = toValue(selectedItems);
+
+  return items.length === 1 ? items.first : null;
 });
 
 const onDateChanged = (formData) => {
@@ -56,12 +58,11 @@ const dateRange = computed(() => {
       <Breadcrumbs :item="item"></Breadcrumbs>
       <TaskGanttHeader :item="item"></TaskGanttHeader>
 
-      <GanttView :list="itemList" :selection="selection">
+      <GanttView :list="itemList">
         <template #aside>
           <EditableList
             :parent="item"
             :list="item.children"
-            :selection="selection"
             :item-draggable="true"
           ></EditableList>
         </template>

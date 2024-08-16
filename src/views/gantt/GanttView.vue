@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, nextTick, watch } from "vue";
+import { computed, ref, nextTick, watch, inject } from "vue";
 
 import { humanizeDate, formatDate } from "@/utils/dates.js";
 import { dateToGridColumn } from "./utils";
@@ -16,9 +16,11 @@ import GridColumn from "./GridColumn.vue";
 import GanttNav from "./GanttNav.vue";
 import GanttThumbnail from "./GanttThumbnail.vue";
 
-const props = defineProps(["list", "selection"]);
+const props = defineProps(["list"]);
 
-const selectedItems = computed(() => props.selection?.selectedItems.value);
+const selection = inject("selection");
+
+const { selectedItems } = selection;
 
 const selectedDate = ref(formatDate(new Date()));
 
@@ -43,11 +45,11 @@ const { startDate, totalDays, dates } = useDates(props, today);
 const { dragging, shadows, onItemMousedown } = useDraggingItems({
   editMode,
   cellWidth,
-  selection: props.selection,
+  selection,
 });
 
 //  drag & drop item
-const { onDropToDate } = useDroppable({ editMode, selection: props.selection });
+const { onDropToDate } = useDroppable({ editMode, selection });
 
 // dragging container
 const containerEl = ref(null);

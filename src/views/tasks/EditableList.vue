@@ -22,6 +22,7 @@ const activated = ref(false);
 provide("activated", activated);
 
 const selection = inject("selection");
+
 const { handleSelect, select } = selection;
 
 const onItemMousedown = (e, item) => {
