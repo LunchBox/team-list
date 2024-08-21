@@ -58,7 +58,7 @@ useEventListener(document, "mouseup", (e) => {
 <style scoped>
 .gantt-nav {
   height: var(--height);
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.1);
 
   position: sticky;
   bottom: 0;

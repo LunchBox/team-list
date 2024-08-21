@@ -411,7 +411,8 @@ strong {
   }
 
   .weekend {
-    background: rgba(0, 0, 0, 0.1);
+    /* background: rgba(0, 0, 0, 0.1); */
+    background: #0000000d;
   }
 
   .weekend.selected,
@@ -428,11 +429,13 @@ strong {
     &:before {
       content: " ";
       position: absolute;
-      top: 2px;
-      bottom: 2px;
+      /* top: 2px; */
+      bottom: 0px;
+      height: 2px;
       left: 0;
       right: 0;
-      border: 1px solid #444;
+      /* border: 1px solid #444; */
+      background: rgb(118 186 211);
     }
 
     &.tiny:before {
@@ -442,7 +445,7 @@ strong {
     }
 
     &.fixed {
-      color: #fff;
+      /* color: #fff; */
 
       &:before {
         background: #3e3e3e;
@@ -496,9 +499,9 @@ strong {
       position: absolute;
       left: 0;
       right: 0;
-      top: 2px;
-      bottom: 2px;
-      border-bottom: 1px solid #e56c70;
+      /* top: 2px; */
+      bottom: 0;
+      border-bottom: 2px dotted #ccc;
     }
 
     &.tiny:before {
