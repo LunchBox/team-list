@@ -12,6 +12,7 @@ a,
 .green {
   text-decoration: none;
   color: hsla(160, 100%, 37%, 1);
+  color: #616161;
   transition: 0.4s;
   /* padding: 3px; */
 }
@@ -45,7 +46,10 @@ pre {
 
 @media (hover: hover) {
   a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
+    /* background-color: hsla(160, 100%, 37%, 0.2); */
+    /* background-color: #ddd; */
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 }
 
