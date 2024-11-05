@@ -100,12 +100,14 @@ const onDoubleClick = (e) => {
 
 .list-item-row {
   outline: none;
+  gap: 0 0.5rem;
 }
 
 .child-info {
   color: #ccc;
   font-style: italic;
   font-size: smaller;
+  margin-left: auto;
 }
 
 .seq-info {

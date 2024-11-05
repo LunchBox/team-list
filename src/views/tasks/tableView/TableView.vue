@@ -19,17 +19,17 @@ const item = computed(() => Task.find(route.params.id));
       <Breadcrumbs :item="item"></Breadcrumbs>
       <Header :item="item"></Header>
 
-      <div class="a-list">
-        <div class="a-table">
-          <div class="th"></div>
-          <div class="th"></div>
-          <div class="th">Start Date</div>
-          <div class="th">End Date</div>
-          <div class="th">Content</div>
+      <table>
+        <tr>
+          <th></th>
+          <th></th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Content</th>
+        </tr>
 
-          <TableRow v-for="c in item.children" :item="c"></TableRow>
-        </div>
-      </div>
+        <TableRow v-for="c in item.children" :item="c"></TableRow>
+      </table>
     </template>
     <div v-else>Not Found...</div>
   </div>
